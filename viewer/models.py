@@ -9,7 +9,7 @@ class Country(Model):
         return self.name
 
 class Region(Model):
-    name = CharField(max_lenght=100,null=False,blank=False,unique=True)
+    name = CharField(max_length=100,null=False,blank=False,unique=True)
     country = ForeignKey("Country",on_delete=SET_NULL,related_name="regions")
 
     class Meta:
@@ -20,7 +20,7 @@ class Region(Model):
         return self.name
 
 class District(Model):
-    name = CharField(max_lenght=100,null=False,blank=False,unique=True)
+    name = CharField(max_length=100,null=False,blank=False,unique=True)
     region = ForeignKey("Region",on_delete=SET_NULL,related_name="districts")
 
     class Meta:
