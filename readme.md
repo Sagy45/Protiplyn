@@ -56,24 +56,24 @@ doby revizie produktov s funkciou automatickeho upozornenia na koniec doby platn
 
 ## Databaza
 
-- [ ] Country
-  - [ ] name (String)
+- [x] Country
+  - [x] name (String)
 
-- [ ] Region 
-  - [ ] name (String)
-  - [ ] country_id (FK -> Country.id)
+- [x] Region 
+  - [x] name (String)
+  - [x] country_id (FK -> Country.id)
 
-- [ ] District
-  - [ ] name (String)
-  - [ ] region_id (FK -> Region.id)
+- [x] District
+  - [x] name (String)
+  - [x] region_id (FK -> Region.id)
 
-- [ ] City
-  - [ ] name (String)
-  - [ ] district_id (FK -> District.id)
+- [x] City
+  - [x] name (String)
+  - [x] district_id (FK -> District.id)
 
-- [ ] Stations 
-  - [ ] name (String)
-  - [ ] city_id (FK -> City.id)
+- [x] Stations 
+  - [x] name (String)
+  - [x] city_id (FK -> City.id)
   
 
 ------
