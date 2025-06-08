@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Typy vybavenia</title>
+</head>
+<body>
+    <h1>Zoznam typov vybavenia</h1>
+
+    <ul>
+        {% for etype in equipment_types %}
+            <li>
+                {{ etype.name }}
+                [<a href="{% url 'equipmenttype_edit' etype.pk %}">Upraviť</a>]
+                [<a href="{% url 'equipmenttype_delete' etype.pk %}">Zmazať</a>]
+            </li>
+        {% empty %}
+            <li>Žiadne typy vybavenia zatiaľ nie sú pridané.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'equipmenttype_add' %}">Pridať nový typ</a>
+</body>
+</html>

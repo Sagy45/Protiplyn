@@ -1,5 +1,9 @@
 from django.shortcuts import render
-from .models import Country
+from .models import Country, EquipmentType
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+
+
 # Create your views here.
 
 def country_detail_full(request):
@@ -17,3 +21,28 @@ def country_detail_full(request):
         'country': country,
         'regions': regions,
     })
+
+class EquipmentTypeListView(ListView):
+    model = EquipmentType
+    template_name = 'equipment/equipmenttype_list.html'
+    context_object_name = 'equipment_types'
+
+
+class EquipmentTypeCreateView(CreateView):
+    model = EquipmentType
+    fields = ['name']
+    template_name = 'equipment/equipmenttype_form.html'
+    success_url = reverse_lazy('equipmenttype_list')
+
+
+class EquipmentTypeUpdateView(UpdateView):
+    model = EquipmentType
+    fields = ['name']
+    template_name = 'equipment/equipmenttype_form.html'
+    success_url = reverse_lazy('equipmenttype_list')
+
+
+class EquipmentTypeDeleteView(DeleteView):
+    model = EquipmentType
+    template_name = 'equipment/equipmenttype_confirm_delete.html'
+    success_url = reverse_lazy('equipmenttype_list')

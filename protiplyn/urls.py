@@ -16,9 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+
 from viewer import views
+from viewer.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('country/', views.country_detail_full, name='country_detail_full')
+    path('country/', views.country_detail_full, name='country_detail_full'),
+    path('', EquipmentTypeListView.as_view(), name='equipmenttype_list'),
+    path('add/', EquipmentTypeCreateView.as_view(), name='equipmenttype_add'),
+    path('<int:pk>/edit/', EquipmentTypeUpdateView.as_view(), name='equipmenttype_edit'),
+    path('<int:pk>/delete/', EquipmentTypeDeleteView.as_view(), name='equipmenttype_delete'),
 ]

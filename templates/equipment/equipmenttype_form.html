@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if form.instance.pk %}Upraviť{% else %}Pridať{% endif %} typ vybavenia</title>
+</head>
+<body>
+    <h1>{% if form.instance.pk %}Upraviť{% else %}Pridať{% endif %} typ vybavenia</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Uložiť</button>
+    </form>
+
+    <a href="{% url 'equipmenttype_list' %}">Späť na zoznam</a>
+</body>
+</html>
