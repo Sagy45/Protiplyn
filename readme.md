@@ -78,111 +78,104 @@ doby revizie produktov s funkciou automatickeho upozornenia na koniec doby platn
 
 ------
 
-- [ ] Equipment_type  
-  - [ ] name (CharField)
+- [x] Equipment_type  
+  - [x] name (CharField)
 
-- [ ] Maska_pretlak
-  - [ ] type_id (FK -> Equipment_type.id)
-  - [ ] type (String) - znacka
-  - [ ] evid_num (String) - ZM
-  - [ ] serial_num (String)
-  - [ ] rev_2y (Date: od) -> 2y (vymena "o" kruzkov pripojenia PA)
-  - [ ] rev_4y (Date: od) -> 4y (vymena disku vydychoveho ventilu)
-  - [ ] rev_6y (Date: od) -> 6y (vymena hovorovej membrany)
-  - [ ] extra_1 (Date) (vymena disku nadychoveho ventilu)
-  - [ ] extra_2 (Date) (vymena disku smeroveho ventilu polomasky)
-  - [ ] status (Charfield -> OK, BSR, Kriticky, V rieseni)
-  - [ ] station_id (FK -> Station.id)
-  - [ ] location (FK -> Vehicle_sklad.id) - auto/sklad
+- [x] MaskOver - pretlak
+  - [x] type_id (FK -> Equipment_type.id)
+  - [x] type (String) - znacka
+  - [x] evid_num (String) - ZM
+  - [x] serial_num (String)
+  - [x] rev_2y (Date: od) -> 2y (vymena "o" kruzkov pripojenia PA)
+  - [x] rev_4y (Date: od) -> 4y (vymena disku vydychoveho ventilu)
+  - [x] rev_6y (Date: od) -> 6y (vymena hovorovej membrany)
+  - [x] extra_1 (Date) (vymena disku nadychoveho ventilu)
+  - [x] extra_2 (Date) (vymena disku smeroveho ventilu polomasky)
+  - [x] status (Charfield -> OK, BSR, Kriticky, V rieseni)
+  - [x] station_id (FK -> Station.id)
+  - [x] location (FK -> Vehicle_sklad.id) - auto/sklad
 
-- [ ] ADP_pretlak_viachadicova (nosic)
-  - [ ] type_id (FK -> Equipment_type.id)
-  - [ ] type (String) - znacka
-  - [ ] evid_num (String) - ZM
-  - [ ] serial_num (String)
-  - [ ] rev_1y (Date: od) -> 1y (vymena tesnenie "o" kruzok)
-  - [ ] rev_6y (Date: od) -> 6y (odborna prehliadka - viac hadicova)
-  - [ ] status (Charfield -> OK, BSR, Kriticky, V rieseni)
-  - [ ] station_id (FK -> Station.id)
-  - [ ] location (FK -> Vehicle_sklad.id) - auto/sklad
+- [x] ADPMulti (nosic)
+  - [x] type_id (FK -> Equipment_type.id)
+  - [x] type (String) - znacka
+  - [x] evid_num (String) - ZM
+  - [x] serial_num (String)
+  - [x] rev_1y (Date: od) -> 1y (vymena tesnenie "o" kruzok)
+  - [x] rev_6y (Date: od) -> 6y (odborna prehliadka - viac hadicova)
+  - [x] status (Charfield -> OK, BSR, Kriticky, V rieseni)
+  - [x] station_id (FK -> Station.id)
+  - [x] location (FK -> Vehicle_sklad.id) - auto/sklad
 
-- [ ] ADP_pretlak_jednohad (nosic)
-  - [ ] type_id (FK -> Equipment_type.id)
-  - [ ] type (String) - znacka
-  - [ ] evid_num (String) - ZM
-  - [ ] serial_num (String)
-  - [ ] rev_1y (Date: od) -> 1y (vymena tesnenie "o" kruzok)
-  - [ ] rev_9y (Date: od) -> 9y (odborna prehliadka - jedno hadicove)
-  - [ ] status (Charfield -> OK, BSR, Kriticky, V rieseni)
-  - [ ] station_id (FK -> Station.id)
-  - [ ] location (FK -> Vehicle_sklad.id) - auto/sklad
+- [x] ADPSingle (nosic)
+  - [x] type_id (FK -> Equipment_type.id)
+  - [x] type (String) - znacka
+  - [x] evid_num (String) - ZM
+  - [x] serial_num (String)
+  - [x] rev_1y (Date: od) -> 1y (vymena tesnenie "o" kruzok)
+  - [x] rev_9y (Date: od) -> 9y (odborna prehliadka - jedno hadicove)
+  - [x] status (Charfield -> OK, BSR, Kriticky, V rieseni)
+  - [x] station_id (FK -> Station.id)
+  - [x] location (FK -> Vehicle_sklad.id) - auto/sklad
 
-- [ ] Flase
-  - [ ] type_id (FK -> Equipment_type.id)
-  - [ ] type (Charfield) - znacka
-  - [ ] evid_num (String) - ZM
-  - [ ] serial_num (String)
-  - [ ] volume (Charfield)
-  - [ ] pressure (Charfield)
-  - [ ] material_type (Charfield)
-  - [ ] rev_5y (Date: od) -> 5y (odborna skuzka po 5 rokoch)
-  - [ ] made (INT) -rok vyroby
-  - [ ] life_time (Charfield) - zivotnost
-  - [ ] status (Charfield -> OK, BSR, Kriticky, V rieseni)
-  - [ ] station_id (FK -> Station.id)
-  - [ ] location (FK -> Vehicle_sklad.id) - auto/sklad
+- [x] OxygenBomb
+  - [x] type_id (FK -> Equipment_type.id)
+  - [x] type (Charfield) - znacka
+  - [x] evid_num (String) - ZM
+  - [x] serial_num (String)
+  - [x] volume (Charfield)
+  - [x] pressure (Charfield)
+  - [x] material_type (Charfield)
+  - [x] rev_5y (Date: od) -> 5y (odborna skuzka po 5 rokoch)
+  - [x] made (INT) -rok vyroby
+  - [x] service_life (Charfield) - zivotnost
+  - [x] status (Charfield -> OK, BSR, Kriticky, V rieseni)
+  - [x] station_id (FK -> Station.id)
+  - [x] location (FK -> Vehicle_sklad.id) - auto/sklad
 
-- [ ] PCHO - proti chem. obleky
-  - [ ] type_id (FK -> Equipment_type.id)
-  - [ ] type (String) - znacka
-  - [ ] evid_num (String) - ZM
-  - [ ] serial_num (String)
-  - [ ] rev_0.5y (Date: od) -> 0.5y (polrocna kontrola)
-  - [ ] rev_2y (Date: od) -> 2y (servisna prehliadka)
-  - [ ] made (INT) - rok vyroby
-  - [ ] life_time (Charfield) - zivotnost
-  - [ ] status (Charfield -> OK, BSR, Kriticky, V rieseni)
-  - [ ] station_id (FK -> Station.id)
-  - [ ] location (FK -> Vehicle_sklad.id) - auto/sklad
+- [x] PCHO - proti chem. obleky
+  - [x] type_id (FK -> Equipment_type.id)
+  - [x] type (String) - znacka
+  - [x] evid_num (String) - ZM
+  - [x] serial_num (String)
+  - [x] rev_0.5y (Date: od) -> 0.5y (polrocna kontrola)
+  - [x] rev_2y (Date: od) -> 2y (servisna prehliadka)
+  - [x] made (INT) - rok vyroby
+  - [x] service_life (Charfield) - zivotnost
+  - [x] status (Charfield -> OK, BSR, Kriticky, V rieseni)
+  - [x] station_id (FK -> Station.id)
+  - [x] location (FK -> Vehicle_sklad.id) - auto/sklad
 
-- [ ] Maska_podtlak
-  - [ ] type_id (FK -> Equipment_type.id)
-  - [ ] type (String) - znacka
-  - [ ] evid_num (String) - ZM
-  - [ ] serial_num (String)
-  - [ ] rev_5y (Date: od) -> 5y ()
-  - [ ] status (Charfield -> OK, BSR, Kriticky, V rieseni)
-  - [ ] station_id (FK -> Station.id)
-  - [ ] location (FK -> Vehicle_sklad.id) - auto/sklad
+- [x] MaskUnder - podtlak
+  - [x] type_id (FK -> Equipment_type.id)
+  - [x] type (String) - znacka
+  - [x] evid_num (String) - ZM
+  - [x] serial_num (String)
+  - [x] rev_5y (Date: od) -> 5y ()
+  - [x] status (Charfield -> OK, BSR, Kriticky, V rieseni)
+  - [x] station_id (FK -> Station.id)
+  - [x] location (FK -> Vehicle_sklad.id) - auto/sklad
 
-- [ ] PA (plucna automatika)
-  - [ ] type_id (FK -> Equipment_type.id)
-  - [ ] type (String) - znacka
-  - [ ] evid_num (String) - ZM
-  - [ ] serial_num (String)
-  - [ ] rev_3y (Date: od) -> 3y (vymena membrany)
-  - [ ] rev_6y (Date: od) -> 6y (odborna prehliadka po 6 rokoch / podla vyrobcu)
-  - [ ] rev_9y (Date: od) -> 9y (odborna prehliadka po 9 rokoch / podla vyrobcu)
-  - [ ] made (INT) - rok zaradenia
-  - [ ] status (Charfield -> OK, BSR, Kriticky, V rieseni)
-  - [ ] station_id (FK -> Station.id)
-  - [ ] location (FK -> Vehicle_sklad.id) - auto/sklad
+- [x] PA (plucna automatika)
+  - [x] type_id (FK -> Equipment_type.id)
+  - [x] type (String) - znacka
+  - [x] evid_num (String) - ZM
+  - [x] serial_num (String)
+  - [x] rev_3y (Date: od) -> 3y (vymena membrany)
+  - [x] rev_6y (Date: od) -> 6y (odborna prehliadka po 6 rokoch / podla vyrobcu)
+  - [x] rev_9y (Date: od) -> 9y (odborna prehliadka po 9 rokoch / podla vyrobcu)
+  - [x] made (INT) - rok zaradenia
+  - [x] status (Charfield -> OK, BSR, Kriticky, V rieseni)
+  - [x] station_id (FK -> Station.id)
+  - [x] location (FK -> Vehicle_sklad.id) - auto/sklad
 
-- [ ] Vehicle_sklad
-  - [ ] brand (Charfield) if Sklad -> SPZ null=True
-  - [ ] SPZ (String)
-  - [ ] station_id (FK -> Station.id)
+- [x] VehicleStorage
+  - [x] brand (Charfield) if Sklad -> SPZ null=True
+  - [x] SPZ (String)
+  - [x] station_id (FK -> Station.id)
 
-- [ ] Komplet
+- [ ? ] Komplet
   - [ ] name (FK -> Maska_pretlak_evid num + ADP_pretlak_viachadicova.evid_num or ADP_pretlak_jednohadic + PA.evid_num)
 
 
-
-
-
-
-
-
-
-
+  
 
