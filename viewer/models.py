@@ -85,8 +85,8 @@ class MaskOver(Model):
     extra_1 = DateField(null=False,blank=False)
     extra_2 = DateField(null=False,blank=False)
     status = CharField(max_length=20,null=False,blank=False)
-    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="locations")
+    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="MO_located_stations")
+    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="MO_locations")
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -103,8 +103,8 @@ class ADPMulti(Model):
     rev_1years = DateField(null=False,blank=False)
     rev_6years = DateField(null=False,blank=False)
     status = CharField(max_length=20,null=False,blank=False)
-    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="locations")
+    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="ADPm_located_stations")
+    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="ADMm_locations")
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -121,8 +121,8 @@ class ADPSingle(Model):
     rev_1years = DateField(null=False,blank=False)
     rev_9years = DateField(null=False,blank=False)
     status = CharField(max_length=20,null=False,blank=False)
-    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="locations")
+    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="ADPs_located_stations")
+    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="ADPs_locations")
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -132,7 +132,7 @@ class ADPSingle(Model):
 
 
 class AirTank(Model):
-    equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="oxygen")
+    equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="airtank")
     type = CharField(max_length=50,null=False,blank=False)
     e_number = CharField(max_length=10,null=False,blank=False)
     serial_number = CharField(max_length=50,null=False,blank=False)
@@ -143,8 +143,8 @@ class AirTank(Model):
     made = IntegerField(null=False,blank=False)
     service_life = IntegerField(null=False,blank=False) #v rokoch
     status = CharField(max_length=20,null=False,blank=False)
-    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="locations")
+    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="AirTank_located_stations")
+    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="AirTank_locations")
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -163,8 +163,8 @@ class PCHO(Model):
     made = IntegerField(null=False,blank=False)
     service_life = IntegerField(null=False,blank=False) #v rokoch
     status = CharField(max_length=20,null=False,blank=False)
-    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="locations")
+    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="PCHO_located_stations")
+    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="PCHO_locations")
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -180,8 +180,8 @@ class MaskUnder(Model):
     serial_number = CharField(max_length=50,null=False,blank=False)
     rev_5years = DateField(null=False,blank=False)
     status = CharField(max_length=20,null=False,blank=False)
-    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="locations")
+    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="MU_located_stations")
+    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="MU_locations")
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -200,8 +200,8 @@ class PA(Model):
     rev_9years = DateField(null=False,blank=False)
     made = IntegerField(null=False,blank=False)
     status = CharField(max_length=20,null=False,blank=False)
-    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="locations")
+    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="PA_located_stations")
+    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="PA_locations")
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
