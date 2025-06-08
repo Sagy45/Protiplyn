@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ country.name }} - Detail</title>
+</head>
+<body>
+    <h1>{{ country.name }}</h1>
+
+    {% for region in regions %}
+        <h2>Region: {{ region.name }}</h2>
+        {% for district in region.districts.all %}
+            <h3>Okres: {{ district.name }}</h3>
+            {% for city in district.cities.all %}
+                <h4>Mesto: {{ city.name }}</h4>
+                <ul>
+                    {% for station in city.stations.all %}
+                        <li>Stanica: {{ station.name }}</li>
+                    {% empty %}
+                        <li>Žiadné stanice</li>
+                    {% endfor %}
+                </ul>
+            {% empty %}
+                <p>Žiadne mestá</p>
+            {% endfor %}
+        {% empty %}
+            <p>Žiadné okresy</p>
+        {% endfor %}
+    {% empty %}
+        <p>Žiadné regiony</p>
+    {% endfor %}
+
+</body>
+</html>
