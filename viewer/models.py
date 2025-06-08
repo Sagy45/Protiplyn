@@ -4,6 +4,9 @@ from django.core.exceptions import ValidationError
 class Country(Model):
     name = CharField(max_length=100,null=False,blank=False,unique=True)
 
+    class Meta:
+        verbose_name_plural = "Štát"
+
     def __str__(self):
         return self.name
 
@@ -14,6 +17,7 @@ class Region(Model):
 
     class Meta:
         ordering = ["name"]
+        verbose_name_plural = "Kraje"
 
     def __str__(self):
         return self.name
@@ -25,6 +29,7 @@ class District(Model):
 
     class Meta:
         ordering = ["name"]
+        verbose_name_plural = "Okresy"
 
     def __str__(self):
         return self.name
@@ -36,6 +41,7 @@ class City(Model):
 
     class Meta:
         ordering = ["name"]
+        verbose_name_plural = "Mestá"
 
     def __str__(self):
         return self.name
@@ -47,6 +53,7 @@ class Station(Model):
 
     class Meta:
         ordering = ["name"]
+        verbose_name_plural = "Stanice"
 
     def __str__(self):
         return self.name

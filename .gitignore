@@ -1,0 +1,6 @@
+.env
+/.idea
+/viewer/migrations/
+*.pyc
+/db.sqlite3
+
