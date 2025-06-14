@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Potvrzení smazání</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2em;
+      background-color: #f9f9f9;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 2em;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1em;
+      color: #d33;
+    }
+
+    p {
+      margin-bottom: 1.5em;
+      font-size: 1.1em;
+    }
+
+    form {
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+    }
+
+    button {
+      background-color: #dc3545;
+      color: white;
+      padding: 0.5em 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #a71d2a;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      padding: 0.5em 1em;
+      border: 1px solid #007bff;
+      border-radius: 5px;
+    }
+
+    a:hover {
+      background-color: #e6f0ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Smazat stanici</h2>
+    <p>Opravdu chcete smazat stanici <strong>{{ object.name }}</strong>?</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit">Ano, smazat</button>
+      <a href="{% url 'station_list' %}">Zpět</a>
+    </form>
+  </div>
+</body>
+</html>
