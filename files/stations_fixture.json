@@ -1,0 +1,1528 @@
+[
+  {
+    "model": "viewer.country",
+    "pk": 1,
+    "fields": {
+      "name": "Slovenská republika"
+    }
+  },
+
+
+
+
+
+  {
+    "model": "viewer.region",
+    "pk": 1,
+    "fields": {
+      "name": "Banskobystrický kraj",
+      "country": 1
+    }
+  },
+   {
+    "model": "viewer.region",
+    "pk": 2,
+    "fields": {
+      "name": "Bratislavský kraj",
+      "country": 1
+    }
+  },
+ {
+    "model": "viewer.region",
+    "pk": 3,
+    "fields": {
+      "name": "Košický kraj",
+      "country": 1
+    }
+  },
+  {
+    "model": "viewer.region",
+    "pk": 4,
+    "fields": {
+      "name": "Nitriansky kraj",
+      "country": 1
+    }
+  },
+  {
+    "model": "viewer.region",
+    "pk": 5,
+    "fields": {
+      "name": "Prešovský kraj",
+      "country": 1
+    }
+  },
+  {
+    "model": "viewer.region",
+    "pk": 6,
+    "fields": {
+      "name": "Trnavský kraj",
+      "country": 1
+    }
+  },
+  {
+    "model": "viewer.region",
+    "pk": 7,
+    "fields": {
+      "name": "Trenčiansky kraj",
+      "country": 1
+    }
+  },
+  {
+    "model": "viewer.region",
+    "pk": 8,
+    "fields": {
+      "name": "Žilinský kraj",
+      "country": 1
+    }
+  },
+
+
+
+
+
+  {
+    "model": "viewer.district",
+    "pk": 1,
+    "fields": {
+      "name": "Banská Bystrica",
+      "region": 1
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 2,
+    "fields": {
+      "name": "Lučenec",
+      "region": 1
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 3,
+    "fields": {
+      "name": "Veľký Krtíš",
+      "region": 1
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 4,
+    "fields": {
+      "name": "Brezno",
+      "region": 1
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 5,
+    "fields": {
+      "name": "Zvolen",
+      "region": 1
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 6,
+    "fields": {
+      "name": "Pezinok",
+      "region": 2
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 7,
+    "fields": {
+      "name": "Malacky",
+      "region": 2
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 8,
+    "fields": {
+      "name": "Spišská Nová Ves",
+      "region": 3
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 9,
+    "fields": {
+      "name": "Košice I",
+      "region": 3
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 10,
+    "fields": {
+      "name": "Michalovce",
+      "region": 3
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 11,
+    "fields": {
+      "name": "Trebišov",
+      "region": 3
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 12,
+    "fields": {
+      "name": "Košice - okolie",
+      "region": 3
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 13,
+    "fields": {
+      "name": "Zlaté Moravce",
+      "region": 4
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 14,
+    "fields": {
+      "name": "Topoľčany",
+      "region": 4
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 15,
+    "fields": {
+      "name": "Levice",
+      "region": 4
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 16,
+    "fields": {
+      "name": "Nitra",
+      "region": 4
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 17,
+    "fields": {
+      "name": "Nové Zámky",
+      "region": 4
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 18,
+    "fields": {
+      "name": "Komárno",
+      "region": 4
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 19,
+    "fields": {
+      "name": "Stará Ľubovňa",
+      "region": 5
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 20,
+    "fields": {
+      "name": "Vranov nad Topľou",
+      "region": 5
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 21,
+    "fields": {
+      "name": "Kežmarok",
+      "region": 5
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 22,
+    "fields": {
+      "name": "Levoča",
+      "region": 5
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 23,
+    "fields": {
+      "name": "Prešov",
+      "region": 5
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 24,
+    "fields": {
+      "name": "Svidník",
+      "region": 5
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 25,
+    "fields": {
+      "name": "Bardejov",
+      "region": 5
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 26,
+    "fields": {
+      "name": "Poprad",
+      "region": 5
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 27,
+    "fields": {
+      "name": "Senica",
+      "region": 6
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 28,
+    "fields": {
+      "name": "Trnava",
+      "region": 6
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 29,
+    "fields": {
+      "name": "Piešťany",
+      "region": 6
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 30,
+    "fields": {
+      "name": "Skalica",
+      "region": 6
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 31,
+    "fields": {
+      "name": "Galanta",
+      "region": 6
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 32,
+    "fields": {
+      "name": "Dunajská Streda",
+      "region": 6
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 33,
+    "fields": {
+      "name": "Trenčín",
+      "region": 7
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 34,
+    "fields": {
+      "name": "Prievidza",
+      "region": 7
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 35,
+    "fields": {
+      "name": "Partizánske",
+      "region": 7
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 36,
+    "fields": {
+      "name": "Nové Mesto nad Váhom",
+      "region": 7
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 37,
+    "fields": {
+      "name": "Považská Bystrica",
+      "region": 7
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 38,
+    "fields": {
+      "name": "Bánovce nad Bebravou",
+      "region": 7
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 39,
+    "fields": {
+      "name": "Dolný Kubín",
+      "region": 8
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 40,
+    "fields": {
+      "name": "Čadca",
+      "region": 8
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 41,
+    "fields": {
+      "name": "Žilina",
+      "region": 8
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 42,
+    "fields": {
+      "name": "Liptovský Mikuláš",
+      "region": 8
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 43,
+    "fields": {
+      "name": "Ružomberok",
+      "region": 8
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 44,
+    "fields": {
+      "name": "Námestovo",
+      "region": 8
+    }
+  },
+
+
+
+
+
+  {
+  "model": "viewer.city",
+  "pk": 1,
+  "fields": {
+    "name": "Banská Bystrica",
+    "district": 1
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 2,
+  "fields": {
+    "name": "Poltár",
+    "district": 2
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 3,
+  "fields": {
+    "name": "Fiľakovo",
+    "district": 2
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 4,
+  "fields": {
+    "name": "Lučenec",
+    "district": 2
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 5,
+  "fields": {
+    "name": "Modrý Kameň",
+    "district": 3
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 6,
+  "fields": {
+    "name": "Pohorelá",
+    "district": 4
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 7,
+  "fields": {
+    "name": "Zvolen",
+    "district": 5
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 8,
+  "fields": {
+    "name": "Brezno",
+    "district": 4
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 9,
+  "fields": {
+    "name": "Senec",
+    "district": 6
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 10,
+  "fields": {
+    "name": "Pezinok",
+    "district": 6
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 11,
+  "fields": {
+    "name": "Malacky",
+    "district": 7
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 12,
+  "fields": {
+    "name": "Spišská Nová Ves",
+    "district": 8
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 13,
+  "fields": {
+    "name": "Košice",
+    "district": 9
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 14,
+  "fields": {
+    "name": "Michalovce",
+    "district": 10
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 15,
+  "fields": {
+    "name": "Sobrance",
+    "district": 10
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 16,
+  "fields": {
+    "name": "Trebišov",
+    "district": 11
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 17,
+  "fields": {
+    "name": "Moldava nad Bodvou",
+    "district": 12
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 18,
+  "fields": {
+    "name": "Veľké Kapušany",
+    "district": 10
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 19,
+  "fields": {
+    "name": "Zlaté Moravce",
+    "district": 13
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 20,
+  "fields": {
+    "name": "Topoľčany",
+    "district": 14
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 21,
+  "fields": {
+    "name": "Želiezovce",
+    "district": 15
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 22,
+  "fields": {
+    "name": "Nitra",
+    "district": 16
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 23,
+  "fields": {
+    "name": "Šurany",
+    "district": 17
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 24,
+  "fields": {
+    "name": "Levice",
+    "district": 15
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 25,
+  "fields": {
+    "name": "Šahy",
+    "district": 15
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 26,
+  "fields": {
+    "name": "Štúrovo",
+    "district": 17
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 27,
+  "fields": {
+    "name": "Komárno",
+    "district": 18
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 28,
+  "fields": {
+    "name": "Nové Zámky",
+    "district": 17
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 29,
+  "fields": {
+    "name": "Ľubotín",
+    "district": 19
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 30,
+  "fields": {
+    "name": "Vranov nad Topľou",
+    "district": 20
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 31,
+  "fields": {
+    "name": "Spišská Stará Ves",
+    "district": 21
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 32,
+  "fields": {
+    "name": "Behárovce",
+    "district": 22
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 33,
+  "fields": {
+    "name": "Prešov",
+    "district": 23
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 34,
+  "fields": {
+    "name": "Stropkov",
+    "district": 24
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 35,
+  "fields": {
+    "name": "Giraltovce",
+    "district": 24
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 36,
+  "fields": {
+    "name": "Kežmarok",
+    "district": 21
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 37,
+  "fields": {
+    "name": "Bardejov",
+    "district": 25
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 38,
+  "fields": {
+    "name": "Poprad",
+    "district": 26
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 39,
+  "fields": {
+    "name": "Vysoké Tatry",
+    "district": 26
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 40,
+  "fields": {
+    "name": "Kúty",
+    "district": 27
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 41,
+  "fields": {
+    "name": "Trnava",
+    "district": 28
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 42,
+  "fields": {
+    "name": "Hlohovec",
+    "district": 29
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 43,
+  "fields": {
+    "name": "Holíč",
+    "district": 30
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 44,
+  "fields": {
+    "name": "Sereď",
+    "district": 31
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 45,
+  "fields": {
+    "name": "Galanta",
+    "district": 31
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 46,
+  "fields": {
+    "name": "Dunajská Streda",
+    "district": 32
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 47,
+  "fields": {
+    "name": "Senica",
+    "district": 27
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 48,
+  "fields": {
+    "name": "Dubnica nad Váhom",
+    "district": 33
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 49,
+  "fields": {
+    "name": "Trenčín",
+    "district": 33
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 50,
+  "fields": {
+    "name": "Handlová",
+    "district": 34
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 51,
+  "fields": {
+    "name": "Prievidza",
+    "district": 34
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 52,
+  "fields": {
+    "name": "Partizánske",
+    "district": 35
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 53,
+  "fields": {
+    "name": "Myjava",
+    "district": 36
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 54,
+  "fields": {
+    "name": "Nové Mesto nad Váhom",
+    "district": 36
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 55,
+  "fields": {
+    "name": "Púchov",
+    "district": 37
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 56,
+  "fields": {
+    "name": "Považská Bystrica",
+    "district": 37
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 57,
+  "fields": {
+    "name": "Bánovce nad Bebravou",
+    "district": 38
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 58,
+  "fields": {
+    "name": "Tvrdošín",
+    "district": 39
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 59,
+  "fields": {
+    "name": "Turzovka",
+    "district": 40
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 60,
+  "fields": {
+    "name": "Rajec",
+    "district": 41
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 61,
+  "fields": {
+    "name": "Liptovský Mikuláš",
+    "district": 42
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 62,
+  "fields": {
+    "name": "Ružomberok",
+    "district": 43
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 63,
+  "fields": {
+    "name": "Čadca",
+    "district": 40
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 64,
+  "fields": {
+    "name": "Bytča",
+    "district": 41
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 65,
+  "fields": {
+    "name": "Dolný Kubín",
+    "district": 39
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 66,
+  "fields": {
+    "name": "Liptovský Hrádok",
+    "district": 42
+  }
+},
+  {
+  "model": "viewer.city",
+  "pk": 67,
+  "fields": {
+    "name": "Námestovo",
+    "district": 44
+  }
+},
+
+
+
+
+  {
+   "model": "viewer.station",
+   "pk": 1,
+   "fields": {
+     "name": "Hasičská stanica Banská Bystrica",
+     "city": 1
+    }
+  },
+    {
+    "model": "viewer.station",
+    "pk": 2,
+    "fields": {
+      "name": "Hasičská stanica Poltár",
+      "city": 2
+    }
+  },
+    {
+    "model": "viewer.station",
+    "pk": 3,
+    "fields": {
+      "name": "Hasičská stanica Fiľakovo",
+      "city": 3
+    }
+  },
+    {
+    "model": "viewer.station",
+    "pk": 4,
+    "fields": {
+      "name": "Hasičská stanica Lučenec",
+      "city": 4
+    }
+  },
+{
+    "model": "viewer.station",
+    "pk": 5,
+    "fields": {
+      "name": "Hasičská stanica Modrý Kameň",
+      "city": 5
+    }
+  },
+{
+    "model": "viewer.station",
+    "pk": 6,
+    "fields": {
+      "name": "Hasičská stanica Pohorelá",
+      "city": 6
+    }
+  },
+{
+    "model": "viewer.station",
+    "pk": 7,
+    "fields": {
+      "name": "Hasičská stanica Zvolen",
+      "city": 7
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 8,
+    "fields": {
+      "name": "Hasičská stanica Brezno",
+      "city": 8
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 9,
+    "fields": {
+      "name": "Hasičská stanica Senec",
+      "city": 9
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 10,
+    "fields": {
+      "name": "Hasičská stanica Pezinok",
+      "city": 10
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 11,
+    "fields": {
+      "name": "Hasičská stanica Malacky",
+      "city": 11
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 12,
+    "fields": {
+      "name": "Hasičská stanica Spišská Nová Ves",
+      "city": 12
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 13,
+    "fields": {
+      "name": "Hasičská stanica Košice",
+      "city": 13
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 14,
+    "fields": {
+      "name": "Hasičská stanica Michalovce",
+      "city": 14
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 15,
+    "fields": {
+      "name": "Hasičská stanica Sobrance",
+      "city": 15
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 16,
+    "fields": {
+      "name": "Hasičská stanica Trebišov",
+      "city": 16
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 17,
+    "fields": {
+      "name": "Hasičská stanica Moldava nad Bodvou",
+      "city": 17
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 18,
+    "fields": {
+      "name": "Hasičská stanica Veľké Kapušany",
+      "city": 18
+    }
+  },
+ {
+    "model": "viewer.station",
+    "pk": 19,
+    "fields": {
+      "name": "Hasičská stanica Zlaté Moravce",
+      "city": 19
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 20,
+    "fields": {
+      "name": "Hasičská stanica Topoľčany",
+      "city": 20
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 21,
+    "fields": {
+      "name": "Hasičská stanica Želiezovce",
+      "city": 21
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 22,
+    "fields": {
+      "name": "Hasičská stanica Selenec",
+      "city": 22
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 23,
+    "fields": {
+      "name": "Hasičská stanica Šurany",
+      "city": 23
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 24,
+    "fields": {
+      "name": "Hasičská stanica Levice",
+      "city": 24
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 25,
+    "fields": {
+      "name": "Hasičská stanica Šahy",
+      "city": 25
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 26,
+    "fields": {
+      "name": "Hasičská stanica Štúrovo",
+      "city": 26
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 27,
+    "fields": {
+      "name": "Hasičská stanica Komárno",
+      "city": 27
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 28,
+    "fields": {
+      "name": "Hasičská stanica Nové Zámky",
+      "city": 28
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 29,
+    "fields": {
+      "name": "Hasičská stanica Ľubotín",
+      "city": 29
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 30,
+    "fields": {
+      "name": "Hasičská stanica Vranov nad Topľou",
+      "city": 30
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 31,
+    "fields": {
+      "name": "Hasičská stanica Spišská Stará Ves",
+      "city": 31
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 32,
+    "fields": {
+      "name": "Hasičská stanica Behárovce",
+      "city": 32
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 33,
+    "fields": {
+      "name": "Hasičská stanica Prešov",
+      "city": 33
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 34,
+    "fields": {
+      "name": "Hasičská stanica Stropkov",
+      "city": 34
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 35,
+    "fields": {
+      "name": "Hasičská stanica Giraltovice",
+      "city": 35
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 36,
+    "fields": {
+      "name": "Hasičská stanica Kežmarok",
+      "city": 36
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 37,
+    "fields": {
+      "name": "Hasičská stanica Bardejov",
+      "city": 37
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 38,
+    "fields": {
+      "name": "Hasičská stanica Poprad",
+      "city": 38
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 39,
+    "fields": {
+      "name": "Hasičská stanica Vysoké Tatry",
+      "city": 39
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 40,
+    "fields": {
+      "name": "Hasičská stanica Kúty I",
+      "city": 40
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 41,
+    "fields": {
+      "name": "Hasičská stanica Kúty II",
+      "city": 40
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 42,
+    "fields": {
+      "name": "Hasičská stanica Trnava",
+      "city": 41
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 43,
+    "fields": {
+      "name": "Hasičská stanica Hlohovec",
+      "city": 42
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 44,
+    "fields": {
+      "name": "Hasičská stanica Holíč",
+      "city": 43
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 45,
+    "fields": {
+      "name": "Hasičská stanica Sereď",
+      "city": 44
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 46,
+    "fields": {
+      "name": "Hasičská stanica Galanta",
+      "city": 45
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 47,
+    "fields": {
+      "name": "Hasičská stanica Dunajská Streda",
+      "city": 46
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 48,
+    "fields": {
+      "name": "Hasičská stanica Senica",
+      "city": 47
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 49,
+    "fields": {
+      "name": "Hasičská stanica Dubnica nad Váhom",
+      "city": 48
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 50,
+    "fields": {
+      "name": "Hasičská stanica Trenčín",
+      "city": 49
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 51,
+    "fields": {
+      "name": "Hasičská stanica Handlová",
+      "city": 50
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 52,
+    "fields": {
+      "name": "Hasičská stanica Prievidza",
+      "city": 51
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 53,
+    "fields": {
+      "name": "Hasičská stanica Partizánske",
+      "city": 52
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 54,
+    "fields": {
+      "name": "Hasičská stanica Myjava",
+      "city": 53
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 55,
+    "fields": {
+      "name": "Hasičská stanica Nové Mesto nad Váhom",
+      "city": 54
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 56,
+    "fields": {
+      "name": "Hasičská stanica Púchov",
+      "city": 55
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 57,
+    "fields": {
+      "name": "Hasičská stanica Považská Bystrica",
+      "city": 56
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 58,
+    "fields": {
+      "name": "Hasičská stanica Bánovce nad Bebravou",
+      "city": 57
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 59,
+    "fields": {
+      "name": "Hasičská stanica Tvrdošín",
+      "city": 58
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 60,
+    "fields": {
+      "name": "Hasičská stanica Turzovka",
+      "city": 59
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 61,
+    "fields": {
+      "name": "Hasičská stanica Rajec",
+      "city": 60
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 62,
+    "fields": {
+      "name": "Hasičská stanica Liptovský Mikuláš",
+      "city": 61
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 63,
+    "fields": {
+      "name": "Hasičská stanica Ružomberok",
+      "city": 62
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 64,
+    "fields": {
+      "name": "Hasičská stanica Čadca",
+      "city": 63
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 65,
+    "fields": {
+      "name": "Hasičská stanica Bytča",
+      "city": 64
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 66,
+    "fields": {
+      "name": "Hasičská stanica Dolný Kubín",
+      "city": 65
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 67,
+    "fields": {
+      "name": "Hasičská stanica Liptovský Hrádok",
+      "city": 66
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 68,
+    "fields": {
+      "name": "Hasičská stanica Námestovo",
+      "city": 67
+    }
+  }
+  ]
+
+
+
+

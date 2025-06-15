@@ -176,6 +176,13 @@ doby revizie produktov s funkciou automatickeho upozornenia na koniec doby platn
 - [ ? ] Komplet
   - [ ] name (FK -> Maska_pretlak_evid num + ADP_pretlak_viachadicova.evid_num or ADP_pretlak_jednohadic + PA.evid_num)
 
+  # FIXTURES
+- after set up load data from fixtures
 
-  
+```bash
+  python manage.py loaddata files/stations_fixture.json
+
+```
+## Files/ `.json`
+`stations_fixture.json`
 
