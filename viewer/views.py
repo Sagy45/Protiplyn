@@ -22,31 +22,6 @@ def country_detail_full(request):
         'regions': regions,
     })
 
-# class EquipmentTypeListView(ListView):
-#     model = EquipmentType
-#     template_name = 'equipment/equipmenttype_list.html'
-#     context_object_name = 'equipment_types'
-#
-#
-# class EquipmentTypeCreateView(CreateView):
-#     model = EquipmentType
-#     fields = ['name']
-#     template_name = 'equipment/equipmenttype_form.html'
-#     success_url = reverse_lazy('equipmenttype_list')
-#
-#
-# class EquipmentTypeUpdateView(UpdateView):
-#     model = EquipmentType
-#     fields = ['name']
-#     template_name = 'equipment/equipmenttype_form.html'
-#     success_url = reverse_lazy('equipmenttype_list')
-#
-#
-# class EquipmentTypeDeleteView(DeleteView):
-#     model = EquipmentType
-#     template_name = 'equipment/equipmenttype_confirm_delete.html'
-#     success_url = reverse_lazy('equipmenttype_list')
-
 
 class StationListView(ListView):
     model = Station
