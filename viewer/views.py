@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Country, EquipmentType, Station, City, Mask
+from .models import Country, Station, City
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
@@ -22,36 +22,36 @@ def country_detail_full(request):
         'regions': regions,
     })
 
-class EquipmentTypeListView(ListView):
-    model = EquipmentType
-    template_name = 'equipment/equipmenttype_list.html'
-    context_object_name = 'equipment_types'
-
-
-class EquipmentTypeCreateView(CreateView):
-    model = EquipmentType
-    fields = ['name']
-    template_name = 'equipment/equipmenttype_form.html'
-    success_url = reverse_lazy('equipmenttype_list')
-
-
-class EquipmentTypeUpdateView(UpdateView):
-    model = EquipmentType
-    fields = ['name']
-    template_name = 'equipment/equipmenttype_form.html'
-    success_url = reverse_lazy('equipmenttype_list')
-
-
-class EquipmentTypeDeleteView(DeleteView):
-    model = EquipmentType
-    template_name = 'equipment/equipmenttype_confirm_delete.html'
-    success_url = reverse_lazy('equipmenttype_list')
+# class EquipmentTypeListView(ListView):
+#     model = EquipmentType
+#     template_name = 'equipment/equipmenttype_list.html'
+#     context_object_name = 'equipment_types'
+#
+#
+# class EquipmentTypeCreateView(CreateView):
+#     model = EquipmentType
+#     fields = ['name']
+#     template_name = 'equipment/equipmenttype_form.html'
+#     success_url = reverse_lazy('equipmenttype_list')
+#
+#
+# class EquipmentTypeUpdateView(UpdateView):
+#     model = EquipmentType
+#     fields = ['name']
+#     template_name = 'equipment/equipmenttype_form.html'
+#     success_url = reverse_lazy('equipmenttype_list')
+#
+#
+# class EquipmentTypeDeleteView(DeleteView):
+#     model = EquipmentType
+#     template_name = 'equipment/equipmenttype_confirm_delete.html'
+#     success_url = reverse_lazy('equipmenttype_list')
 
 
 class StationListView(ListView):
     model = Station
     template_name = 'station/station_list.html'
-    context_object_name = 'stations'
+    context_object_name = 'viewer'
 
     def get_queryset(self):
         queryset = super().get_queryset().select_related('city__district__region__country')

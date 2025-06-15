@@ -19,6 +19,7 @@ from django.urls import path, include
 
 from viewer import views
 from viewer.views import *
+from equipment.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,9 +28,9 @@ urlpatterns = [
     path('add/', EquipmentTypeCreateView.as_view(), name='equipmenttype_add'),
     path('<int:pk>/edit/', EquipmentTypeUpdateView.as_view(), name='equipmenttype_edit'),
     path('<int:pk>/delete/', EquipmentTypeDeleteView.as_view(), name='equipmenttype_delete'),
-    path('stations/', StationListView.as_view(), name='station_list'),
-    path('stations/add/', StationCreateView.as_view(), name='station_add'),
-    path('stations/<int:pk>/edit/', StationUpdateView.as_view(), name='station_edit'),
-    path('stations/<int:pk>/delete/', StationDeleteView.as_view(), name='station_delete'),
+    path('viewer/', StationListView.as_view(), name='station_list'),
+    path('viewer/add/', StationCreateView.as_view(), name='station_add'),
+    path('viewer/<int:pk>/edit/', StationUpdateView.as_view(), name='station_edit'),
+    path('viewer/<int:pk>/delete/', StationDeleteView.as_view(), name='station_delete'),
     path('cities/add/', CityCreateView.as_view(), name='city_add'),
 ]
