@@ -1,0 +1,129 @@
+[
+  {
+    "model": "viewer.country",
+    "pk": 1,
+    "fields": {
+      "name": "Slovenská republika"
+    }
+  },
+  {
+    "model": "viewer.region",
+    "pk": 1,
+    "fields": {
+      "name": "Trnavský kraj",
+      "country": 1
+    }
+  },
+  {
+    "model": "viewer.region",
+    "pk": 2,
+    "fields": {
+      "name": "Košický kraj",
+      "country": 1
+    }
+  },
+  {
+    "model": "viewer.region",
+    "pk": 3,
+    "fields": {
+      "name": "Nitriansky kraj",
+      "country": 1
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 1,
+    "fields": {
+      "name": "Trnava",
+      "region": 1
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 2,
+    "fields": {
+      "name": "Piešťany",
+      "region": 1
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 3,
+    "fields": {
+      "name": "Trebišov",
+      "region": 2
+    }
+  },
+  {
+    "model": "viewer.district",
+    "pk": 4,
+    "fields": {
+      "name": "Veľký Krtíš",
+      "region": 3
+    }
+  },
+  {
+    "model": "viewer.city",
+    "pk": 1,
+    "fields": {
+      "name": "Trnava",
+      "district": 1
+    }
+  },
+  {
+    "model": "viewer.city",
+    "pk": 2,
+    "fields": {
+      "name": "Piešťany",
+      "district": 2
+    }
+  },
+  {
+    "model": "viewer.city",
+    "pk": 3,
+    "fields": {
+      "name": "Trebišov",
+      "district": 3
+    }
+  },
+  {
+    "model": "viewer.city",
+    "pk": 4,
+    "fields": {
+      "name": "Veľký Krtíš",
+      "district": 4
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 1,
+    "fields": {
+      "name": "Hasičská stanica Trnava",
+      "city": 1
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 2,
+    "fields": {
+      "name": "Hasičská stanica Piešťany",
+      "city": 2
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 3,
+    "fields": {
+      "name": "Hasičská stanica Trebišov",
+      "city": 3
+    }
+  },
+  {
+    "model": "viewer.station",
+    "pk": 4,
+    "fields": {
+      "name": "Hasičská stanica Veľký Krtíš",
+      "city": 4
+    }
+  }
+]
