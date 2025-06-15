@@ -81,7 +81,7 @@ class VehicleStorage(Model):
         return f" {self.brand} {self.spz}"
 
 
-class MaskOver(Model):
+class Mask(Model):
     equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="masks_over")
     type = CharField(max_length=50,null=False,blank=False)
     e_number = CharField(max_length=10,null=False,blank=False)
@@ -180,21 +180,6 @@ class PCHO(Model):
         return f" {self.equipment_type} {self.type} {self.e_number}"
 
 
-class MaskUnder(Model):
-    equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="mask_under")
-    type = CharField(max_length=50,null=False,blank=False)
-    e_number = CharField(max_length=10,null=False,blank=False)
-    serial_number = CharField(max_length=50,null=False,blank=False)
-    rev_5years = DateField(null=False,blank=False)
-    status = CharField(max_length=20,null=False,blank=False)
-    located = ForeignKey("Station", on_delete=SET_NULL, null=True,related_name="MU_located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="MU_locations")
-
-    class Meta:
-        ordering = ["equipment_type", "type", "e_number"]
-
-    def __str__(self):
-        return f" {self.equipment_type} {self.type} {self.e_number}"
 
 
 class PA(Model):
@@ -227,7 +212,7 @@ class Complete(Model):
 
     @property
     def mask(self):
-        return MaskOver.objects.get(e_number=self.e_number)
+        return Mask.objects.get(e_number=self.e_number)
 
     @property
     def pa(self):
@@ -250,7 +235,7 @@ class Complete(Model):
 
     def clean(self):
         error = {}
-        if not MaskOver.objects.filter(e_number=self.e_number).exists():
+        if not Mask.objects.filter(e_number=self.e_number).exists():
             error["e_number"] = f"Maska neexistuje"
         if not PA.objects.filter(e_number=self.e_number).exists():
             error.setdefault("e_number", f"PA neexistuje")

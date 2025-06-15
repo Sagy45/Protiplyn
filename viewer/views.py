@@ -1,9 +1,5 @@
 from django.shortcuts import render
-<<<<<<< Updated upstream
-from .models import Country, EquipmentType, Station, City
-=======
-from .models import Country, EquipmentType, Station, City, MaskOver
->>>>>>> Stashed changes
+from .models import Country, EquipmentType, Station, City, Mask
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
