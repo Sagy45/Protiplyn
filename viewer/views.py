@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from .models import Country, EquipmentType, Station, City, Mask
+
+from equipment.models import EquipmentType
+from .models import Country, Station, City
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
@@ -62,7 +64,7 @@ class StationListView(ListView):
         stat = self.request.GET.get('stat')
 
         if stat:
-            queryset = queryset.filter(city__district__regio__country__name__icontains=stat)
+            queryset = queryset.filter(city__district__region__country__name__icontains=stat)
         if kraj:
             queryset = queryset.filter(city__district__region__name__icontains=kraj)
         if okres:
@@ -74,20 +76,92 @@ class StationListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        stations = self.get_queryset()
+        #stations = self.get_queryset()
 
-        context['stat_options'] = stations.values_list(
+        stat = self.request.GET.get('stat')
+        kraj = self.request.GET.get('kraj')
+        okres = self.request.GET.get('okres')
+        mesto = self.request.GET.get('mesto')
+
+        all_stations = Station.objects.select_related('city__district__region__country')
+
+        # Filtered for table
+        filtered = all_stations
+        if stat:
+            filtered = filtered.filter(city__district__region__country__name__icontains=stat)
+        if kraj:
+            filtered = filtered.filter(city__district__region__name__icontains=kraj)
+        if okres:
+            filtered = filtered.filter(city__district__name__icontains=okres)
+        if mesto:
+            filtered = filtered.filter(city__name__icontains=mesto)
+
+        context['stations'] = filtered
+
+        # Dropdown logika
+
+        # Pre stat = vsetko
+        context['stat_options'] = all_stations.values_list(
             'city__district__region__country__name', flat=True
-        ).order_by(
-            'city__district__region__country__name'
-        ).distinct()
-        context['kraj_options'] = stations.values_list(
-            'city__district__region__name', flat=True).distinct()
-        context['okres_options'] = stations.values_list(
-            'city__district__name', flat=True).distinct()
-        context['mesto_options'] = stations.values_list(
-            'city__name', flat=True).distinct()
+        ).order_by('city__district__region__country__name').distinct()
+
+        # Okres: limit  Mesto/Kraj
+        regions_qs = all_stations
+        if stat:
+            regions_qs = regions_qs.filter(city__district__region__country__name__icontains=stat)
+        if okres:
+            regions_qs = regions_qs.filter(city__district__name__icontains=okres)
+        if mesto:
+            regions_qs = regions_qs.filter(city__name__icontains=mesto)
+        context['kraj_options'] = regions_qs.values_list(
+            'city__district__region__name', flat=True
+        ).order_by('city__district__region__name').distinct()
+
+        # Kraj: limit Okres/Mesto
+        districts_qs = all_stations
+        if kraj:
+            districts_qs = districts_qs.filter(city__district__region__name__icontains=kraj)
+        if mesto:
+            districts_qs = districts_qs.filter(city__name__icontains=mesto)
+        context['okres_options'] = districts_qs.values_list(
+            'city__district__name', flat=True
+        ).order_by('city__district__name').distinct()
+
+        # Mesta: limit Kraj/Okres
+        cities_qs = all_stations
+        if okres:
+            cities_qs = cities_qs.filter(city__district__name__icontains=okres)
+        if kraj:
+            cities_qs = cities_qs.filter(city__district__region__name__icontains=kraj)
+        context['mesto_options'] = cities_qs.values_list(
+            'city__name', flat=True
+        ).order_by('city__name').distinct()
+
         return context
+
+
+
+        # context['stat_options'] = stations \
+        #     .values_list('city__district__region__country__name', flat=True) \
+        #     .order_by('city__district__region__country__name') \
+        #     .distinct()
+        #
+        # context['kraj_options'] = stations \
+        #     .values_list('city__district__region__name', flat=True) \
+        #     .order_by('city__district__region__name') \
+        #     .distinct()
+        #
+        # context['okres_options'] = stations \
+        #     .values_list('city__district__name', flat=True) \
+        #     .order_by('city__district__name') \
+        #     .distinct()
+        #
+        # context['mesto_options'] = stations \
+        #     .values_list('city__name', flat=True) \
+        #     .order_by('city__name') \
+        #     .distinct()
+        #
+        # return context
 
 class StationCreateView(CreateView):
     model = Station

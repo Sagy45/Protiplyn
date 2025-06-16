@@ -1,0 +1,22 @@
+{% load static %}
+
+<header>
+  <div class="header-left">
+    <span id="station-id">ZM</span> &nbsp; | &nbsp;
+    <span id="datetime"></span>
+  </div>
+
+  <div class="header-center">
+    <nav>
+      <a href="{% url 'station_list' %}">Filterovať Stanice</a>
+      <a href="#">Filterovať Výstroj</a>
+      <a href="#">Tlačové Formuláre</a>
+      <a href="#">Archív</a>
+      <a href="{% url 'logout' %}">Odhlásiť sa</a>
+    </nav>
+  </div>
+
+  <div class="header-right">
+    <img src="{% static 'images/logo.png' %}" alt="Logo" height="40">
+  </div>
+</header>
