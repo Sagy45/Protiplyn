@@ -33,207 +33,207 @@ class EquipmentTypeDeleteView(DeleteView):
 
 class VehicleStorageListView(ListView):
     model = VehicleStorage
-    template_name = 'vehicle/vehicle_list.html'
+    template_name = 'equipment/vehicle_list.html'
     context_object_name = 'vehicle_storages'
 
 
 class VehicleStorageCreateView(CreateView):
     model = VehicleStorage
     fields = '__all__'
-    template_name = 'vehicle/vehicle_form.html'
+    template_name = 'equipment/vehicle_form.html'
     success_url = reverse_lazy('vehicle_list')
 
 
 class VehicleStorageUpdateView(UpdateView):
     model = VehicleStorage
     fields = '__all__'
-    template_name = 'vehicle/vehicle_form.html'
+    template_name = 'equipment/vehicle_form.html'
     success_url = reverse_lazy('vehicle_list')
 
 
 class VehicleStorageDeleteView(DeleteView):
     model = VehicleStorage
-    template_name = 'vehicle/vehicle_confirm_delete.html'
+    template_name = 'equipment/vehicle_confirm_delete.html'
     reverse_url = reverse_lazy('vehicle_list')
 
 
 class MaskListView(ListView):
     model = Mask
-    template_name = 'mask/mask_list.html'
+    template_name = 'equipment/mask_list.html'
     context_object_name = 'masks'
 
 
 class MaskCreateView(CreateView):
     model = Mask
     fields = '__all__'
-    template_name = 'mask/mask_form.html'
+    template_name = 'equipment/mask_form.html'
     success_url = reverse_lazy('mask_list')
 
 
 class MaskUpdateView(UpdateView):
     model = Mask
     fields = '__all__'
-    template_name = 'mask/mask_form.html'
+    template_name = 'equipment/mask_form.html'
     success_url = reverse_lazy('mask_list')
 
 
 class MaskDeleteView(DeleteView):
     model = Mask
-    template_name = 'mask/mask_confirm_delete.html'
+    template_name = 'equipment/mask_confirm_delete.html'
     reverse_url = reverse_lazy('mask_list')
 
 
 class ADPMultiListView(ListView):
     model = ADPMulti
-    template_name = 'adpmulti/adpmulti_list.html'
+    template_name = 'equipment/adpmulti_list.html'
     context_object_name = 'adp_multis'
 
 
 class ADPMultiCreateView(CreateView):
     model = ADPMulti
     fields = '__all__'
-    template_name = 'adpmulti_form.html'
+    template_name = 'equipment/adpmulti_form.html'
     success_url = reverse_lazy('adpmulti_list')
 
 
 class ADPMultiUpdateView(UpdateView):
     model = ADPMulti
     fields = '__all__'
-    template_name = 'adpmulti_form.html'
+    template_name = 'equipment/adpmulti_form.html'
     success_url = reverse_lazy('adpmulti_list')
 
 
 class ADPMultiDeleteView(DeleteView):
     model = ADPMulti
-    template_name = 'adpmulti_confirm_delete.html'
+    template_name = 'equipment/adpmulti_confirm_delete.html'
     reverse_url = reverse_lazy('adpmulti_list')
 
 
 class ADPSingleListView(ListView):
     model = ADPSingle
-    template_name = 'adpsingle/adpsingle_list'
+    template_name = 'equipment/adpsingle_list'
     context_object_name = 'adp_singles'
 
 
 class ADPSingleCreateView(CreateView):
     model = ADPSingle
     fields = '__all__'
-    template_name = 'adpsingle/adpsingle_form.html'
+    template_name = 'equipment/adpsingle_form.html'
     success_url = reverse_lazy('adpsingle_list')
 
 
 class ADPSingleUpdateView(UpdateView):
     model = ADPSingle
     fields = '__all__'
-    template_name = 'adpsingle/adpsingle_form.html'
+    template_name = 'equipment/adpsingle_form.html'
     success_url = reverse_lazy('adpsingle_list')
 
 
 class ADPSingleDeleteView(DeleteView):
     model = ADPSingle
-    template_name = 'adpsingle/adpsingle_confirm_delete.html'
+    template_name = 'equipment/adpsingle_confirm_delete.html'
     success_url = reverse_lazy('adpsingle_list')
 
 
 class AirTankListView(ListView):
     model = AirTank
-    template_name = 'airtank/airtank_list'
+    template_name = 'equipment/airtank_list'
     context_object_name = 'airtanks'
 
 
 class AirTankCreateView(CreateView):
     model = AirTank
     fields = '__all__'
-    template_name = 'airtank/airtank_form.html'
+    template_name = 'equipment/airtank_form.html'
     success_url = reverse_lazy('airtank_list')
 
 class AirTankUpdateView(UpdateView):
     model = AirTank
     fields = '__all__'
-    template_name = 'airtank/airtank_form.html'
+    template_name = 'equipment/airtank_form.html'
 
 
 class AirTankDeleteView(DeleteView):
     model = AirTank
-    template_name = 'airtank/airtank_confirm_delete.html'
+    template_name = 'equipment/airtank_confirm_delete.html'
     success_url = reverse_lazy('airtank_list')
 
 
 class PCHOListView(ListView):
     model = PCHO
-    template_name = 'pcho/pcho_list.html'
+    template_name = 'equipment/pcho_list.html'
     context_object_name = 'pchos'
 
 
 class PCHOCreateView(CreateView):
     model = PCHO
     fields = '__all__'
-    template_name = 'pcho/pcho_form.html'
+    template_name = 'equipment/pcho_form.html'
     success_url = reverse_lazy('pcho_list')
 
 
 class PCHOUpdateView(UpdateView):
     model = PCHO
     fields = '__all__'
-    template_name = 'pcho/pcho_form.html'
+    template_name = 'equipment/pcho_form.html'
     success_url = reverse_lazy('pcho_list')
 
 
 class PCHODeleteView(DeleteView):
     model = PCHO
-    template_name = 'pcho/pcho_confirm_delete.html'
+    template_name = 'equipment/pcho_confirm_delete.html'
     success_url = reverse_lazy('pcho_list')
 
 
 class PAListView(ListView):
     model = PA
-    template_name = 'pa/pa_list.html'
+    template_name = 'equipment/pa_list.html'
     context_object_name = 'pas'
 
 
 class PACreateView(CreateView):
     model = PA
     fields = '__all__'
-    template_name = 'pa/pa_form.html'
+    template_name = 'equipment/pa_form.html'
     success_url = reverse_lazy('pa_list')
 
 
 class PAUpdateView(UpdateView):
     model = PA
     fields = '__all__'
-    template_name = 'pa/pa_form.html'
+    template_name = 'equipment/pa_form.html'
     success_url = reverse_lazy('pa_list')
 
 
 class PADeleteView(DeleteView):
     model = PA
-    template_name = 'pa/pa_confirm_delete.html'
+    template_name = 'equipment/pa_confirm_delete.html'
     success_url = reverse_lazy('pa_list')
 
 
 class CompleteListView(ListView):
     model = Complete
-    template_name = 'complete/complete_list.html'
+    template_name = 'equipment/complete_list.html'
     context_object_name = 'completes'
 
 
 class CompleteCreateView(CreateView):
     model = Complete
     fields = '__all__'
-    template_name = 'complete/complete_form.html'
+    template_name = 'equipment/complete_form.html'
     success_url = reverse_lazy('complete_list')
 
 
 class CompleteUpdateView(UpdateView):
     model = Complete
     fields = '__all__'
-    template_name = 'complete/complete_form.html'
+    template_name = 'equipment/complete_form.html'
     success_url = reverse_lazy('complete_list')
 
 
 class CompleteDeleteView(DeleteView):
     model = Complete
-    template_name = 'complete/complete_confirm_delete.html'
+    template_name = 'equipment/complete_confirm_delete.html'
     success_url = reverse_lazy('complete_list')
 
 

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+
+{% block title %}Vybavení stanice: {{ station.name }}{% endblock %}
+
+{% block content %}
+<h2>Vybavení stanice: {{ station.name }}</h2>
+
+<div class="tab-container">
+  <ul class="tab-list">
+    {% for section in equipment_sections %}
+      <li><a href="#" class="{% if forloop.first %}active{% endif %}" data-tab="tab-{{ forloop.counter }}">{{ section.0 }}</a></li>
+    {% endfor %}
+  </ul>
+
+  {% for section in equipment_sections %}
+    <div class="tab-content {% if forloop.first %}active{% endif %}" id="tab-{{ forloop.counter }}">
+      <h3>{{ section.0 }}</h3>
+      {% if section.1 %}
+        <table>
+          <thead>
+            <tr>
+              {% for field in section.4 %}
+                <th>{{ field|capfirst }}</th>
+              {% endfor %}
+              <th>Akce</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in section.1 %}
+              <tr>
+                {% for field in section.4 %}
+                  <td>{{ item|attr:field }}</td>
+                {% endfor %}
+                <td>
+                  <a href="{% url section.2 item.pk %}">Upravit</a> |
+                  <a href="{% url section.3 item.pk %}" onclick="return confirm('Opravdu smazat?')">Smazat</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>Žádné položky.</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+<style>
+  .tab-container {
+    margin-top: 2em;
+  }
+  .tab-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 1em;
+    border-bottom: 2px solid #ccc;
+  }
+  .tab-list li {
+    display: inline;
+  }
+  .tab-list a {
+    text-decoration: none;
+    padding: 0.5em 1em;
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    color: black;
+  }
+  .tab-list a.active {
+    background: white;
+    font-weight: bold;
+  }
+  .tab-content {
+    display: none;
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll(".tab-list a");
+    const contents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", function (e) {
+        e.preventDefault();
+        tabs.forEach(t => t.classList.remove("active"));
+        contents.forEach(c => c.classList.remove("active"));
+
+        this.classList.add("active");
+        contents[index].classList.add("active");
+      });
+    });
+  });
+</script>
+{% endblock %}
