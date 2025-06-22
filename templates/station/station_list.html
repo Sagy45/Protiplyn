@@ -1,194 +1,5 @@
 {% extends "base.html" %}
 
-<!--<!DOCTYPE html>-->
-<!--<html lang="cs">-->
-<!--<head>-->
-<!--  <meta charset="UTF-8">-->
-<!--  <title>Zoznam stanic</title>-->
-
-<!--<style>-->
-<!--  body {-->
-<!--    font-family: Arial, sans-serif;-->
-<!--    margin: 2em;-->
-<!--    background-color: #f4f4f4; /* tlumenější než #fafafa */-->
-<!--  }-->
-
-<!--  h2 {-->
-<!--    margin-bottom: 1em;-->
-<!--    color: #333;-->
-<!--  }-->
-
-<!--  .filter-form {-->
-<!--    padding: 1em;-->
-<!--    background-color: #eaeaea; /* jemně šedá */-->
-<!--    border-radius: 8px;-->
-<!--    margin-bottom: 1.5em;-->
-<!--    border: 1px solid #bbb;-->
-<!--  }-->
-
-<!--  .filter-row {-->
-<!--    display: flex;-->
-<!--    flex-wrap: wrap;-->
-<!--    gap: 0.75em;-->
-<!--    align-items: center;-->
-<!--  }-->
-
-<!--  .filter-form select,-->
-<!--  .filter-form button,-->
-<!--  .filter-form .reset-link {-->
-<!--    padding: 0.5em;-->
-<!--    font-size: 1em;-->
-<!--    border-radius: 5px;-->
-<!--    border: 1px solid #aaa;-->
-<!--  }-->
-
-<!--  .filter-form select {-->
-<!--    min-width: 180px;-->
-<!--    background-color: #fcfcfc; /* méně ostré než white */-->
-<!--  }-->
-
-<!--  .filter-btn {-->
-<!--    background-color: #007bff;-->
-<!--    color: white;-->
-<!--    border: none;-->
-<!--    cursor: pointer;-->
-<!--    transition: background-color 0.3s;-->
-<!--  }-->
-
-<!--  .filter-btn:hover {-->
-<!--    background-color: #0056b3;-->
-<!--  }-->
-
-<!--  .reset-link {-->
-<!--    color: #666;-->
-<!--    text-decoration: none;-->
-<!--    font-weight: bold;-->
-<!--    margin-left: 0.5em;-->
-<!--  }-->
-
-<!--  .reset-link:hover {-->
-<!--    color: #000;-->
-<!--  }-->
-
-<!--  table {-->
-<!--    width: 100%;-->
-<!--    border-collapse: collapse;-->
-<!--    background-color: #fdfdfd; /* světle šedobílá */-->
-<!--    box-shadow: 0 2px 4px rgba(0,0,0,0.04);-->
-<!--  }-->
-
-<!--  th, td {-->
-<!--    border: 1px solid #ccc;-->
-<!--    padding: 0.75em;-->
-<!--    text-align: left;-->
-<!--  }-->
-
-<!--  th {-->
-<!--    background-color: #007bff;-->
-<!--    color: white;-->
-<!--  }-->
-
-<!--  tr:nth-child(even) {-->
-<!--    background-color: #f1f1f1;-->
-<!--  }-->
-
-<!--  tr:hover {-->
-<!--    background-color: #e6f0ff;-->
-<!--  }-->
-
-<!--  .empty-row {-->
-<!--    text-align: center;-->
-<!--    font-style: italic;-->
-<!--    color: #999;-->
-<!--  }-->
-<!--</style>-->
-
-<!--</head>-->
-
-<!--<body>-->
-
-<!--  <h2>Zoznam stanic</h2>-->
-
-<!--  <form method="get" class="filter-form">-->
-<!--    <div class="filter-row">-->
-<!--      <select name="stat">-->
-<!--        <option value="">&#45;&#45; Všetky štáty &#45;&#45;</option>-->
-<!--        {% for s in stat_options %}-->
-<!--          <option value="{{ s }}" {% if request.GET.stat == s %}selected{% endif %}>{{ s }}</option>-->
-<!--        {% endfor %}-->
-<!--      </select>-->
-
-<!--      <select name="kraj">-->
-<!--        <option value="">&#45;&#45; Všetky kraje &#45;&#45;</option>-->
-<!--        {% for k in kraj_options %}-->
-<!--          <option value="{{ k }}" {% if request.GET.kraj == k %}selected{% endif %}>{{ k }}</option>-->
-<!--        {% endfor %}-->
-<!--      </select>-->
-
-<!--      <select name="okres">-->
-<!--        <option value="">&#45;&#45; Všetky okresy &#45;&#45;</option>-->
-<!--        {% for o in okres_options %}-->
-<!--          <option value="{{ o }}" {% if request.GET.okres == o %}selected{% endif %}>{{ o }}</option>-->
-<!--        {% endfor %}-->
-<!--      </select>-->
-
-<!--      <select name="mesto">-->
-<!--        <option value="">&#45;&#45; Všetky mesta &#45;&#45;</option>-->
-<!--        {% for m in mesto_options %}-->
-<!--          <option value="{{ m }}" {% if request.GET.mesto == m %}selected{% endif %}>{{ m }}</option>-->
-<!--        {% endfor %}-->
-<!--      </select>-->
-
-<!--      <button type="submit" class="filter-btn">Filtrovať</button>-->
-<!--      <a href="{% url 'station_list' %}" class="reset-link">Zrušiť filter</a>-->
-<!--    </div>-->
-<!--  </form>-->
-
-<!--  <div style="margin-bottom: 1em;">-->
-<!--  <a href="{% url 'station_add' %}" style="display:inline-block; margin-right:0.5em; padding:0.5em 1em; background:#28a745; color:white; text-decoration:none; border-radius:5px;">-->
-<!--    ➕ Pridať novú stanicu-->
-<!--  </a>-->
-<!--  <a href="{% url 'city_add' %}" style="display:inline-block; padding:0.5em 1em; background:#17a2b8; color:white; text-decoration:none; border-radius:5px;">-->
-<!--    🏙️ Pridať nové mesto-->
-<!--  </a>-->
-<!--</div>-->
-
-<!--  <table>-->
-<!--    <thead>-->
-<!--      <tr>-->
-<!--        <th>Stanica</th>-->
-<!--        <th>Mesto</th>-->
-<!--        <th>Okres</th>-->
-<!--        <th>Kraj</th>-->
-<!--        <th>Štát</th>-->
-<!--      </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--      {% for station in stations %}-->
-<!--        <tr>-->
-<!--          <td>{{ station.name }}</td>-->
-<!--          <td>{{ station.city.name }}</td>-->
-<!--          <td>{{ station.city.district.name }}</td>-->
-<!--          <td>{{ station.city.district.region.name }}</td>-->
-<!--          <td>{{ station.city.district.region.country.name }}</td>-->
-<!--          <td>-->
-<!--            <a href="{% url 'station_edit' station.pk %}" title="Upravit">✏️</a>-->
-<!--            <a href="{% url 'station_delete' station.pk %}" title="Smazat" onclick="return confirm('Opravdu chcete smazat tuto stanici?')">🗑️</a>-->
-<!--          </td>-->
-<!--        </tr>-->
-<!--      {% empty %}-->
-<!--        <tr><td colspan="6" class="empty-row">Žiadne stanice neboli nájdené.</td></tr>-->
-<!--      {% endfor %}-->
-<!--    </tbody>-->
-<!--  </table>-->
-
-
-
-
-
-
-
-
 {% block title %}Zoznam Staníc{% endblock %}
 
 {% block content %}
@@ -226,23 +37,6 @@
       border-radius: 5px;
       border: 1px solid #aaa;
     }
-
-    /*.filter-form select {*/
-    /*  min-width: 180px;*/
-    /*  background-color: #fcfcfc;*/
-    /*}*/
-
-    /*.filter-btn {*/
-    /*  background-color: #007bff;*/
-    /*  color: white;*/
-    /*  border: none;*/
-    /*  cursor: pointer;*/
-    /*  transition: background-color 0.3s;*/
-    /*}*/
-
-    /*.filter-btn:hover {*/
-    /*  background-color: #0056b3;*/
-    /*}*/
 
     .reset-link {
       color: #666;
@@ -326,23 +120,10 @@
         {% endfor %}
       </select>
 
-<!--      <button type="submit" class="filter-btn">Filtrovať</button>
 
-      ZRUSIL SOM A PRIDAL TROCHU JS dole
-
--->
       <a href="{% url 'station_list' %}" class="reset-link">Zrušiť filter</a>
     </div>
   </form>
-
-<!--  <div style="margin-bottom: 1em;">-->
-<!--    <a href="{% url 'station_add' %}" style="display:inline-block; margin-right:0.5em; padding:0.5em 1em; background:#28a745; color:white; text-decoration:none; border-radius:5px;">-->
-<!--      ➕ Pridať novú stanicu-->
-<!--    </a>-->
-<!--    <a href="{% url 'city_add' %}" style="display:inline-block; padding:0.5em 1em; background:#17a2b8; color:white; text-decoration:none; border-radius:5px;">-->
-<!--      🏙️ Pridať nové mesto-->
-<!--    </a>-->
-<!--  </div>-->
 
   <table>
     <thead>
@@ -352,7 +133,6 @@
         <th>Okres</th>
         <th>Kraj</th>
         <th>Štát</th>
-<!--        <th>Akcie</th> -->
       </tr>
     </thead>
     <tbody>
@@ -367,10 +147,6 @@
           <td>{{ station.city.district.name }}</td>
           <td>{{ station.city.district.region.name }}</td>
           <td>{{ station.city.district.region.country.name }}</td>
-<!--          <td>-->
-<!--            <a href="{% url 'station_edit' station.pk %}" title="Upravit">✏️</a>-->
-<!--            <a href="{% url 'station_delete' station.pk %}" title="Smazat" onclick="return confirm('Opravdu chcete smazat tuto stanici?')">🗑️</a>-->
-<!--          </td>-->
         </tr>
       {% empty %}
         <tr><td colspan="5" class="empty-row">Žiadne stanice neboli nájdené.</td></tr>
