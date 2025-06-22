@@ -2,8 +2,10 @@ from django.shortcuts import render
 
 from viewer.models import Station
 from .models import EquipmentType, VehicleStorage, Mask, ADPMulti, ADPSingle, AirTank, PCHO, PA, Complete
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView
 from django.urls import reverse_lazy
+from django.utils import timezone
+from datetime import timedelta
 
 class EquipmentTypeListView(ListView):
     model = EquipmentType
@@ -263,3 +265,38 @@ class StationEquipmentListView(DetailView):
         return context
 
 
+class UpcomingRevisionListView(TemplateView):
+    template_name = 'equipment/upcoming_revisions.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = timezone.now().date()
+        soon = today + timedelta(days=30)
+
+        def in_range(qs, *fields):
+            from django.db.models import Q
+            q = Q()
+            for field in fields:
+                kwargs = {f"{field}__lte": soon, f"{field}__gte": today}
+                q |= Q(**kwargs)
+            return qs.filter(q)
+
+        mask = in_range(Mask.objects.all(), "rev_2years", "rev_4years", "rev_6years", "extra_1", "extra_2")
+        adpmulti = in_range(ADPMulti.objects.all(), "rev_1years", "rev_6years")
+        adpsingle = in_range(ADPSingle.objects.all(), "rev_1years", "rev_9years")
+        airtank = in_range(AirTank.objects.all(), "rev_5years")
+        pcho = in_range(PCHO.objects.all(), "rev_half_year", "rev_2years")
+        pa = in_range(PA.objects.all(), "rev_3year", "rev_6years", "rev_9years")
+
+        context["equipment_groups"] = [
+            ("Masky", mask),
+            ("ADP Multi", adpmulti),
+            ("ADP Single", adpsingle),
+            ("Vzduchové bomby", airtank),
+            ("PCHO", pcho),
+            ("PA", pa),
+        ]
+
+        context["today"] = today
+        context["soon"] = soon
+        return context

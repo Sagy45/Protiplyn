@@ -84,4 +84,7 @@ urlpatterns = [
     path('completes/<int:pk>/delete/', CompleteDeleteView.as_view(), name='complete_delete'),
 
     path('stations/<int:pk>/equipment/', StationEquipmentListView.as_view(), name='station_equipment'),
+
+    #Upcoming revision
+    path('equipment/revision-upcoming/', UpcomingRevisionListView.as_view(), name='upcoming_revisions'),
 ]
