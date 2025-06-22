@@ -358,7 +358,11 @@
     <tbody>
       {% for station in stations %}
         <tr>
-          <td>{{ station.name }}</td>
+          <td>
+            <a href="{% url 'station_equipment' station.pk %}">
+              {{ station.name }}
+            </a>
+          </td>
           <td>{{ station.city.name }}</td>
           <td>{{ station.city.district.name }}</td>
           <td>{{ station.city.district.region.name }}</td>
