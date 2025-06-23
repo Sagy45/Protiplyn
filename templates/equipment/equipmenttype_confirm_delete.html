@@ -1,23 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Typy vybavenia</title>
-</head>
-<body>
-    <h1>Zoznam typov vybavenia</h1>
+{% extends "base.html" %}
 
-    <ul>
-        {% for etype in equipment_types %}
-            <li>
-                {{ etype.name }}
-                [<a href="{% url 'equipmenttype_edit' etype.pk %}">Upraviť</a>]
-                [<a href="{% url 'equipmenttype_delete' etype.pk %}">Zmazať</a>]
-            </li>
-        {% empty %}
-            <li>Žiadne typy vybavenia zatiaľ nie sú pridané.</li>
-        {% endfor %}
-    </ul>
+{% block content %}
+  <h1>Potvrdit smazání</h1>
+  <p>Opravdu chceš smazat typ vybavení <strong>{{ object.name }}</strong>?</p>
 
-    <a href="{% url 'equipmenttype_add' %}">Pridať nový typ</a>
-</body>
-</html>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">🗑️ Smazat</button>
+    <a href="{% url 'equipmenttype_list' %}">↩️ Zpět</a>
+  </form>
+{% endblock %}

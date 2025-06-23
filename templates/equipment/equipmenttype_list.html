@@ -1,26 +1,36 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Typy vybavenia</title>
-</head>
-<body>
-    <h1>Zoznam typov vybavenia</h1>
+{% extends "base.html" %}
 
-    <ul>
+{% block content %}
+  <h1>Typy vybavení</h1>
+  <a href="{% url 'equipmenttype_add' %}">➕ Přidat nový typ</a>
+
+  {% if equipment_types %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Název</th>
+          <th>Akce</th>
+        </tr>
+      </thead>
+      <tbody>
         {% for etype in equipment_types %}
-            <li>
-                {{ etype.name }}
-                [<a href="{% url 'equipmenttype_edit' etype.pk %}">Upraviť</a>]
-                [<a href="{% url 'equipmenttype_delete' etype.pk %}">Zmazať</a>]
-            </li>
-        {% empty %}
-            <li>Žiadne typy vybavenia zatiaľ nie sú pridané.</li>
+          <tr>
+            <td>{{ etype.id }}</td>
+            <td>{{ etype.name }}</td>
+            <td>
+              <a href="{% url 'equipmenttype_edit' etype.id %}">✏️ Upravit</a>
+              |
+              <a href="{% url 'equipmenttype_delete' etype.id %}">🗑️ Smazat</a>
+            </td>
+          </tr>
         {% endfor %}
-    </ul>
-
-    <a href="{% url 'equipmenttype_add' %}">Pridať nový typ</a>
-</body>
-</html>
+      </tbody>
+    </table>
+  {% else %}
+    <p>Žádné typy vybavení nejsou k dispozici.</p>
+  {% endif %}
+{% endblock %}
 
 
 

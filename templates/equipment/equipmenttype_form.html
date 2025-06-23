@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{% if form.instance.pk %}Upraviť{% else %}Pridať{% endif %} typ vybavenia</title>
-</head>
-<body>
-    <h1>{% if form.instance.pk %}Upraviť{% else %}Pridať{% endif %} typ vybavenia</h1>
+{% extends "base.html" %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Uložiť</button>
-    </form>
+{% block content %}
+  <h1>{{ view.object.pk|yesno:"Upravit typ vybavení,Přidat nový typ vybavení" }}</h1>
 
-    <a href="{% url 'equipmenttype_list' %}">Späť na zoznam</a>
-</body>
-</html>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">💾 Uložit</button>
+    <a href="{% url 'equipmenttype_list' %}">↩️ Zpět na seznam</a>
+  </form>
+{% endblock %}
