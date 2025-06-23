@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}Detail: {{ object }}{% endblock %}
+
+{% block content %}
+  <h2 style="text-align:center; margin-bottom: 20px;">
+    Detail výbavy: {{ object }}
+  </h2>
+
+  <table class="equipment-table" style="max-width: 600px; margin: 0 auto;">
+    <tbody>
+      <tr>
+        <th>Typ</th>
+        <td>{{ object.type }}</td>
+      </tr>
+      <tr>
+        <th>Evidenčné číslo</th>
+        <td>{{ object.e_number }}</td>
+      </tr>
+      <tr>
+        <th>Sériové číslo</th>
+        <td>{{ object.serial_number }}</td>
+      </tr>
+
+      {% for field in revision_fields %}
+        {% with value=object|attr:field %}
+          {% if value %}
+            <tr>
+              <th>{{ REVISION_LABELS|get_item:field }}</th>
+              <td>{{ value|date:"d.m.Y" }}</td>
+            </tr>
+          {% endif %}
+        {% endwith %}
+      {% endfor %}
+
+      <tr>
+        <th>Stav</th>
+        <td>{{ object.status }}</td>
+      </tr>
+
+      {% if object.located %}
+      <tr>
+        <th>Stanica</th>
+        <td>{{ object.located.name }}</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div style="text-align:center; margin-top: 20px;">
+    <a href="javascript:history.back()" class="button">Späť</a>
+  </div>
+{% endblock %}

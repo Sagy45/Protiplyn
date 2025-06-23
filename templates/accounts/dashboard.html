@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+  <h2 style="text-align: center">{{ request.user.profile.station.name }}</h2>
+
+  <style>
+    .equipment-table {
+      width: 80%;
+      margin: 2em auto;
+      border-collapse: collapse;
+      table-layout: fixed; /* consistent column width */
+      font-size: 1.2em;
+    }
+    .equipment-table th,
+    .equipment-table td {
+      padding: 1em;
+      border: 1px solid #333;
+      text-align: center;
+      word-wrap: break-word;
+    }
+    .equipment-table th {
+      background: #f2f2f2;
+    }
+    .equipment-table tr.red-row {
+      background-color: #ffcccc;
+    }
+    .equipment-group {
+      text-align: center;
+      margin: 2em 0 1em;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+  </style>
+
+  {% for group_name, items in groups %}
+    <div class="equipment-group">{{ group_name }}</div>
+    <table class="equipment-table">
+      <tr>
+        <th>Typ</th>
+        <th>Znak</th>
+        <th>Nadchádzajúce revízie</th>
+      </tr>
+      {% for item in items %}
+        <tr class="{% if item.is_red %}red-row{% endif %}">
+          <td>{{ item.type }}</td>
+          <td>{{ item.e_number }}</td>
+          <td>
+            {% for f, date in item.relevant_dates %}
+              {{ f }}: {{ date|date:"d.m.Y" }}<br>
+            {% endfor %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3">Žiadne revízie</td></tr>
+      {% endfor %}
+    </table>
+  {% endfor %}
+{% endblock %}

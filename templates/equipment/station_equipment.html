@@ -1,10 +1,12 @@
 {% extends "base.html" %}
-{% load custom_tags %}
+{% load custom_filters %}
 
-{% block title %}Vybavení stanice: {{ station.name }}{% endblock %}
+{% block title %}Vybavenie stanice: {{ station.name }}{% endblock %}
 
 {% block content %}
-<h2>Vybavení stanice: {{ station.name }}</h2>
+<h2 style="text-align:center; margin-bottom: 20px;">
+  Vybavenie stanice: {{ station.name }}
+</h2>
 
 <div class="tab-container">
   <ul class="tab-list">
@@ -17,96 +19,87 @@
     <div class="tab-content {% if forloop.first %}active{% endif %}" id="tab-{{ forloop.counter }}">
       <h3>{{ section.0 }}</h3>
       {% if section.1 %}
-        <table>
+        <table class="equipment-table">
           <thead>
             <tr>
-              {% for field in section.4 %}
-                <th>{{ field|capfirst }}</th>
+              {% for raw, pretty in section.2 %}
+                <th>{{ pretty }}</th>
               {% endfor %}
-              <th>Akce</th>
             </tr>
           </thead>
           <tbody>
             {% for item in section.1 %}
               <tr>
-                {% for field in section.4 %}
-                  <td>{{ item|attr:field }}</td>
+                {% for raw, pretty in section.2 %}
+                  {% if raw == "type" %}
+                    <td>
+                      <a href="{% url 'equipment_detail' section.3 item.pk %}">
+                        {{ item|attr:raw }}
+                      </a>
+                    </td>
+                  {% elif raw in "e_number,serial_number" %}
+                    <td>{{ item|attr:raw }}</td>
+                  {% else %}
+                    <td>
+                      <form method="post" action="{% url 'update_status_form' %}" class="status-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="model" value="{{ section.3 }}">
+                        <input type="hidden" name="id" value="{{ item.pk }}">
+                        <input type="hidden" name="field" value="{{ raw }}">
+                        <select name="status" class="status-dropdown {{ item|get_status_class:raw }}">
+                          {% for choice, label in STATUS_CHOICES %}
+                            <option value="{{ choice }}" {% if choice == item|get_status:raw %}selected{% endif %}>{{ label }}</option>
+                          {% endfor %}
+                        </select>
+                      </form>
+                    </td>
+                  {% endif %}
                 {% endfor %}
-                <td>
-                  <a href="{% url section.2 item.pk %}">Upravit</a> |
-                  <a href="{% url section.3 item.pk %}" onclick="return confirm('Opravdu smazat?')">Smazat</a>
-                </td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       {% else %}
-        <p>Žádné položky.</p>
+        <p>Žiadne položky.</p>
       {% endif %}
     </div>
   {% endfor %}
 </div>
 
-<style>
-  .tab-container {
-    margin-top: 2em;
-  }
-  .tab-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    gap: 1em;
-    border-bottom: 2px solid #ccc;
-  }
-  .tab-list li {
-    display: inline;
-  }
-  .tab-list a {
-    text-decoration: none;
-    padding: 0.5em 1em;
-    background: #f4f4f4;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    border-radius: 5px 5px 0 0;
-    color: black;
-  }
-  .tab-list a.active {
-    background: white;
-    font-weight: bold;
-  }
-  .tab-content {
-    display: none;
-    padding: 1em;
-    border: 1px solid #ccc;
-    border-top: none;
-  }
-  .tab-content.active {
-    display: block;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  th, td {
-    padding: 0.5em;
-    border: 1px solid #ccc;
-    text-align: left;
-  }
-</style>
-
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    // Tabs
     const tabs = document.querySelectorAll(".tab-list a");
     const contents = document.querySelectorAll(".tab-content");
-
     tabs.forEach((tab, index) => {
       tab.addEventListener("click", function (e) {
         e.preventDefault();
         tabs.forEach(t => t.classList.remove("active"));
         contents.forEach(c => c.classList.remove("active"));
-
         this.classList.add("active");
         contents[index].classList.add("active");
+      });
+    });
+
+    // AJAX & color update
+    const selects = document.querySelectorAll(".status-dropdown");
+    selects.forEach(select => {
+      select.addEventListener("change", function () {
+        const form = this.closest("form");
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-CSRFToken": formData.get("csrfmiddlewaretoken")
+          }
+        }).then(res => {
+          if (!res.ok) alert("Chyba ukladania!");
+        });
+
+        // Update dropdown color
+        this.className = "status-dropdown " + this.value;
       });
     });
   });

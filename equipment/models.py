@@ -24,6 +24,26 @@ class VehicleStorage(Model):
     def __str__(self):
         return f" {self.brand} {self.spz}"
 
+STATUS_CHOICES = [
+    ('ok', 'OK'),
+    ('bsr', 'BSR'),
+    ('under_revision', 'V rieseni'),
+    ('critical', 'Kriticky'),
+]
+
+REVISION_LABELS = {
+    "rev_2years": "2 ročná",
+    "rev_4years": "4 ročná",
+    "rev_6years": "6 ročná",
+    "rev_1years": "1 ročná",
+    "rev_5years": "5 ročná",
+    "rev_9years": "9 ročná",
+    "rev_3year": "3 ročná",
+    "rev_half_year": "Polročná",
+    "extra_1": "Extra 1",
+    "extra_2": "Extra 2",
+}
+
 
 class Mask(Model):
     equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="masks_over")
@@ -35,7 +55,7 @@ class Mask(Model):
     rev_6years = DateField(null=False,blank=False)
     extra_1 = DateField(null=True,blank=True)
     extra_2 = DateField(null=True,blank=True)
-    status = CharField(max_length=20,null=False,blank=False)
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="MO_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="MO_locations")
 
@@ -54,7 +74,7 @@ class ADPMulti(Model):
     serial_number = CharField(max_length=50,null=False,blank=False)
     rev_1years = DateField(null=False,blank=False)
     rev_6years = DateField(null=False,blank=False)
-    status = CharField(max_length=20,null=False,blank=False)
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="ADPm_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="ADMm_locations")
 
@@ -73,7 +93,7 @@ class ADPSingle(Model):
     serial_number = CharField(max_length=50,null=False,blank=False)
     rev_1years = DateField(null=False,blank=False)
     rev_9years = DateField(null=False,blank=False)
-    status = CharField(max_length=20,null=False,blank=False)
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="ADPs_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="ADPs_locations")
 
@@ -96,7 +116,7 @@ class AirTank(Model):
     rev_5years = DateField(null=False,blank=False)
     made = IntegerField(null=False,blank=False)
     service_life = IntegerField(null=False,blank=False) #v rokoch
-    status = CharField(max_length=20,null=False,blank=False)
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="AirTank_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="AirTank_locations")
 
@@ -117,7 +137,7 @@ class PCHO(Model):
     rev_2years = DateField(null=False,blank=False)
     made = IntegerField(null=False,blank=False)
     service_life = IntegerField(null=False,blank=False) #v rokoch
-    status = CharField(max_length=20,null=False,blank=False)
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="PCHO_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="PCHO_locations")
 
@@ -140,7 +160,7 @@ class PA(Model):
     rev_6years = DateField(null=False,blank=False)
     rev_9years = DateField(null=False,blank=False)
     made = IntegerField(null=False,blank=False)
-    status = CharField(max_length=20,null=False,blank=False)
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="PA_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="PA_locations")
 

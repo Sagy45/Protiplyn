@@ -1,71 +1,36 @@
 {% extends "base.html" %}
-{% load custom_tags %}  {# Pokud používáš vlastní filtr get_attr #}
+{% load custom_filters %}
 
 {% block content %}
-<div class="container">
-  <h1>Výbava s blížiacou sa revíziou</h1>
-  <p><strong>Od:</strong> {{ today }} &nbsp; <strong>Do:</strong> {{ soon }}</p>
+  <h2>Upcoming Revisions in Your Scope</h2>
 
-  {% for label, items in equipment_groups %}
-    <h2>{{ label }}</h2>
-    {% if items %}
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Typ</th>
-            <th>Evidenční číslo</th>
-            <th>Sériové číslo</th>
-            <th>Revizní data</th>
-            <th>Stanice</th>
+  {% for name, items in groups %}
+    <h3>{{ name }}</h3>
+    <table border="1" style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>E Number</th>
+          <th>Station</th>
+          <th>Upcoming Revisions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr {% if item.is_red %} style="background: red;" {% endif %}>
+            <td>{{ item.type }}</td>
+            <td>{{ item.e_number }}</td>
+            <td>{{ item.located.name }}</td>
+            <td>
+              {% for f, date in item.relevant_dates %}
+                {{ f }}: {{ date|date:"d.m.Y" }}<br>
+              {% endfor %}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {% for item in items %}
-            <tr>
-              <td>{{ item.type }}</td>
-              <td>{{ item.e_number }}</td>
-              <td>{{ item.serial_number }}</td>
-              <td>
-                {% if item.rev_1years and today <= item.rev_1years <= soon %}
-                  1 rok: {{ item.rev_1years }}<br>
-                {% endif %}
-                {% if item.rev_2years and today <= item.rev_2years <= soon %}
-                  2 roky: {{ item.rev_2years }}<br>
-                {% endif %}
-                {% if item.rev_3year and today <= item.rev_3year <= soon %}
-                  3 roky: {{ item.rev_3year }}<br>
-                {% endif %}
-                {% if item.rev_4years and today <= item.rev_4years <= soon %}
-                  4 roky: {{ item.rev_4years }}<br>
-                {% endif %}
-                {% if item.rev_5years and today <= item.rev_5years <= soon %}
-                  5 let: {{ item.rev_5years }}<br>
-                {% endif %}
-                {% if item.rev_6years and today <= item.rev_6years <= soon %}
-                  6 let: {{ item.rev_6years }}<br>
-                {% endif %}
-                {% if item.rev_9years and today <= item.rev_9years <= soon %}
-                  9 let: {{ item.rev_9years }}<br>
-                {% endif %}
-                {% if item.rev_half_year and today <= item.rev_half_year <= soon %}
-                  6 měsíců: {{ item.rev_half_year }}<br>
-                {% endif %}
-                {% if item.extra_1 and today <= item.extra_1 <= soon %}
-                  Extra 1: {{ item.extra_1 }}<br>
-                {% endif %}
-                {% if item.extra_2 and today <= item.extra_2 <= soon %}
-                  Extra 2: {{ item.extra_2 }}<br>
-                {% endif %}
-              </td>
-              <td>{{ item.located.name }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <p><em>Žádné položky.</em></p>
-    {% endif %}
+        {% empty %}
+          <tr><td colspan="4">No items</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
   {% endfor %}
-</div>
 {% endblock %}
-

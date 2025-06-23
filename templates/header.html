@@ -13,7 +13,12 @@
       <a href="{% url 'upcoming_revisions' %}">Nadchádzajúca revízia</a>
       <a href="#">Tlačové Formuláre</a>
       <a href="#">Archív</a>
-      <a href="{% url 'logout' %}">Odhlásiť sa</a>
+      <form method="post" action="{% url 'logout' %}" style="display: inline;">
+        {% csrf_token %}
+          <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">
+            Odhlásiť sa
+          </button>
+      </form>
     </nav>
   </div>
 
