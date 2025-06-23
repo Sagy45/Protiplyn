@@ -1,9 +1,16 @@
 from django.shortcuts import render
 
-from equipment.models import EquipmentType
+from equipment.models import EquipmentType, Mask, ADPMulti, ADPSingle, AirTank, PCHO, PA, STATUS_CHOICES
+from equipment.views import MODEL_MAP, REVISION_INTERVALS
 from .models import Country, Station, City
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
+from datetime import timedelta
+from django.utils import timezone
+from django.http import  JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -76,7 +83,7 @@ class StationListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #stations = self.get_queryset()
+
 
         stat = self.request.GET.get('stat')
         kraj = self.request.GET.get('kraj')
@@ -140,29 +147,6 @@ class StationListView(ListView):
         return context
 
 
-
-        # context['stat_options'] = stations \
-        #     .values_list('city__district__region__country__name', flat=True) \
-        #     .order_by('city__district__region__country__name') \
-        #     .distinct()
-        #
-        # context['kraj_options'] = stations \
-        #     .values_list('city__district__region__name', flat=True) \
-        #     .order_by('city__district__region__name') \
-        #     .distinct()
-        #
-        # context['okres_options'] = stations \
-        #     .values_list('city__district__name', flat=True) \
-        #     .order_by('city__district__name') \
-        #     .distinct()
-        #
-        # context['mesto_options'] = stations \
-        #     .values_list('city__name', flat=True) \
-        #     .order_by('city__name') \
-        #     .distinct()
-        #
-        # return context
-
 class StationCreateView(CreateView):
     model = Station
     fields = ['name', 'city']
@@ -186,6 +170,123 @@ class CityCreateView(CreateView):
     fields = ['name', 'district']
     template_name = 'city/city_form.html'
     success_url = reverse_lazy('station_add')
+
+station_prefix_map = {
+    1:"BB",
+    19: "ZM",
+    20: "BA",
+    21: "NR",
+    # add more if needed
+}
+
+
+class StationEquipmentListView(TemplateView):
+    template_name = 'viewer/station_equipment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        station = get_object_or_404(Station, pk=self.kwargs['pk'])
+
+        # ✅ NEW: use the prefix dynamically
+        prefix = station.prefix or ""
+
+        context['station'] = station
+        context['STATUS_CHOICES'] = STATUS_CHOICES
+
+        context['equipment_sections'] = [
+            ("Masky",
+             Mask.objects.filter(e_number__startswith=prefix),
+             None, None,
+             ["type", "e_number", "serial_number",
+              "rev_2years", "rev_4years", "rev_6years",
+              "extra_1", "extra_2", "status"],
+             "Mask"),
+
+            ("ADP Multi",
+             ADPMulti.objects.filter(e_number__startswith=prefix),
+             None, None,
+             ["type", "e_number", "serial_number",
+              "rev_1years", "rev_6years",
+              "status"],
+             "ADPMulti"),
+
+            ("ADP Single",
+             ADPSingle.objects.filter(e_number__startswith=prefix),
+             None, None,
+             ["type", "e_number", "serial_number",
+              "rev_1years", "rev_9years",
+              "status"],
+             "ADPSingle"),
+
+            ("Vzduchové bomby",
+             AirTank.objects.filter(e_number__startswith=prefix),
+             None, None,
+             ["type", "e_number", "serial_number",
+              "rev_5years",
+              "status"],
+             "AirTank"),
+
+            ("PCHO",
+             PCHO.objects.filter(e_number__startswith=prefix),
+             None, None,
+             ["type", "e_number", "serial_number",
+              "rev_half_year", "rev_2years",
+              "status"],
+             "PCHO"),
+
+            ("PA",
+             PA.objects.filter(e_number__startswith=prefix),
+             None, None,
+             ["type", "e_number", "serial_number",
+              "rev_3year", "rev_6years", "rev_9years",
+              "status"],
+             "PA"),
+        ]
+
+        # ✅ Debug: check what comes back
+        for section in context['equipment_sections']:
+            print("Section:", section[0])
+            for item in section[1]:
+                print("  ", item.e_number, item.type)
+                for field in section[4]:
+                    print(f"    {field} = ", getattr(item, field, "MISSING"))
+
+        return context
+
+
+
+@csrf_protect
+@login_required
+def update_status_form(request):
+    if request.method == "POST":
+        model_name = request.POST.get("model")
+        obj_id = request.POST.get("id")
+        new_status = request.POST.get("status")
+        field = request.POST.get("field")  # ⚡️ must be passed!
+
+        print(f"Received: model={model_name} id={obj_id} field={field} status={new_status}")
+
+        model = MODEL_MAP.get(model_name)
+        if not model:
+            return JsonResponse({"error": "Invalid model"}, status=400)
+
+        obj = model.objects.get(pk=obj_id)
+
+        # ✅ 1) Update overall status (optional)
+        obj.status = new_status
+
+        # ✅ 2) Update revision field date if status is OK
+        if new_status == "ok" and field in REVISION_INTERVALS:
+            new_date = timezone.now().date() + REVISION_INTERVALS[field]
+            setattr(obj, field, new_date)
+            print(f"Updated {field} to {new_date}")
+
+        obj.save()
+
+        return JsonResponse({"success": True})
+    else:
+        return JsonResponse({"error": "Invalid request"}, status=400)
+
 
 
 

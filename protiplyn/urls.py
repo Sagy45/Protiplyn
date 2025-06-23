@@ -87,4 +87,12 @@ urlpatterns = [
 
     #Upcoming revision
     path('equipment/revision-upcoming/', UpcomingRevisionListView.as_view(), name='upcoming_revisions'),
+
+    # Accounts
+    path('accounts/', include('accounts.urls')),
+    path('', HomeView.as_view(), name='home'),
+    path('update-status-form/', views.update_status_form, name='update_status_form'),
+    path("equipment/<str:model>/<int:pk>/", EquipmentDetailView.as_view(), name="equipment_detail"),
+
+
 ]

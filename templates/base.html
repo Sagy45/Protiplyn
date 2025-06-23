@@ -1,71 +1,12 @@
 <!DOCTYPE html>
+
+{% load static %}
+
 <html lang="sk">
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}Hasičská Stanica{% endblock %}</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      padding-top: 140px;
-      padding-bottom: 60px;
-    }
-
-    header, footer {
-      position: fixed;
-      left: 0;
-      right: 0;
-      background: #c62828; /* fire red */
-      color: white;
-      padding: 10px 20px;
-      z-index: 1000;
-    }
-
-    header {
-      top: 0;
-      display: flex;
-      align-items: center;
-      height: 120px;
-    }
-
-    .header-left {
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-    }
-
-    .header-center {
-      margin: 0 auto;
-    }
-
-    .header-center nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
-      font-weight: bold;
-    }
-
-    .header-center nav a:hover {
-      text-decoration: underline;
-    }
-
-    .header-right {
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-    }
-
-    footer {
-      bottom: 0;
-      text-align: center;
-      height: 40px;
-      font-size: 0.9em;
-    }
-
-    main {
-      padding: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
   {% block extra_head %}{% endblock %}
 </head>
 <body>

@@ -982,7 +982,8 @@
    "pk": 1,
    "fields": {
      "name": "Hasičská stanica Banská Bystrica",
-     "city": 1
+     "city": 1,
+     "prefix": "BB"
     }
   },
     {
@@ -990,7 +991,8 @@
     "pk": 2,
     "fields": {
       "name": "Hasičská stanica Poltár",
-      "city": 2
+      "city": 2,
+      "prefix": "PT"
     }
   },
     {
@@ -998,7 +1000,8 @@
     "pk": 3,
     "fields": {
       "name": "Hasičská stanica Fiľakovo",
-      "city": 3
+      "city": 3,
+      "prefix": "FL"
     }
   },
     {
@@ -1006,7 +1009,8 @@
     "pk": 4,
     "fields": {
       "name": "Hasičská stanica Lučenec",
-      "city": 4
+      "city": 4,
+      "prefix": "LU"
     }
   },
 {
@@ -1014,7 +1018,8 @@
     "pk": 5,
     "fields": {
       "name": "Hasičská stanica Modrý Kameň",
-      "city": 5
+      "city": 5,
+      "prefix": "MK"
     }
   },
 {
@@ -1022,7 +1027,8 @@
     "pk": 6,
     "fields": {
       "name": "Hasičská stanica Pohorelá",
-      "city": 6
+      "city": 6,
+      "prefix": "PH"
     }
   },
 {
@@ -1030,7 +1036,8 @@
     "pk": 7,
     "fields": {
       "name": "Hasičská stanica Zvolen",
-      "city": 7
+      "city": 7,
+      "prefix": "ZV"
     }
   },
   {
@@ -1038,7 +1045,8 @@
     "pk": 8,
     "fields": {
       "name": "Hasičská stanica Brezno",
-      "city": 8
+      "city": 8,
+      "prefix": "BR"
     }
   },
   {
@@ -1046,7 +1054,8 @@
     "pk": 9,
     "fields": {
       "name": "Hasičská stanica Senec",
-      "city": 9
+      "city": 9,
+      "prefix": "SC"
     }
   },
   {
@@ -1054,7 +1063,8 @@
     "pk": 10,
     "fields": {
       "name": "Hasičská stanica Pezinok",
-      "city": 10
+      "city": 10,
+      "prefix": "PE"
     }
   },
   {
@@ -1062,7 +1072,8 @@
     "pk": 11,
     "fields": {
       "name": "Hasičská stanica Malacky",
-      "city": 11
+      "city": 11,
+      "prefix": "MA"
     }
   },
   {
@@ -1070,7 +1081,8 @@
     "pk": 12,
     "fields": {
       "name": "Hasičská stanica Spišská Nová Ves",
-      "city": 12
+      "city": 12,
+      "prefix": "SNV"
     }
   },
   {
@@ -1078,7 +1090,8 @@
     "pk": 13,
     "fields": {
       "name": "Hasičská stanica Košice",
-      "city": 13
+      "city": 13,
+      "prefix": "KE"
     }
   },
   {
@@ -1086,7 +1099,8 @@
     "pk": 14,
     "fields": {
       "name": "Hasičská stanica Michalovce",
-      "city": 14
+      "city": 14,
+      "prefix": "MI"
     }
   },
   {
@@ -1094,7 +1108,8 @@
     "pk": 15,
     "fields": {
       "name": "Hasičská stanica Sobrance",
-      "city": 15
+      "city": 15,
+      "prefix": "SB"
     }
   },
   {
@@ -1102,7 +1117,8 @@
     "pk": 16,
     "fields": {
       "name": "Hasičská stanica Trebišov",
-      "city": 16
+      "city": 16,
+      "prefix": "TV"
     }
   },
   {
@@ -1110,7 +1126,8 @@
     "pk": 17,
     "fields": {
       "name": "Hasičská stanica Moldava nad Bodvou",
-      "city": 17
+      "city": 17,
+      "prefix": "MB"
     }
   },
   {
@@ -1118,7 +1135,8 @@
     "pk": 18,
     "fields": {
       "name": "Hasičská stanica Veľké Kapušany",
-      "city": 18
+      "city": 18,
+      "prefix": "KA"
     }
   },
  {
@@ -1126,7 +1144,8 @@
     "pk": 19,
     "fields": {
       "name": "Hasičská stanica Zlaté Moravce",
-      "city": 19
+      "city": 19,
+      "prefix": "MV"
     }
   },
   {
@@ -1134,7 +1153,8 @@
     "pk": 20,
     "fields": {
       "name": "Hasičská stanica Topoľčany",
-      "city": 20
+      "city": 20,
+      "prefix": "TO"
     }
   },
   {
@@ -1142,7 +1162,8 @@
     "pk": 21,
     "fields": {
       "name": "Hasičská stanica Želiezovce",
-      "city": 21
+      "city": 21,
+      "prefix": "ZE"
     }
   },
   {
@@ -1150,7 +1171,8 @@
     "pk": 22,
     "fields": {
       "name": "Hasičská stanica Selenec",
-      "city": 22
+      "city": 22,
+      "prefix": "SL"
     }
   },
   {
@@ -1166,7 +1188,8 @@
     "pk": 24,
     "fields": {
       "name": "Hasičská stanica Levice",
-      "city": 24
+      "city": 24,
+      "prefix": "LV"
     }
   },
   {
@@ -1174,7 +1197,8 @@
     "pk": 25,
     "fields": {
       "name": "Hasičská stanica Šahy",
-      "city": 25
+      "city": 25,
+      "prefix": "SH"
     }
   },
   {
@@ -1182,7 +1206,8 @@
     "pk": 26,
     "fields": {
       "name": "Hasičská stanica Štúrovo",
-      "city": 26
+      "city": 26,
+      "prefix": "ST"
     }
   },
   {
@@ -1190,7 +1215,8 @@
     "pk": 27,
     "fields": {
       "name": "Hasičská stanica Komárno",
-      "city": 27
+      "city": 27,
+      "prefix": "KN"
     }
   },
   {
@@ -1198,7 +1224,8 @@
     "pk": 28,
     "fields": {
       "name": "Hasičská stanica Nové Zámky",
-      "city": 28
+      "city": 28,
+      "prefix": "NZ"
     }
   },
   {
@@ -1206,7 +1233,8 @@
     "pk": 29,
     "fields": {
       "name": "Hasičská stanica Ľubotín",
-      "city": 29
+      "city": 29,
+      "prefix": "LT"
     }
   },
   {
@@ -1214,7 +1242,8 @@
     "pk": 30,
     "fields": {
       "name": "Hasičská stanica Vranov nad Topľou",
-      "city": 30
+      "city": 30,
+      "prefix": "VT"
     }
   },
   {
@@ -1222,7 +1251,8 @@
     "pk": 31,
     "fields": {
       "name": "Hasičská stanica Spišská Stará Ves",
-      "city": 31
+      "city": 31,
+      "prefix": "SSV"
     }
   },
   {
@@ -1230,7 +1260,8 @@
     "pk": 32,
     "fields": {
       "name": "Hasičská stanica Behárovce",
-      "city": 32
+      "city": 32,
+      "prefix": "BH"
     }
   },
   {
@@ -1238,7 +1269,8 @@
     "pk": 33,
     "fields": {
       "name": "Hasičská stanica Prešov",
-      "city": 33
+      "city": 33,
+      "prefix": "PO"
     }
   },
   {
@@ -1246,7 +1278,8 @@
     "pk": 34,
     "fields": {
       "name": "Hasičská stanica Stropkov",
-      "city": 34
+      "city": 34,
+      "prefix": "ST"
     }
   },
   {
@@ -1254,7 +1287,8 @@
     "pk": 35,
     "fields": {
       "name": "Hasičská stanica Giraltovice",
-      "city": 35
+      "city": 35,
+      "prefix": "GT"
     }
   },
   {
@@ -1262,7 +1296,8 @@
     "pk": 36,
     "fields": {
       "name": "Hasičská stanica Kežmarok",
-      "city": 36
+      "city": 36,
+      "prefix": "KK"
     }
   },
   {
@@ -1270,7 +1305,8 @@
     "pk": 37,
     "fields": {
       "name": "Hasičská stanica Bardejov",
-      "city": 37
+      "city": 37,
+      "prefix": "BR"
     }
   },
   {
@@ -1278,7 +1314,8 @@
     "pk": 38,
     "fields": {
       "name": "Hasičská stanica Poprad",
-      "city": 38
+      "city": 38,
+      "prefix": "PP"
     }
   },
   {
@@ -1286,7 +1323,8 @@
     "pk": 39,
     "fields": {
       "name": "Hasičská stanica Vysoké Tatry",
-      "city": 39
+      "city": 39,
+      "prefix": "VR"
     }
   },
   {
@@ -1294,7 +1332,8 @@
     "pk": 40,
     "fields": {
       "name": "Hasičská stanica Kúty I",
-      "city": 40
+      "city": 40,
+      "prefix": "KT"
     }
   },
   {
@@ -1302,7 +1341,8 @@
     "pk": 41,
     "fields": {
       "name": "Hasičská stanica Kúty II",
-      "city": 40
+      "city": 40,
+      "prefix": "KTT"
     }
   },
   {
@@ -1310,7 +1350,8 @@
     "pk": 42,
     "fields": {
       "name": "Hasičská stanica Trnava",
-      "city": 41
+      "city": 41,
+      "prefix": "TT"
     }
   },
   {
@@ -1318,7 +1359,8 @@
     "pk": 43,
     "fields": {
       "name": "Hasičská stanica Hlohovec",
-      "city": 42
+      "city": 42,
+      "prefix": "HC"
     }
   },
   {
@@ -1326,7 +1368,8 @@
     "pk": 44,
     "fields": {
       "name": "Hasičská stanica Holíč",
-      "city": 43
+      "city": 43,
+      "prefix": "HC"
     }
   },
   {
@@ -1334,7 +1377,8 @@
     "pk": 45,
     "fields": {
       "name": "Hasičská stanica Sereď",
-      "city": 44
+      "city": 44,
+      "prefix": "SD"
     }
   },
   {
@@ -1342,7 +1386,8 @@
     "pk": 46,
     "fields": {
       "name": "Hasičská stanica Galanta",
-      "city": 45
+      "city": 45,
+      "prefix": "GA"
     }
   },
   {
@@ -1350,7 +1395,8 @@
     "pk": 47,
     "fields": {
       "name": "Hasičská stanica Dunajská Streda",
-      "city": 46
+      "city": 46,
+      "prefix": "DS"
     }
   },
   {
@@ -1358,7 +1404,8 @@
     "pk": 48,
     "fields": {
       "name": "Hasičská stanica Senica",
-      "city": 47
+      "city": 47,
+      "prefix": "SE"
     }
   },
   {
@@ -1366,7 +1413,8 @@
     "pk": 49,
     "fields": {
       "name": "Hasičská stanica Dubnica nad Váhom",
-      "city": 48
+      "city": 48,
+      "prefix": "DV"
     }
   },
   {
@@ -1374,7 +1422,8 @@
     "pk": 50,
     "fields": {
       "name": "Hasičská stanica Trenčín",
-      "city": 49
+      "city": 49,
+      "prefix": "TN"
     }
   },
   {
@@ -1382,7 +1431,8 @@
     "pk": 51,
     "fields": {
       "name": "Hasičská stanica Handlová",
-      "city": 50
+      "city": 50,
+      "prefix": "HA"
     }
   },
   {
@@ -1390,7 +1440,8 @@
     "pk": 52,
     "fields": {
       "name": "Hasičská stanica Prievidza",
-      "city": 51
+      "city": 51,
+      "prefix": "PD"
     }
   },
   {
@@ -1398,7 +1449,8 @@
     "pk": 53,
     "fields": {
       "name": "Hasičská stanica Partizánske",
-      "city": 52
+      "city": 52,
+      "prefix": "PE"
     }
   },
   {
@@ -1406,7 +1458,8 @@
     "pk": 54,
     "fields": {
       "name": "Hasičská stanica Myjava",
-      "city": 53
+      "city": 53,
+      "prefix": "MY"
     }
   },
   {
@@ -1414,7 +1467,8 @@
     "pk": 55,
     "fields": {
       "name": "Hasičská stanica Nové Mesto nad Váhom",
-      "city": 54
+      "city": 54,
+      "prefix": "NM"
     }
   },
   {
@@ -1422,7 +1476,8 @@
     "pk": 56,
     "fields": {
       "name": "Hasičská stanica Púchov",
-      "city": 55
+      "city": 55,
+      "prefix": "PU"
     }
   },
   {
@@ -1430,7 +1485,8 @@
     "pk": 57,
     "fields": {
       "name": "Hasičská stanica Považská Bystrica",
-      "city": 56
+      "city": 56,
+      "prefix": "PB"
     }
   },
   {
@@ -1438,7 +1494,8 @@
     "pk": 58,
     "fields": {
       "name": "Hasičská stanica Bánovce nad Bebravou",
-      "city": 57
+      "city": 57,
+      "prefix": "BN"
     }
   },
   {
@@ -1446,7 +1503,8 @@
     "pk": 59,
     "fields": {
       "name": "Hasičská stanica Tvrdošín",
-      "city": 58
+      "city": 58,
+      "prefix": "TD"
     }
   },
   {
@@ -1454,7 +1512,8 @@
     "pk": 60,
     "fields": {
       "name": "Hasičská stanica Turzovka",
-      "city": 59
+      "city": 59,
+      "prefix": "TZ"
     }
   },
   {
@@ -1462,7 +1521,8 @@
     "pk": 61,
     "fields": {
       "name": "Hasičská stanica Rajec",
-      "city": 60
+      "city": 60,
+      "prefix": "RJ"
     }
   },
   {
@@ -1470,7 +1530,8 @@
     "pk": 62,
     "fields": {
       "name": "Hasičská stanica Liptovský Mikuláš",
-      "city": 61
+      "city": 61,
+      "prefix": "LM"
     }
   },
   {
@@ -1478,7 +1539,8 @@
     "pk": 63,
     "fields": {
       "name": "Hasičská stanica Ružomberok",
-      "city": 62
+      "city": 62,
+      "prefix": "RK"
     }
   },
   {
@@ -1486,7 +1548,8 @@
     "pk": 64,
     "fields": {
       "name": "Hasičská stanica Čadca",
-      "city": 63
+      "city": 63,
+      "prefix": "CA"
     }
   },
   {
@@ -1494,7 +1557,8 @@
     "pk": 65,
     "fields": {
       "name": "Hasičská stanica Bytča",
-      "city": 64
+      "city": 64,
+      "prefix": "BY"
     }
   },
   {
@@ -1502,7 +1566,8 @@
     "pk": 66,
     "fields": {
       "name": "Hasičská stanica Dolný Kubín",
-      "city": 65
+      "city": 65,
+      "prefix": "DK"
     }
   },
   {
@@ -1510,7 +1575,8 @@
     "pk": 67,
     "fields": {
       "name": "Hasičská stanica Liptovský Hrádok",
-      "city": 66
+      "city": 66,
+      "prefix": "LH"
     }
   },
   {
@@ -1518,7 +1584,8 @@
     "pk": 68,
     "fields": {
       "name": "Hasičská stanica Námestovo",
-      "city": 67
+      "city": 67,
+      "prefix": "NO"
     }
   }
   ]
