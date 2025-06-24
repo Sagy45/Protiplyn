@@ -126,6 +126,11 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",  # kde mam ulozene vlastni staticke soubory
 ]
 
+# Media files (uživatelské nahrané soubory)
+MEDIA_URL = '/media/' #URL prefix pro přístup k nahraným souborům
+MEDIA_ROOT = BASE_DIR / 'media' # fyzická cesta kde se budou ukládat nahrané soubory (vytvoří se složka media v root adresáři projektu)
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
