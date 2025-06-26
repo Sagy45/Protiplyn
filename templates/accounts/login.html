@@ -1,12 +1,41 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prihlásenie</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
   <div class="login-container">
+    <img src="{% static 'images/logo_head.png' %}" alt="Logo" class="login-logo">
+    <h1>Protiplynová služba</h1>
     <h2>Prihlásenie</h2>
-    <form method="post" action="{% url 'login' %}">
+    <form method="post">
       {% csrf_token %}
-      {{ form.as_p }}
+
+      {% if form.errors %}
+        <div class="error-message">
+          Neplatné používateľské meno alebo heslo.
+        </div>
+      {% endif %}
+
+      <label for="username">Používateľské meno</label>
+      <input type="text" name="username" id="username" required>
+
+      <label for="password">Heslo</label>
+      <input type="password" name="password" id="password" required>
+
       <button type="submit">Prihlásiť sa</button>
+
+      <p>
+        <label for="id_remember_me">
+          <input type="checkbox" name="remember_me" id="id_remember_me">
+          Zapamätať si ma
+        </label>
+      </p>
     </form>
   </div>
-{% endblock %}
+</body>
+</html>
