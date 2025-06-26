@@ -1,28 +1,44 @@
 {% load static %}
-
 <header>
   <div class="header-left">
-    <span id="station-id">ZM</span> &nbsp; | &nbsp;
-    <span id="datetime"></span>
+    <img src="{% static 'images/logo_head.png' %}" alt="Logo" class="header-logo">
+
+    <div class="station-info-box">
+      <div class="station-code">ZM</div>
+      <div class="datetime" id="datetime"></div>
+    </div>
   </div>
 
   <div class="header-center">
-    <nav>
-      <a href="{% url 'station_list' %}">Filtrovať Stanice</a>
-      <a href="#">Filtrovať Výstroj</a>
-      <a href="{% url 'upcoming_revisions' %}">Nadchádzajúca revízia</a>
-      <a href="#">Tlačové Formuláre</a>
-      <a href="#">Archív</a>
-      <form method="post" action="{% url 'logout' %}" style="display: inline;">
-        {% csrf_token %}
-          <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">
-            Odhlásiť sa
-          </button>
-      </form>
+    <nav class="nav-buttons">
+      <a href="{% url 'station_list' %}" class="nav-btn">Filtrovať Stanice</a>
+      <a href="#" class="nav-btn">Filtrovať Výstroj</a>
+      <a href="{% url 'upcoming_revisions' %}" class="nav-btn">Nadchádzajúca revízia</a>
+      <a href="#" class="nav-btn">Tlačové Formuláre</a>
+      <a href="#" class="nav-btn">Archív</a>
     </nav>
   </div>
 
-  <div class="header-right">
-    <img src="{% static 'images/logo.png' %}" alt="Logo" height="140">
+  <div class="header-right user-panel">
+    {% if user.is_authenticated %}
+      <div class="user-info">
+        {% if user.profile.profile_image %}
+          <img src="{{ user.profile.profile_image.url }}" alt="{{ user.username }}" class="profile-avatar">
+        {% else %}
+          <div class="profile-avatar-placeholder">
+            {{ user.username|first|upper }}
+          </div>
+        {% endif %}
+        <div class="user-details">
+          <span class="user-label">Užívateľ:</span>
+          <span class="username">{{ user.username }}</span>
+        </div>
+      </div>
+      <form method="post" action="{% url 'logout' %}" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Odhlásiť sa</button>
+      </form>
+    {% endif %}
   </div>
 </header>
+
