@@ -1,0 +1,97 @@
+/* Styl pro tabulku */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+}
+
+thead th {
+  background-color: #c62828; /* tmavě červená */
+  color: white;
+  text-align: left;
+  padding: 12px;
+  text-transform: uppercase;
+}
+
+tbody td {
+  padding: 12px;
+  border-top: 1px solid #eee;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+tbody tr:hover {
+  background-color: #ffeaea;
+}
+
+a {
+  color: #1565c0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Styl pro prázdný řádek */
+.empty-row {
+  text-align: center;
+  font-style: italic;
+  color: #999;
+}
+
+/* Styl pro filtrační formulář */
+.filter-form {
+  margin: 20px 0;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-row select,
+.filter-row .reset-link {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.reset-link {
+  background-color: #eee;
+  color: #000;
+  text-decoration: none;
+  line-height: 2.3em;
+}
+
+.reset-link:hover {
+  background-color: #ccc;
+}
+
+.filter-form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+select, option {
+  font-family: 'Poppins', sans-serif;
+}
