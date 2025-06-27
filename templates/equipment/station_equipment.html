@@ -4,6 +4,100 @@
 {% block title %}Vybavenie stanice: {{ station.name }}{% endblock %}
 
 {% block content %}
+<style>
+  .equipment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+.equipment-table thead {
+  background-color: #f1f1f1;
+  color: #333;
+  font-weight: bold;
+}
+
+  .equipment-table th,
+  .equipment-table td {
+    padding: 0.6rem 1rem;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+
+  .equipment-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .equipment-table a {
+    color: #1565c0;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .tab-container {
+    margin-top: 20px;
+  }
+
+  .tab-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #c62828;
+  }
+
+  .tab-list li {
+    margin-right: 10px;
+  }
+
+  .tab-list a {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #eee;
+    border-radius: 4px 4px 0 0;
+    text-decoration: none;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .tab-list a.active {
+    background: #c62828;
+    color: white;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .status-dropdown {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+  .status-dropdown.Kriticky {
+    background-color: #ef5350;
+    color: white;
+  }
+
+  .status-dropdown.BSR {
+    background-color: #fbc02d;
+    color: black;
+  }
+
+  .status-dropdown.OK {
+    background-color: #66bb6a;
+    color: white;
+  }
+</style>
+
 <h2 style="text-align:center; margin-bottom: 20px;">
   Vybavenie stanice: {{ station.name }}
 </h2>
@@ -68,9 +162,9 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    // Tabs
     const tabs = document.querySelectorAll(".tab-list a");
     const contents = document.querySelectorAll(".tab-content");
+
     tabs.forEach((tab, index) => {
       tab.addEventListener("click", function (e) {
         e.preventDefault();
@@ -81,7 +175,7 @@
       });
     });
 
-    // AJAX & color update
+    // AJAX pro změnu stavu
     const selects = document.querySelectorAll(".status-dropdown");
     selects.forEach(select => {
       select.addEventListener("change", function () {
@@ -98,7 +192,7 @@
           if (!res.ok) alert("Chyba ukladania!");
         });
 
-        // Update dropdown color
+        // Změna barvy dle nové hodnoty
         this.className = "status-dropdown " + this.value;
       });
     });
