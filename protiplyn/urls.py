@@ -23,11 +23,12 @@ from protiplyn import settings
 from viewer import views
 from viewer.views import *
 from equipment.views import *
+from equipment import views as equipment_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('country/', views.country_detail_full, name='country_detail_full'),
-    path('', EquipmentTypeListView.as_view(), name='equipmenttype_list'),
+    path('#', EquipmentTypeListView.as_view(), name='equipmenttype_list'),
     path('add/', EquipmentTypeCreateView.as_view(), name='equipmenttype_add'),
     path('<int:pk>/edit/', EquipmentTypeUpdateView.as_view(), name='equipmenttype_edit'),
     path('<int:pk>/delete/', EquipmentTypeDeleteView.as_view(), name='equipmenttype_delete'),
@@ -96,6 +97,10 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('update-status-form/', views.update_status_form, name='update_status_form'),
     path("equipment/<str:model>/<int:pk>/", EquipmentDetailView.as_view(), name="equipment_detail"),
+
+    # Searching
+    path("search/", equipment_views.equipment_search, name="equipment_search"),
+    path("equipment/<str:model>/<int:pk>/", EquipmentDetailView.as_view(), name="equipment_detail")
 
 
 ]

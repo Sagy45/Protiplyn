@@ -10,12 +10,37 @@ from viewer.models import Station
 from .models import  VehicleStorage, Mask, ADPMulti, ADPSingle, AirTank, PCHO, PA, Complete, \
     REVISION_LABELS, STATUS_CHOICES
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, DetailView
-from django.urls import reverse_lazy
-
-
-
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from .models import EquipmentType
+
+from django.shortcuts import render, redirect
+
+
+def equipment_search(request):
+    # Ziska hodnotu z GET parametru 'serial_number' (z formulare), odstrani bile znaky okolo
+    serial_number = request.GET.get("serial_number", "").strip()
+    if serial_number:
+        #Mapovani nazvu modelu (jako string) na tridy modelu
+        model_map = {
+            "Mask": Mask,
+            "ADPMulti": ADPMulti,
+            "ADPSingle": ADPSingle,
+            "AirTank": AirTank,
+            "PCHO": PCHO,
+            "PA": PA,
+        }
+        # Projde vsechny modely a zkusi najit objekt podle e_number
+        for model_name, model_class in model_map.items():
+            try:
+                # Hleda zaznam v danem modelu, ignoruje velikost pismen (iexact)
+                obj = model_class.objects.get(serial_number__iexact=serial_number)
+                return redirect(reverse("equipment_detail", args=[model_name, obj.pk]))
+            except model_class.DoesNotExist:
+                # Pokud dany model zaznam nema, pokracuje dal
+                continue
+    # Pokud se nic nenaslo, zobrazi stranku s hlaskou, ze se nic nenaslo
+    return render(request, "equipment/search_not_found.html", {"query": serial_number})
 
 class HomeView(ListView):
     model = EquipmentType
@@ -321,7 +346,7 @@ class StationEquipmentListView(TemplateView):
             ("Masky", Mask, None, None, ["type", "e_number", "serial_number", "rev_2years", "rev_4years", "rev_6years", "extra_1", "extra_2"], "Mask"),
             ("ADP Multi", ADPMulti, None, None, ["type", "e_number", "serial_number", "rev_1years", "rev_6years"], "ADPMulti"),
             ("ADP Single", ADPSingle, None, None, ["type", "e_number", "serial_number", "rev_1years", "rev_9years"], "ADPSingle"),
-            ("Vzduchové bomby", AirTank, None, None, ["type", "e_number", "serial_number", "rev_5years"], "AirTank"),
+            ("Tlakové nádoby", AirTank, None, None, ["type", "e_number", "serial_number", "rev_5years"], "AirTank"),
             ("PCHO", PCHO, None, None, ["type", "e_number", "serial_number", "rev_half_year", "rev_2years"], "PCHO"),
             ("PA", PA, None, None, ["type", "e_number", "serial_number", "rev_3year", "rev_6years", "rev_9years"], "PA"),
         ]:
@@ -387,7 +412,7 @@ class UpcomingRevisionListView(TemplateView):
             ("Masky", filter_items(Mask, ["rev_2years", "rev_4years", "rev_6years", "extra_1", "extra_2"])),
             ("ADP Multi", filter_items(ADPMulti, ["rev_1years", "rev_6years"])),
             ("ADP Single", filter_items(ADPSingle, ["rev_1years", "rev_9years"])),
-            ("Vzduchové bomby", filter_items(AirTank, ["rev_5years"])),
+            ("Tlakové nádoby", filter_items(AirTank, ["rev_5years"])),
             ("PCHO", filter_items(PCHO, ["rev_half_year", "rev_2years"])),
             ("PA", filter_items(PA, ["rev_3year", "rev_6years", "rev_9years"])),
         ]

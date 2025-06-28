@@ -122,7 +122,7 @@ class AirTank(Model):
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
-        verbose_name_plural = "Vzduchove bomby"
+        verbose_name_plural = "Tlakové nádoby"
 
     def __str__(self):
         return f" {self.equipment_type} {self.type} {self.e_number}"

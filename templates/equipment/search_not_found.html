@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Vybavenie nenájdené{% endblock %}
+
+{% block content %}
+  <h2 style="text-align:center; margin: 40px 0;">
+    Výbava so sériovým číslom <strong>{{ query }}</strong> nebola nájdená.
+  </h2>
+  <div style="text-align:center;">
+    <a href="{% url 'station_list' %}" class="button">Späť na zoznam staníc</a>
+  </div>
+{% endblock %}

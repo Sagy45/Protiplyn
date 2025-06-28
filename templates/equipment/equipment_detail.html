@@ -45,6 +45,15 @@
         <td>{{ object.located.name }}</td>
       </tr>
       {% endif %}
+
+      <tr>
+        <th>Umiestnenie</th>
+        <td>
+           {% if object.location %}
+               🚗 {{ object.location.brand }}{% if object.location.spz %} ({{ object.location.spz }}){% endif %}
+           {% endif %}
+        </td>
+      </tr>
     </tbody>
   </table>
 
@@ -52,3 +61,4 @@
     <a href="javascript:history.back()" class="button">Späť</a>
   </div>
 {% endblock %}
+

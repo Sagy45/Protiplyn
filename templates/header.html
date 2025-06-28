@@ -12,10 +12,15 @@
   <div class="header-center">
     <nav class="nav-buttons">
       <a href="{% url 'station_list' %}" class="nav-btn">Filtrovať Stanice</a>
-      <a href="#" class="nav-btn">Filtrovať Výstroj</a>
       <a href="{% url 'upcoming_revisions' %}" class="nav-btn">Nadchádzajúca revízia</a>
       <a href="#" class="nav-btn">Tlačové Formuláre</a>
       <a href="#" class="nav-btn">Archív</a>
+
+      <!-- Vyhledávací formulář stylovaný jako nav-btn -->
+      <form action="{% url 'equipment_search' %}" method="get" class="nav-search-form">
+        <input type="text" name="serial_number" placeholder="Hľadať Sériové číslo" required>
+        <button type="submit">🔍</button>
+      </form>
     </nav>
   </div>
 
@@ -34,6 +39,7 @@
           <span class="username">{{ user.username }}</span>
         </div>
       </div>
+
       <form method="post" action="{% url 'logout' %}" class="logout-form">
         {% csrf_token %}
         <button type="submit" class="logout-btn">Odhlásiť sa</button>
@@ -41,4 +47,3 @@
     {% endif %}
   </div>
 </header>
-

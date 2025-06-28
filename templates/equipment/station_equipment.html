@@ -13,11 +13,11 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
 
-.equipment-table thead {
-  background-color: #f1f1f1;
-  color: #333;
-  font-weight: bold;
-}
+  .equipment-table thead {
+    background-color: #f1f1f1;
+    color: #333;
+    font-weight: bold;
+  }
 
   .equipment-table th,
   .equipment-table td {
@@ -105,13 +105,18 @@
 <div class="tab-container">
   <ul class="tab-list">
     {% for section in equipment_sections %}
-      <li><a href="#" class="{% if forloop.first %}active{% endif %}" data-tab="tab-{{ forloop.counter }}">{{ section.0 }}</a></li>
+      <li>
+        <a href="#" class="{% if forloop.first %}active{% endif %}" data-tab="tab-{{ forloop.counter }}">
+          {{ section.0 }}
+        </a>
+      </li>
     {% endfor %}
   </ul>
 
   {% for section in equipment_sections %}
     <div class="tab-content {% if forloop.first %}active{% endif %}" id="tab-{{ forloop.counter }}">
       <h3>{{ section.0 }}</h3>
+
       {% if section.1 %}
         <table class="equipment-table">
           <thead>
@@ -119,6 +124,7 @@
               {% for raw, pretty in section.2 %}
                 <th>{{ pretty }}</th>
               {% endfor %}
+              <th>Umiestnenie</th>
             </tr>
           </thead>
           <tbody>
@@ -142,13 +148,20 @@
                         <input type="hidden" name="field" value="{{ raw }}">
                         <select name="status" class="status-dropdown {{ item|get_status_class:raw }}">
                           {% for choice, label in STATUS_CHOICES %}
-                            <option value="{{ choice }}" {% if choice == item|get_status:raw %}selected{% endif %}>{{ label }}</option>
+                            <option value="{{ choice }}" {% if choice == item|get_status:raw %}selected{% endif %}>
+                              {{ label }}
+                            </option>
                           {% endfor %}
                         </select>
                       </form>
                     </td>
                   {% endif %}
                 {% endfor %}
+                <td>
+                  {% if item.location %}
+                   🚗 {{ item.location.brand }}{% if item.location.spz %} ({{ item.location.spz }}){% endif %}
+                  {% endif %}
+                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -175,7 +188,6 @@
       });
     });
 
-    // AJAX pro změnu stavu
     const selects = document.querySelectorAll(".status-dropdown");
     selects.forEach(select => {
       select.addEventListener("change", function () {
@@ -192,7 +204,6 @@
           if (!res.ok) alert("Chyba ukladania!");
         });
 
-        // Změna barvy dle nové hodnoty
         this.className = "status-dropdown " + this.value;
       });
     });
