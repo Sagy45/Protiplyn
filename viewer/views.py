@@ -11,6 +11,7 @@ from django.http import  JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 
 # Create your views here.
@@ -261,10 +262,23 @@ def update_status_form(request):
     if request.method == "POST":
         model_name = request.POST.get("model")
         obj_id = request.POST.get("id")
+        field = request.POST.get("field")
         new_status = request.POST.get("status")
-        field = request.POST.get("field")  # ⚡️ must be passed!
+        revise_from_str = request.POST.get("revise_from_date")
 
-        print(f"Received: model={model_name} id={obj_id} field={field} status={new_status}")
+        print(f"MODEL: {model_name}")
+        print(f"ID: {obj_id}")
+        print(f"FIELD: {field}")
+        print(f"NEW STATUS: {new_status}")
+        print(f"REVIZE OD DATA: {revise_from_str}")
+
+        # Nově: načti datum z formuláře (volitelné)
+        revise_from_date = None
+        if revise_from_str:
+            try:
+                revise_from_date = datetime.strptime(revise_from_str, "%Y-%m-%d").date()
+            except ValueError:
+                return JsonResponse({"error": "Neplatný formát data"}, status=400)
 
         model = MODEL_MAP.get(model_name)
         if not model:
@@ -272,20 +286,19 @@ def update_status_form(request):
 
         obj = model.objects.get(pk=obj_id)
 
-        # ✅ 1) Update overall status (optional)
-        obj.status = new_status
-
-        # ✅ 2) Update revision field date if status is OK
         if new_status == "ok" and field in REVISION_INTERVALS:
-            new_date = timezone.now().date() + REVISION_INTERVALS[field]
-            setattr(obj, field, new_date)
-            print(f"Updated {field} to {new_date}")
+            base_date = revise_from_date or getattr(obj, field, None)
+            if base_date:
+                new_date = base_date + REVISION_INTERVALS[field]
+                setattr(obj, field, new_date)
 
+        obj.status = new_status
         obj.save()
 
         return JsonResponse({"success": True})
     else:
         return JsonResponse({"error": "Invalid request"}, status=400)
+
 
 
 
