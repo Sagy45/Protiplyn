@@ -1,4 +1,5 @@
 from django import template
+from equipment.models import STATUS_CHOICES
 
 register = template.Library()
 
@@ -26,3 +27,18 @@ def get_status(item, field):
 def get_status_class(item, field):
     status = get_status(item, field)
     return status
+
+@register.simple_tag
+def allowed_statuses(current_status, allowed_dict):
+    """
+    Vrací dropdown položky: vždy aktuální status + povolené přechody.
+    """
+    pool = [current_status]
+    for ns in allowed_dict.get(current_status, []):
+        if ns not in pool:
+            pool.append(ns)
+    return [
+        (choice, label)
+        for choice, label in STATUS_CHOICES
+        if choice in pool
+    ]
