@@ -1,10 +1,8 @@
-# viewer/tests.py
-from django.test import TestCase, Client, RequestFactory
+from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 
 from viewer.models import Country, Region, District, City, Station
-from viewer.context_processors import station_prefix, STATION_PREFIX_MAP
 from accounts.models import Profile
 
 """
@@ -28,23 +26,25 @@ StationListViewPermissionsTest:
 """
 
 
-class StationPrefixContextProcessorTest(TestCase):
-    def setUp(self):
-        # build the minimal geography tree so we can create a Station
-        self.country  = Country.objects.create(name="Testland")
-        self.region   = Region.objects.create(name="Test Region", country=self.country)
-        self.district = District.objects.create(name="Test District", region=self.region)
-        self.city     = City.objects.create(name="Test City", district=self.district)
-        # create a station with pk=1 to match STATION_PREFIX_MAP
-        self.station = Station.objects.create(name="Alpha", city=self.city)
 
-        # two users: one technician, one admin
+class StationPrefixHeaderTest(TestCase):
+    def setUp(self):
+        # build minimal geography tree
+        self.country = Country.objects.create(name="C")
+        self.region = Region.objects.create(name="R", country=self.country)
+        self.district = District.objects.create(name="D", region=self.region)
+        self.city = City.objects.create(name="City", district=self.district)
+        # create a station with explicit prefix
+        self.station = Station.objects.create(name="One", city=self.city, prefix="XX")
+
+        # Technician user linked to station
         self.tech = User.objects.create_user("tech", password="pw")
         Profile.objects.create(
             user=self.tech,
             station=self.station,
             role=Profile.ROLE_TECHNICIAN
         )
+        # Admin user without station
         self.admin = User.objects.create_user("admin", password="pw", is_staff=True)
         Profile.objects.create(
             user=self.admin,
@@ -52,24 +52,19 @@ class StationPrefixContextProcessorTest(TestCase):
             role=Profile.ROLE_ADMIN
         )
 
-        self.factory = RequestFactory()
+        self.client = Client()
 
-    def test_tech_gets_prefix_from_map(self):
-        # station.pk == 1, so prefix should be STATION_PREFIX_MAP[1]
-        req = self.factory.get("/")
-        req.user = self.tech
+    def test_technician_header_shows_their_prefix(self):
+        self.client.login(username="tech", password="pw")
+        resp = self.client.get(reverse("station_list"))
+        # Header .station-code should display station.prefix
+        self.assertContains(resp, '<div class="station-code">XX</div>')
 
-        ctx = station_prefix(req)
-        expected = STATION_PREFIX_MAP.get(self.station.pk, "")
-        self.assertEqual(ctx["station_prefix"], expected)
-
-    def test_admin_gets_empty_prefix(self):
-        req = self.factory.get("/")
-        req.user = self.admin
-
-        ctx = station_prefix(req)
-        # admin has no station → prefix is blank
-        self.assertEqual(ctx["station_prefix"], "")
+    def test_admin_header_shows_default_prefix(self):
+        self.client.login(username="admin", password="pw")
+        resp = self.client.get(reverse("station_list"))
+        # Admin with no station falls back to default 'ZM'
+        self.assertContains(resp, '<div class="station-code">ZM</div>')
 
 
 class StationListViewPermissionsTest(TestCase):
@@ -108,7 +103,7 @@ class StationListViewPermissionsTest(TestCase):
         # only s1 in context
         stations = list(resp.context["stations"])
         self.assertEqual(stations, [self.s1])
-        # and page title should be "Vaša stanica"
+        # dynamic title for technician
         self.assertContains(resp, "Vaša stanica")
 
     def test_admin_sees_all_stations(self):
@@ -117,6 +112,7 @@ class StationListViewPermissionsTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         stations = set(resp.context["stations"])
         self.assertEqual(stations, {self.s1, self.s2})
-        # page title remains default
+        # default title for admin
         self.assertContains(resp, "Zoznam Staníc")
+
 
