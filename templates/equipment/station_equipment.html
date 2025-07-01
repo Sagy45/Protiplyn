@@ -132,134 +132,166 @@
     </div>
   </div>
 
-  <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // --- Tabs switch ---
-    const tabs     = document.querySelectorAll(".tab-list a"),
-          contents = document.querySelectorAll(".tab-content");
-    tabs.forEach((tab, i) => {
-      tab.addEventListener("click", e => {
-        e.preventDefault();
-        tabs.forEach(t => t.classList.remove("active"));
-        contents.forEach(c => c.classList.remove("active"));
-        tab.classList.add("active");
-        contents[i].classList.add("active");
-      });
+ <script>
+document.addEventListener("DOMContentLoaded", function () {
+  // --- Tabs switch ---
+  const tabs     = document.querySelectorAll(".tab-list a"),
+        contents = document.querySelectorAll(".tab-content");
+  tabs.forEach((tab, i) => {
+    tab.addEventListener("click", e => {
+      e.preventDefault();
+      tabs.forEach(t => t.classList.remove("active"));
+      contents.forEach(c => c.classList.remove("active"));
+      tab.classList.add("active");
+      contents[i].classList.add("active");
     });
+  });
 
-    // --- Variables for modal workflow ---
-    const selects    = document.querySelectorAll(".status-dropdown"),
-          modal      = document.getElementById("dateModal"),
-          revInput   = document.getElementById("revisionDateInput"),
-          confirmBtn = document.getElementById("confirmDateBtn"),
-          cancelBtn  = document.getElementById("cancelDateBtn");
-    let pendingSelect = null,
-        pendingForm   = null,
-        originalValue = null;
+  // --- Variables for modal workflow ---
+  const selects    = document.querySelectorAll(".status-dropdown"),
+        modal      = document.getElementById("dateModal"),
+        revInput   = document.getElementById("revisionDateInput"),
+        confirmBtn = document.getElementById("confirmDateBtn"),
+        cancelBtn  = document.getElementById("cancelDateBtn");
+  let pendingSelect = null,
+      pendingForm   = null,
+      originalValue = null;
 
-    // --- Handle select changes ---
-    selects.forEach(select => {
-      select.setAttribute("data-original-value", select.dataset.originalValue);
-      select.addEventListener("change", function () {
-        const newStatus = this.value,
-              oldStatus = this.getAttribute("data-original-value"),
-              form      = this.closest("form");
+  // --- Handle select changes ---
+  selects.forEach(select => {
+    select.setAttribute("data-original-value", select.dataset.originalValue);
+    select.addEventListener("change", function () {
+      const newStatus = this.value,
+            oldStatus = this.getAttribute("data-original-value"),
+            form      = this.closest("form");
 
-        // Confirm retire action
-        if (newStatus === "vyradit") {
-          if (!confirm("Opravdu chcete tuto položku vyradit?")) {
-            this.value = oldStatus;
-            return;
-          }
+      // Confirm retire action
+      if (newStatus === "vyradit") {
+        if (!confirm("Opravdu chcete tuto položku vyradit?")) {
+          this.value = oldStatus;
+          return;
         }
+      }
 
-        // If switching to OK → show date picker
-        if (newStatus === "ok") {
-          pendingSelect  = this;
-          pendingForm    = form;
-          originalValue  = oldStatus;
-          revInput.value = "";
-          modal.style.display = "flex";
-        } else {
-          // Immediate save for other statuses
-          submitForm(form);
-          this.setAttribute("data-original-value", newStatus);
-        }
-      });
+      // If switching to OK → show date picker
+      if (newStatus === "ok") {
+        pendingSelect  = this;
+        pendingForm    = form;
+        originalValue  = oldStatus;
+        revInput.value = "";
+        modal.style.display = "flex";
+      } else {
+        // Immediate save for other statuses
+        submitForm(form, this);
+        this.setAttribute("data-original-value", newStatus);
+      }
     });
+  });
 
-    // --- Confirm revision date ---
-    confirmBtn.addEventListener("click", function () {
-      if (!revInput.value) {
-        alert("Prosím vyberte datum.");
+  // --- Confirm revision date ---
+  confirmBtn.addEventListener("click", function () {
+    if (!revInput.value) {
+      alert("Prosím vyberte datum.");
+      return;
+    }
+    // capture before we clear pendingSelect
+    const sel  = pendingSelect,
+          form = pendingForm,
+          fd   = new FormData(form);
+    fd.append("revise_from_date", revInput.value);
+
+    fetch(form.action, {
+      method: "POST",
+      body: fd,
+      headers: { "X-CSRFToken": fd.get("csrfmiddlewaretoken") }
+    })
+    .then(r => {
+      if (!r.ok) throw new Error("Chyba při odeslání datumu");
+      return r.json();
+    })
+    .then(data => {
+      if (data.result === 'archived') {
+        form.closest("tr").remove();
         return;
       }
-      // capture before we clear pendingSelect
-      const sel  = pendingSelect,
-            form = pendingForm,
-            fd   = new FormData(form);
-      fd.append("revise_from_date", revInput.value);
-
-      fetch(form.action, {
-        method: "POST",
-        body: fd,
-        headers: { "X-CSRFToken": fd.get("csrfmiddlewaretoken") }
-      })
-      .then(r => {
-        if (!r.ok) throw new Error("Chyba při odeslání datumu");
-        return r.json();
-      })
-      .then(data => {
-        if (data.result === 'archived') {
-          form.closest("tr").remove();
-          return;
-        }
-        // immediately recolor select
-        sel.className = "status-dropdown " + sel.value;
-      })
-      .catch(err => {
-        alert(err.message);
-      })
-      .finally(() => {
-        modal.style.display = "none";
-        sel.setAttribute("data-original-value", sel.value);
-        pendingSelect = pendingForm = null;
-      });
-    });
-
-    // --- Cancel revision date ---
-    cancelBtn.addEventListener("click", function () {
-      modal.style.display = "none";
-      if (pendingSelect) {
-        pendingSelect.value = originalValue;
+      // Update dropdown with new options
+      if (data.new_options && sel) {
+        updateDropdownOptions(sel, data.new_options);
       }
+      sel.className = "status-dropdown " + sel.value;
+    })
+    .catch(err => {
+      alert(err.message);
+    })
+    .finally(() => {
+      modal.style.display = "none";
+      if (sel) sel.setAttribute("data-original-value", sel.value);
       pendingSelect = pendingForm = null;
     });
-
-    // --- Common AJAX save & recolor ---
-    function submitForm(form) {
-      const fd = new FormData(form);
-      fetch(form.action, {
-        method: "POST",
-        body: fd,
-        headers: { "X-CSRFToken": fd.get("csrfmiddlewaretoken") }
-      })
-      .then(r => {
-        if (!r.ok) throw new Error("Chyba při změně statusu");
-        return r.json();
-      })
-      .then(data => {
-        if (data.result === 'archived') {
-          form.closest("tr").remove();
-          return;
-        }
-        const sel = form.querySelector("select.status-dropdown");
-        sel.className = "status-dropdown " + sel.value;
-      })
-      .catch(err => {
-        alert(err.message);
-      });
-    }
   });
-  </script>
+
+  // --- Cancel revision date ---
+  cancelBtn.addEventListener("click", function () {
+    modal.style.display = "none";
+    if (pendingSelect) {
+      pendingSelect.value = originalValue;
+    }
+    pendingSelect = pendingForm = null;
+  });
+
+  // --- Common AJAX save & recolor ---
+  function submitForm(form, selectEl) {
+    const fd = new FormData(form);
+    fetch(form.action, {
+      method: "POST",
+      body: fd,
+      headers: {"X-CSRFToken": fd.get("csrfmiddlewaretoken")}
+    })
+    .then(r => {
+      if (!r.ok) throw new Error("Chyba při změně statusu");
+      return r.json();
+    })
+    .then(data => {
+      if (data.result === 'archived') {
+        form.closest("tr").remove();
+        return;
+      }
+      const sel = selectEl || form.querySelector("select.status-dropdown");
+      if ((sel && sel.value === "under_revision") || (fd && fd.get("status") === "under_revision")) {
+        window.location.reload();
+        return;
+      }
+      if (data.new_options && sel) {
+        updateDropdownOptions(sel, data.new_options);
+      }
+      sel.className = "status-dropdown " + sel.value;
+    })
+    .catch(err => {
+      alert(err.message);
+    });
+  }
+
+  // --- Helper to update dropdown options after change ---
+  function updateDropdownOptions(sel, options) {
+    // Remove all old options
+    sel.innerHTML = "";
+    // Add placeholder
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Vyberte stav...";
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    sel.appendChild(placeholder);
+    // Add each new option
+    options.forEach(([value, label]) => {
+      const opt = document.createElement("option");
+      opt.value = value;
+      opt.textContent = label;
+      sel.appendChild(opt);
+    });
+    sel.selectedIndex = 0; // Always show placeholder after change
+  }
+});
+</script>
+
 {% endblock %}
