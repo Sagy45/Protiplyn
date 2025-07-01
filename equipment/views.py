@@ -1,3 +1,5 @@
+from random import choices
+
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, JsonResponse
 from django.shortcuts import  get_object_or_404, render, redirect
@@ -29,10 +31,23 @@ from .models import (
 
 ALLOWED = {
     'ok':             ['vyradit'],
-    'bsr':            ['vyradit'],
-    'critical':       ['under_revision'],
+    'bsr':            ['vyradit', 'under_revision'],
+    'critical':       ['vyradit', 'under_revision'],
     'under_revision': ['ok', 'vyradit'],
 }
+
+def get_allowed_trransitions(current_status):
+    label_map = {
+        'ok': 'OK',
+        'bsr': 'BSR',
+        'critical': 'Kriticky',
+        'under_revision': 'V rieseni',
+        'vyradit': 'Vyradit',
+    }
+    choices = []
+    for s in ALLOWED.get(current_status, []):
+        choices.append((s, label_map.get(s, s.capitalize())))
+    return choices
 
 
 def equipment_search(request):
@@ -360,10 +375,12 @@ class UpdateStatusView(View):
 
         # 1) ARCHIVACE (Vyradit)
         if new_status == 'vyradit':
-            eq.is_archived   = True
-            eq.status        = 'vyradit'
-            eq.status_field  = None
-            eq.save(update_fields=['is_archived','status','status_field'])
+            eq.is_archived = True
+            eq.archived_at = timezone.now()
+            eq.archived_by = request.user
+            eq.status = 'vyradit'
+            eq.status_field = None
+            eq.save(update_fields=['is_archived', 'archived_at', 'archived_by', 'status', 'status_field'])
             return JsonResponse({'result': 'archived'})
 
         # 2) V řešení (under_revision)
@@ -542,7 +559,9 @@ def update_status_form(request):
 
         obj.save()
 
-        return JsonResponse({"success": True})
+        new_options = get_allowed_trransitions(new_status)
+
+        return JsonResponse({"success": True, "new_options": new_options})
     else:
         return JsonResponse({"error": "Invalid request"}, status=400)
 
@@ -627,7 +646,9 @@ class RetireEquipment(View):
                 continue
             # našli jsme ten správný model
             eq.is_archived = True
-            eq.save(update_fields=['is_archived'])
+            eq.archived_at = timezone.now()
+            eq.archived_by = request.user
+            eq.save(update_fields=['is_archived', 'archived_at', 'archived_by'])
             return redirect('station_equipment', pk=eq.located.pk)
         # nic jsme nenašli
         raise Http404("Equipment not found")

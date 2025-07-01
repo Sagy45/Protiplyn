@@ -5,11 +5,22 @@
 
 {% block extra_head %}
   <style>
-    /* Zalamování ve sloupci Umístění */
-    .equipment-table td.location-cell {
-      max-width: 150px;      /* upravte podle potřeby */
-      white-space: normal;   /* dovolí zalamovat */
-      word-wrap: break-word; /* láme slova, není-li místo */
+    .equipment-table th, .equipment-table td {
+      padding: 4px 6px;
+      font-size: 13px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    /* Wrap long serials if needed */
+    .equipment-table td {
+      max-width: 110px;
+      overflow-x: auto;
+    }
+    /* Highlight archive info */
+    .archive-meta {
+      font-size: 12px;
+      color: #666;
+      white-space: normal;
     }
   </style>
 {% endblock %}
@@ -47,25 +58,43 @@
           <table class="equipment-table">
             <thead>
               <tr>
+                <th>Typ</th>
+                <th>E číslo</th>
+                <th>Sériové číslo</th>
                 {% for raw, pretty in section.2 %}
-                  <th>{{ pretty }}</th>
+                  {% if raw|slice:":4" == "rev_" %}
+                    <th>{{ pretty }}</th>
+                  {% endif %}
                 {% endfor %}
-                <th>Umiestnenie</th>
+                <th>Archivováno</th>
+                <th>Archivoval</th>
                 <th>Akce</th>
               </tr>
             </thead>
             <tbody>
               {% for item in section.1 %}
                 <tr>
+                  <td>{{ item.type }}</td>
+                  <td>{{ item.e_number }}</td>
+                  <td>{{ item.serial_number }}</td>
                   {% for raw, pretty in section.2 %}
-                    <td>{{ item|attr:raw }}</td>
-                  {% endfor %}
-                  <!-- zde třída pro zalamování textu -->
-                  <td class="location-cell">
-                    {% if item.location %}
-                      {{ item.location.brand }}
-                      {% if item.location.spz %}<br>({{ item.location.spz }}){% endif %}
+                    {% if raw|slice:":4" == "rev_" %}
+                      <td>
+                        {% with val=item|attr:raw %}
+                          {% if val %}{{ val|date:"d.m.Y" }}{% endif %}
+                        {% endwith %}
+                      </td>
                     {% endif %}
+                  {% endfor %}
+                  <td class="archive-meta">
+                    {% if item.archived_at %}
+                      {{ item.archived_at|date:"d.m.Y H:i" }}
+                    {% else %}–{% endif %}
+                  </td>
+                  <td class="archive-meta">
+                    {% if item.archived_by %}
+                      {{ item.archived_by.get_full_name|default:item.archived_by.username }}
+                    {% else %}–{% endif %}
                   </td>
                   <td>
                     <form method="post"
@@ -85,7 +114,6 @@
             <em>Archiv je prázdný.</em>
           </p>
         {% endif %}
-
       </div>
     {% endfor %}
   </div>
