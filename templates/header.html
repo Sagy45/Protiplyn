@@ -22,8 +22,11 @@
 
       <!-- Vyhledávací formulář stylovaný jako nav-btn -->
       <form action="{% url 'equipment_search' %}" method="get" class="nav-search-form">
-        <input type="text" name="serial_number" placeholder="Hľadať Sériové číslo" required>
-        <button type="submit">🔍</button>
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <label>
+              <input type="text" name="serial_number" placeholder="Hľadať Sériové číslo" required>
+          </label>
+          <button type="submit">🔍</button>
       </form>
     </nav>
   </div>

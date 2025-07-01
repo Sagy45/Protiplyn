@@ -38,6 +38,8 @@ ALLOWED = {
 def equipment_search(request):
     # Ziska hodnotu z GET parametru 'serial_number' (z formulare), odstrani bile znaky okolo
     serial_number = request.GET.get("serial_number", "").strip()
+    next_url = request.GET.get("next") or request.META.get("HTTP_REFERER") or reverse('station_list')
+
     if serial_number:
         #Mapovani nazvu modelu (jako string) na tridy modelu
         model_map = {
@@ -58,7 +60,11 @@ def equipment_search(request):
                 # Pokud dany model zaznam nema, pokracuje dal
                 continue
     # Pokud se nic nenaslo, zobrazi stranku s hlaskou, ze se nic nenaslo
-    return render(request, "equipment/search_not_found.html", {"query": serial_number})
+    return render(request, "equipment/search_not_found.html", {
+        "query": serial_number,
+        "next_url": next_url,
+    })
+
 
 class HomeView(ListView):
     model = EquipmentType
