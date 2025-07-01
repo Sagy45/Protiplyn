@@ -1,20 +1,38 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, JsonResponse
-from django.shortcuts import  get_object_or_404
+from django.shortcuts import  get_object_or_404, render, redirect
 from django.utils import timezone
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_protect
 
 from viewer.models import Station
-from .models import  VehicleStorage, Mask, ADPMulti, ADPSingle, AirTank, PCHO, PA, Complete, \
-    REVISION_LABELS, STATUS_CHOICES
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, DetailView
 from django.urls import reverse_lazy, reverse
-from django.shortcuts import redirect
 from .models import EquipmentType
+from django.views import View
+from django.apps import apps
+from .models import (
+    Mask,
+    VehicleStorage,
+    ADPMulti,
+    ADPSingle,
+    AirTank,
+    PCHO,
+    PA,
+    Complete,
+    REVISION_FIELDS,
+    REVISION_LABELS,
+    STATUS_CHOICES,
+    Equipment,
+)
 
-from django.shortcuts import render, redirect
+ALLOWED = {
+    'ok':             ['vyradit'],
+    'bsr':            ['vyradit'],
+    'critical':       ['under_revision'],
+    'under_revision': ['ok', 'vyradit'],
+}
 
 
 def equipment_search(request):
@@ -328,6 +346,58 @@ REVISION_INTERVALS = {
     'rev_9years': timedelta(days=3285),
 }
 
+class UpdateStatusView(View):
+    def post(self, request, *args, **kwargs):
+        model_name = request.POST.get('model')
+        obj_id     = request.POST.get('id')
+        field      = request.POST.get('field')    # např. "rev_6years"
+        new_status = request.POST.get('status')   # ok | bsr | critical | under_revision | vyradit
+
+        # načteme správný model podle názvu
+        from django.apps import apps
+        Model = apps.get_model('equipment', model_name)
+        eq = get_object_or_404(Model, pk=obj_id)
+
+        # 1) ARCHIVACE (Vyradit)
+        if new_status == 'vyradit':
+            eq.is_archived   = True
+            eq.status        = 'vyradit'
+            eq.status_field  = None
+            eq.save(update_fields=['is_archived','status','status_field'])
+            return JsonResponse({'result': 'archived'})
+
+        # 2) V řešení (under_revision)
+        if new_status == 'under_revision':
+            eq.status       = 'under_revision'
+            eq.status_field = field
+            eq.save(update_fields=['status','status_field'])
+            return JsonResponse({'result': 'ok'})
+
+        # 3) Návrat z řešení / OK / BSR / Critical
+        # Pokud už jsme byli v řešení, smažeme status_field
+        if eq.status == 'under_revision':
+            eq.status_field = None
+
+        # Nastavíme nový globální status i v poli status_field (vyčistíme ho)
+        eq.status = new_status
+
+        # Pokud potřebujeme posunout datum (OK/BSR) podle revise_from_date:
+        if new_status in ('ok', 'bsr'):
+            base_date_str = request.POST.get('revise_from_date')
+            if base_date_str:
+                base = datetime.strptime(base_date_str, '%Y-%m-%d').date()
+            else:
+                base = date.today()
+            interval = REVISION_INTERVALS.get(field)
+            if interval:
+                setattr(eq, field, base + interval)
+                eq.save(update_fields=[field, 'status', 'status_field'])
+                return JsonResponse({'result': 'ok'})
+
+        # Pro všechny ostatní stavy (critical apod.) jen uložíme status
+        eq.save(update_fields=['status','status_field'])
+        return JsonResponse({'result': 'ok'})
+
 class StationEquipmentListView(TemplateView):
     template_name = 'equipment/station_equipment.html'
 
@@ -350,21 +420,31 @@ class StationEquipmentListView(TemplateView):
             ("PCHO", PCHO, None, None, ["type", "e_number", "serial_number", "rev_half_year", "rev_2years"], "PCHO"),
             ("PA", PA, None, None, ["type", "e_number", "serial_number", "rev_3year", "rev_6years", "rev_9years"], "PA"),
         ]:
-            queryset = model.objects.filter(located=station)
+            queryset = model.objects.filter(located=station, is_archived=False)  # taháme pouze aktivní vybavení (is_archived=False)
+            # Příklad uvnitř get_context_data ve vašem view
             for eq in queryset:
                 eq.status_map = {}
-                for f in REVISION_FIELDS:
+                for f in fields:
+                    # 1) Override: pokud je právě toto pole v řešení, vykreslíme under_revision
+                    if eq.status == 'under_revision' and eq.status_field == f:
+                        eq.status_map[f] = 'under_revision'
+                        continue
+
+                    # 2) Jinak fallback na datovou logiku
                     rev_date = getattr(eq, f, None)
-                    if rev_date:
-                        if rev_date <= one_month:
-                            eq.status_map[f] = 'critical'
-                        elif rev_date <= three_months:
-                            eq.status_map[f] = 'bsr'
-                        else:
-                            eq.status_map[f] = 'ok'
+                    if not isinstance(rev_date, date):
+                        continue
+                    if rev_date <= one_month:
+                        eq.status_map[f] = 'critical'
+                    elif rev_date <= three_months:
+                        eq.status_map[f] = 'bsr'
+                    else:
+                        eq.status_map[f] = 'ok'
+
             pretty_fields = [(f, REVISION_LABELS.get(f, f.capitalize())) for f in fields]
             sections.append((label, queryset, pretty_fields, model_name))
         context['equipment_sections'] = sections
+        context['allowed_transitions'] = ALLOWED
         return context
 
 
@@ -465,3 +545,101 @@ def update_status_form(request):
         return JsonResponse({"success": True})
     else:
         return JsonResponse({"error": "Invalid request"}, status=400)
+
+class ArchiveEquipmentListView(TemplateView):
+    template_name = 'equipment/archive_equipment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        station = get_object_or_404(Station, pk=self.kwargs['pk'])
+
+        today         = date.today()
+        one_month     = today + timedelta(days=30)
+        three_months  = today + timedelta(days=90)
+
+        sections = []
+        for label, model, _, _, fields, model_name in [
+            # **TADY JE TEN KLÍČOVÝ SEZNAM** – MUSÍ BÝT PLNÝ ŘÁDKŮ
+            ("Masky",         Mask,     None, None,
+             ["type","e_number","serial_number","rev_2years","rev_4years","rev_6years","extra_1","extra_2"],
+             "Mask"),
+
+            ("ADP Multi",     ADPMulti, None, None,
+             ["type","e_number","serial_number","rev_1years","rev_6years"],
+             "ADPMulti"),
+
+            ("ADP Single",    ADPSingle,None, None,
+             ["type","e_number","serial_number","rev_1years","rev_9years"],
+             "ADPSingle"),
+
+            ("Tlakové nádoby",AirTank,  None, None,
+             ["type","e_number","serial_number","rev_5years"],
+             "AirTank"),
+
+            ("PCHO",          PCHO,     None, None,
+             ["type","e_number","serial_number","rev_half_year","rev_2years"],
+             "PCHO"),
+
+            ("PA",            PA,       None, None,
+             ["type","e_number","serial_number","rev_3year","rev_6years","rev_9years"],
+             "PA"),
+        ]:
+            # tahám jen ty, které jsou archivované
+            qs = model.objects.filter(located=station, is_archived=True)
+
+            # připravím status_map jen pro skutečná data
+            for eq in qs:
+                eq.status_map = {}
+                for f in fields:
+                    rev_date = getattr(eq, f, None)
+                    if not isinstance(rev_date, date):
+                        continue
+                    if rev_date <= one_month:
+                        eq.status_map[f] = 'critical'
+                    elif rev_date <= three_months:
+                        eq.status_map[f] = 'bsr'
+                    else:
+                        eq.status_map[f] = 'ok'
+
+            # hezké popisky
+            pretty_fields = []
+            for f in fields:
+                if f in REVISION_LABELS:
+                    pretty_fields.append((f, REVISION_LABELS[f]))
+                else:
+                    pretty_fields.append((f, f.replace('_',' ').capitalize()))
+
+            sections.append((label, qs, pretty_fields, model_name))
+
+        context['equipment_sections']  = sections
+        context['station']             = station
+        context['allowed_transitions'] = ALLOWED
+        return context
+
+
+class RetireEquipment(View):
+    def post(self, request, pk):
+        # pro každý model zkusíme najít objekt s tímto pk
+        for model in MODEL_MAP.values():
+            try:
+                eq = model.objects.get(pk=pk)
+            except model.DoesNotExist:
+                continue
+            # našli jsme ten správný model
+            eq.is_archived = True
+            eq.save(update_fields=['is_archived'])
+            return redirect('station_equipment', pk=eq.located.pk)
+        # nic jsme nenašli
+        raise Http404("Equipment not found")
+
+class RestoreEquipment(View):
+    def post(self, request, pk):
+        for model in MODEL_MAP.values():
+            try:
+                eq = model.objects.get(pk=pk)
+            except model.DoesNotExist:
+                continue
+            eq.is_archived = False
+            eq.save(update_fields=['is_archived'])
+            return redirect('station_equipment_archive', pk=eq.located.pk)
+        raise Http404("Equipment not found")

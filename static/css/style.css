@@ -135,7 +135,10 @@ td button {
 
 .equipment-table th:last-child,
 .equipment-table td:last-child {
-  min-width: 220px;
+  max-width: 160px;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* TABS */

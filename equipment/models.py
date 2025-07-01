@@ -1,4 +1,5 @@
 from django.db.models import Model, CharField, ForeignKey, SET_NULL, DateField, IntegerField
+from django.db import models
 from django.core.exceptions import ValidationError
 
 class EquipmentType(Model):
@@ -29,6 +30,7 @@ STATUS_CHOICES = [
     ('bsr', 'BSR'),
     ('under_revision', 'V rieseni'),
     ('critical', 'Kriticky'),
+    ('vyradit', 'Vyradiť'),
 ]
 
 REVISION_LABELS = {
@@ -44,6 +46,8 @@ REVISION_LABELS = {
     "extra_2": "Extra 2",
 }
 
+REVISION_FIELDS = list(REVISION_LABELS.keys())
+
 
 class Mask(Model):
     equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="masks_over")
@@ -55,9 +59,15 @@ class Mask(Model):
     rev_6years = DateField(null=False,blank=False)
     extra_1 = DateField(null=True,blank=True)
     extra_2 = DateField(null=True,blank=True)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="MO_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="MO_locations")
+    is_archived = models.BooleanField(default=False)
+    status_field = models.CharField(
+        max_length=30,
+        blank=True, null=True,
+        help_text="Která revize je právě v řešení"
+    )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -74,9 +84,15 @@ class ADPMulti(Model):
     serial_number = CharField(max_length=50,null=False,blank=False)
     rev_1years = DateField(null=False,blank=False)
     rev_6years = DateField(null=False,blank=False)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="ADPm_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="ADMm_locations")
+    is_archived = models.BooleanField(default=False)
+    status_field = models.CharField(
+        max_length=30,
+        blank=True, null=True,
+        help_text="Která revize je právě v řešení"
+    )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -93,9 +109,15 @@ class ADPSingle(Model):
     serial_number = CharField(max_length=50,null=False,blank=False)
     rev_1years = DateField(null=False,blank=False)
     rev_9years = DateField(null=False,blank=False)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="ADPs_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="ADPs_locations")
+    is_archived = models.BooleanField(default=False)
+    status_field = models.CharField(
+        max_length=30,
+        blank=True, null=True,
+        help_text="Která revize je právě v řešení"
+    )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -116,9 +138,15 @@ class AirTank(Model):
     rev_5years = DateField(null=False,blank=False)
     made = IntegerField(null=False,blank=False)
     service_life = IntegerField(null=False,blank=False) #v rokoch
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="AirTank_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="AirTank_locations")
+    is_archived = models.BooleanField(default=False)
+    status_field = models.CharField(
+        max_length=30,
+        blank=True, null=True,
+        help_text="Která revize je právě v řešení"
+    )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -137,9 +165,15 @@ class PCHO(Model):
     rev_2years = DateField(null=False,blank=False)
     made = IntegerField(null=False,blank=False)
     service_life = IntegerField(null=False,blank=False) #v rokoch
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="PCHO_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="PCHO_locations")
+    is_archived = models.BooleanField(default=False)
+    status_field = models.CharField(
+        max_length=30,
+        blank=True, null=True,
+        help_text="Která revize je právě v řešení"
+    )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -160,9 +194,15 @@ class PA(Model):
     rev_6years = DateField(null=False,blank=False)
     rev_9years = DateField(null=False,blank=False)
     made = IntegerField(null=False,blank=False)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
     located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="PA_located_stations")
     location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="PA_locations")
+    is_archived = models.BooleanField(default=False)
+    status_field = models.CharField(
+        max_length=30,
+        blank=True, null=True,
+        help_text="Která revize je právě v řešení"
+    )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
@@ -221,3 +261,20 @@ class Complete(Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
+class ActiveManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_archived=False)
+
+class ArchivedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_archived=True)
+
+
+class Equipment(models.Model):
+    # … ostatní pole …
+    is_archived = models.BooleanField(default=False)
+
+    objects = models.Manager()      # standardní manager
+    active = ActiveManager()        # manager pro aktivní záznamy
+    archived = ArchivedManager()    # manager pro archivované

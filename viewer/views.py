@@ -5,8 +5,6 @@ from equipment.views import MODEL_MAP, REVISION_INTERVALS
 from .models import Country, Station, City
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
-from datetime import timedelta
-from django.utils import timezone
 from django.http import  JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
@@ -179,125 +177,6 @@ station_prefix_map = {
     21: "NR",
     # add more if needed
 }
-
-
-class StationEquipmentListView(TemplateView):
-    template_name = 'viewer/station_equipment.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        station = get_object_or_404(Station, pk=self.kwargs['pk'])
-
-        # ✅ NEW: use the prefix dynamically
-        prefix = station.prefix or ""
-
-        context['station'] = station
-        context['STATUS_CHOICES'] = STATUS_CHOICES
-
-        context['equipment_sections'] = [
-            ("Masky",
-             Mask.objects.filter(e_number__startswith=prefix),
-             None, None,
-             ["type", "e_number", "serial_number",
-              "rev_2years", "rev_4years", "rev_6years",
-              "extra_1", "extra_2", "status"],
-             "Mask"),
-
-            ("ADP Multi",
-             ADPMulti.objects.filter(e_number__startswith=prefix),
-             None, None,
-             ["type", "e_number", "serial_number",
-              "rev_1years", "rev_6years",
-              "status"],
-             "ADPMulti"),
-
-            ("ADP Single",
-             ADPSingle.objects.filter(e_number__startswith=prefix),
-             None, None,
-             ["type", "e_number", "serial_number",
-              "rev_1years", "rev_9years",
-              "status"],
-             "ADPSingle"),
-
-            ("Vzduchové bomby",
-             AirTank.objects.filter(e_number__startswith=prefix),
-             None, None,
-             ["type", "e_number", "serial_number",
-              "rev_5years",
-              "status"],
-             "AirTank"),
-
-            ("PCHO",
-             PCHO.objects.filter(e_number__startswith=prefix),
-             None, None,
-             ["type", "e_number", "serial_number",
-              "rev_half_year", "rev_2years",
-              "status"],
-             "PCHO"),
-
-            ("PA",
-             PA.objects.filter(e_number__startswith=prefix),
-             None, None,
-             ["type", "e_number", "serial_number",
-              "rev_3year", "rev_6years", "rev_9years",
-              "status"],
-             "PA"),
-        ]
-
-        # ✅ Debug: check what comes back
-        for section in context['equipment_sections']:
-            print("Section:", section[0])
-            for item in section[1]:
-                print("  ", item.e_number, item.type)
-                for field in section[4]:
-                    print(f"    {field} = ", getattr(item, field, "MISSING"))
-
-        return context
-
-
-
-@csrf_protect
-@login_required
-def update_status_form(request):
-    if request.method == "POST":
-        model_name = request.POST.get("model")
-        obj_id = request.POST.get("id")
-        field = request.POST.get("field")
-        new_status = request.POST.get("status")
-        revise_from_str = request.POST.get("revise_from_date")
-
-        print(f"MODEL: {model_name}")
-        print(f"ID: {obj_id}")
-        print(f"FIELD: {field}")
-        print(f"NEW STATUS: {new_status}")
-        print(f"REVIZE OD DATA: {revise_from_str}")
-
-        # Nově: načti datum z formuláře (volitelné)
-        revise_from_date = None
-        if revise_from_str:
-            try:
-                revise_from_date = datetime.strptime(revise_from_str, "%Y-%m-%d").date()
-            except ValueError:
-                return JsonResponse({"error": "Neplatný formát data"}, status=400)
-
-        model = MODEL_MAP.get(model_name)
-        if not model:
-            return JsonResponse({"error": "Invalid model"}, status=400)
-
-        obj = model.objects.get(pk=obj_id)
-
-        if new_status == "ok" and field in REVISION_INTERVALS:
-            base_date = revise_from_date or getattr(obj, field, None)
-            if base_date:
-                new_date = base_date + REVISION_INTERVALS[field]
-                setattr(obj, field, new_date)
-
-        obj.status = new_status
-        obj.save()
-
-        return JsonResponse({"success": True})
-    else:
-        return JsonResponse({"error": "Invalid request"}, status=400)
 
 
 

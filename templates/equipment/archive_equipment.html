@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}Archiv vybavení: {{ station.name }}{% endblock %}
+
+{% block extra_head %}
+  <style>
+    /* Zalamování ve sloupci Umístění */
+    .equipment-table td.location-cell {
+      max-width: 150px;      /* upravte podle potřeby */
+      white-space: normal;   /* dovolí zalamovat */
+      word-wrap: break-word; /* láme slova, není-li místo */
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h2 style="text-align:center; margin-bottom:20px;">
+    Archiv vybavení: {{ station.name }}
+  </h2>
+
+  <p style="text-align:right; margin-bottom:10px;">
+    <a href="{% url 'station_equipment' station.pk %}" class="btn btn-secondary">
+      ← Zpět na aktivní
+    </a>
+  </p>
+
+  <div class="tab-container">
+    <ul class="tab-list">
+      {% for section in equipment_sections %}
+        <li>
+          <a href="#"
+             class="{% if forloop.first %}active{% endif %}"
+             data-tab="tab-{{ forloop.counter }}">
+            {{ section.0 }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% for section in equipment_sections %}
+      <div class="tab-content {% if forloop.first %}active{% endif %}"
+           id="tab-{{ forloop.counter }}">
+        <h3>{{ section.0 }}</h3>
+
+        {% if section.1 %}
+          <table class="equipment-table">
+            <thead>
+              <tr>
+                {% for raw, pretty in section.2 %}
+                  <th>{{ pretty }}</th>
+                {% endfor %}
+                <th>Umiestnenie</th>
+                <th>Akce</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in section.1 %}
+                <tr>
+                  {% for raw, pretty in section.2 %}
+                    <td>{{ item|attr:raw }}</td>
+                  {% endfor %}
+                  <!-- zde třída pro zalamování textu -->
+                  <td class="location-cell">
+                    {% if item.location %}
+                      {{ item.location.brand }}
+                      {% if item.location.spz %}<br>({{ item.location.spz }}){% endif %}
+                    {% endif %}
+                  </td>
+                  <td>
+                    <form method="post"
+                          action="{% url 'equipment_restore' item.pk %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-success">
+                        Obnoviť
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p style="padding:20px; text-align:center; color:#666;">
+            <em>Archiv je prázdný.</em>
+          </p>
+        {% endif %}
+
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tabs     = document.querySelectorAll(".tab-list a");
+    const contents = document.querySelectorAll(".tab-content");
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", function (e) {
+        e.preventDefault();
+        tabs.forEach(t => t.classList.remove("active"));
+        contents.forEach(c => c.classList.remove("active"));
+        this.classList.add("active");
+        contents[i].classList.add("active");
+      });
+    });
+  });
+  </script>
+{% endblock %}

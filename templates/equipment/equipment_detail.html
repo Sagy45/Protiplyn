@@ -50,7 +50,11 @@
         <th>Umiestnenie</th>
         <td>
            {% if object.location %}
-               🚗 {{ object.location.brand }}{% if object.location.spz %} ({{ object.location.spz }}){% endif %}
+               {% if object.location.brand == "Sklad" %}
+                   🏢 {{ object.location.brand }}
+               {% elif object.location.brand %}
+                   🚒 {{ object.location.brand }}{% if object.location.spz %} ({{ object.location.spz }}){% endif %}
+               {% endif %}
            {% endif %}
         </td>
       </tr>
