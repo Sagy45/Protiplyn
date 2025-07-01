@@ -4,7 +4,7 @@
     <img src="{% static 'images/logo_head.png' %}" alt="Logo" class="header-logo">
 
     <div class="station-info-box">
-      <div class="station-code">{{ station.code|default:'ZM' }}</div>
+      <div class="station-code">{{ station_prefix|default:'' }}</div>
       <div class="datetime" id="datetime"></div>
     </div>
   </div>

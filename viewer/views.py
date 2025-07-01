@@ -170,15 +170,5 @@ class CityCreateView(CreateView):
     template_name = 'city/city_form.html'
     success_url = reverse_lazy('station_add')
 
-station_prefix_map = {
-    1:"BB",
-    19: "ZM",
-    20: "BA",
-    21: "NR",
-    # add more if needed
-}
-
-
-
 
 
