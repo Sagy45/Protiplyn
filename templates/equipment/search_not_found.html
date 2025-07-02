@@ -7,6 +7,6 @@
     Výbava so sériovým číslom <strong>{{ query }}</strong> nebola nájdená.
   </h2>
   <div style="text-align:center;">
-    <a href="{% url 'station_list' %}" class="button">Späť na zoznam staníc</a>
+    <a href="{{ next_url }}" class="button">Späť</a>
   </div>
 {% endblock %}

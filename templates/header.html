@@ -4,7 +4,7 @@
     <img src="{% static 'images/logo_head.png' %}" alt="Logo" class="header-logo">
 
     <div class="station-info-box">
-      <div class="station-code">ZM</div>
+      <div class="station-code">{{ request.user.profile.station.prefix|default:"ZM"|default_if_none:"" }}</div>
       <div class="datetime" id="datetime"></div>
     </div>
   </div>
@@ -14,12 +14,19 @@
       <a href="{% url 'station_list' %}" class="nav-btn">Filtrovať Stanice</a>
       <a href="{% url 'upcoming_revisions' %}" class="nav-btn">Nadchádzajúca revízia</a>
       <a href="#" class="nav-btn">Tlačové Formuláre</a>
-      <a href="#" class="nav-btn">Archív</a>
+      {% if station %}
+        <a href="{% url 'station_equipment_archive' station.pk %}" class="nav-btn">Archív</a>
+      {% else %}
+        <a href="#" class="nav-btn disabled" title="Vyberte staniciu pre zobrazenie archívu">Archív</a>
+      {% endif %}
 
       <!-- Vyhledávací formulář stylovaný jako nav-btn -->
       <form action="{% url 'equipment_search' %}" method="get" class="nav-search-form">
-        <input type="text" name="serial_number" placeholder="Hľadať Sériové číslo" required>
-        <button type="submit">🔍</button>
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <label>
+              <input type="text" name="serial_number" placeholder="Hľadať Sériové číslo" required>
+          </label>
+          <button type="submit">🔍</button>
       </form>
     </nav>
   </div>

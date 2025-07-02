@@ -24,6 +24,13 @@ from viewer import views
 from viewer.views import *
 from equipment.views import *
 from equipment import views as equipment_views
+from equipment.views import (
+    StationEquipmentListView,
+    ArchiveEquipmentListView,
+    RetireEquipment,
+    RestoreEquipment,
+    UpdateStatusView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -95,12 +102,21 @@ urlpatterns = [
     # Accounts
     path('accounts/', include('accounts.urls')),
     path('', HomeView.as_view(), name='home'),
-    path('update-status-form/', views.update_status_form, name='update_status_form'),
+    path('update-status-form/', UpdateStatusView.as_view(), name='update_status_form'),
     path("equipment/<str:model>/<int:pk>/", EquipmentDetailView.as_view(), name="equipment_detail"),
 
     # Searching
     path("search/", equipment_views.equipment_search, name="equipment_search"),
-    path("equipment/<str:model>/<int:pk>/", EquipmentDetailView.as_view(), name="equipment_detail")
+    path("equipment/<str:model>/<int:pk>/", EquipmentDetailView.as_view(), name="equipment_detail"),
+
+     # nový archiv
+    path('stations/<int:pk>/equipment/archive/',ArchiveEquipmentListView.as_view(),name='station_equipment_archive'),
+
+    # retire (přesune do archivu)
+    path('equipment/<int:pk>/retire/',RetireEquipment.as_view(),name='equipment_retire'),
+
+    # restore (zpět z archivu do aktivních)
+    path('equipment/<int:pk>/restore/',RestoreEquipment.as_view(),name='equipment_restore'),
 
 
 ]
