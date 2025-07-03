@@ -118,6 +118,9 @@ urlpatterns = [
     # restore (zpět z archivu do aktivních)
     path('equipment/<int:pk>/restore/',RestoreEquipment.as_view(),name='equipment_restore'),
 
+    # formulare
+    path('formulare/', include('documents.urls')),
+
 
 ]
 

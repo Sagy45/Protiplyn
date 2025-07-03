@@ -13,7 +13,7 @@
     <nav class="nav-buttons">
       <a href="{% url 'station_list' %}" class="nav-btn">Filtrovať Stanice</a>
       <a href="{% url 'upcoming_revisions' %}" class="nav-btn">Nadchádzajúca revízia</a>
-      <a href="#" class="nav-btn">Tlačové Formuláre</a>
+      <a href="{% url 'templates_list' %}" class="nav-btn">Tlačové Formuláre</a>
       {% if station %}
         <a href="{% url 'station_equipment_archive' station.pk %}" class="nav-btn">Archív</a>
       {% else %}

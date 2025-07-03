@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>Vyber zariadenia pre: {{ template.name }}</h1>
+
+{% if equipment_list %}
+<form method="post">
+    {% csrf_token %}
+    <table class="my-table">
+        <thead>
+            <tr>
+                <th>Vybrať</th>
+                <th>Typ</th>
+                <th>E-číslo</th>
+                <th>Sériové číslo</th>
+                <th>Stanica</th>
+                <th>Status</th>
+                <th>Model</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for eq in equipment_list %}
+            <tr>
+                <td>
+                    <input type="checkbox" name="equipment_ids" value="{{ eq.id }}|{{ eq.model_name }}">
+                </td>
+                <td>{{ eq.equipment_type }}</td>
+                <td>{{ eq.e_number }}</td>
+                <td>{{ eq.serial_number }}</td>
+                <td>{{ eq.located }}</td>
+                <td>{{ eq.status }}</td>
+                <td>{{ eq.model_verbose }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Pridať do dokumentu</button>
+</form>
+{% else %}
+    <p>Žiadne zariadenia na výber.</p>
+{% endif %}
+{% endblock %}
