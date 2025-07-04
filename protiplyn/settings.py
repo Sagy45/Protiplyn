@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'equipment',
     'accounts',
     'documents',
+    'notifier',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +138,17 @@ MEDIA_ROOT = BASE_DIR / 'media' # fyzická cesta kde se budou ukládat nahrané 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/accounts/dashboard/'
+
+
+#email sending/local testing only
+
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = '0ee9f8260651d8'
+EMAIL_HOST_PASSWORD = '1fd7d6a77e32ac'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'noreply@protiplyn.sk'
+

@@ -186,3 +186,17 @@ doby revizie produktov s funkciou automatickeho upozornenia na koniec doby platn
 ## Files/ `.json`
 `stations_fixture.json`
 
+
+## emaily
+
+`mailtrap.io`
+
+`log in - vpravo hore` ` stanicaBB@yahoo.com` - `pass: protiplynBB#1`
+
+
+`lava strana UI - Sandbox` -> `My sandboxes`
+
+`
+python manage.py email_upcoming_revisions
+`
+mal by sa ukazat email pre kazdu stanicu 
