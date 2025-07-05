@@ -1,26 +1,23 @@
 <!DOCTYPE html>
-
 {% load static %}
-
 <html lang="sk">
-<head>
-  <meta charset="UTF-8">
-  <title>{% block title %}Hasičská Stanica{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  {% block extra_head %}{% endblock %}
-</head>
-<body>
-
-  {% include "header.html" %}
-
-  <main>
-    {% block content %}{% endblock %}
-  </main>
-
-  {% include "footer.html" %}
-
-  <script>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            {% block title %}Hasičská Stanica{% endblock %}
+        </title>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+              rel="stylesheet">
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body>
+        {% include "header.html" %}
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        {% include "footer.html" %}
+        <script>
     function updateDateTime() {
       const now = new Date();
       const day = String(now.getDate()).padStart(2, '0');
@@ -35,7 +32,6 @@
 
     updateDateTime();
     setInterval(updateDateTime, 1000);
-  </script>
-
-</body>
+        </script>
+    </body>
 </html>

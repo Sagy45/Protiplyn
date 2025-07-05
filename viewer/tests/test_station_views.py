@@ -1,118 +1,113 @@
+"""
+Testy pro zobrazení a oprávnění stanic (StationPrefixContextProcessor, StationListView).
+
+Testujú správné zobrazenie prefixu stanice a filtráciu
+stanic podľa rolí používateľa (technik, admin).
+"""
+
 from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from viewer.models import Country, Region, District, City, Station
 from accounts.models import Profile
 
-"""
-What these tests do:
-
-    StationPrefixContextProcessorTest:
-
-    Vytvorí minimálny modelový strom (krajina, región, okres, mesto, stanica) tak, aby ste dostali stanicu(pk=1), ktorá zodpovedá vašej STATION_PREFIX_MAP.
-
-    Overuje, či technik dostane správny prefix a administrátor nedostane žiadny prefix.
-
-StationListViewPermissionsTest:
-
-    Vytvorí dve stanice a dvoch používateľov (technik je viazaný na stanicu jedna, administrátor nie je viazaný na žiadnu).
-
-    Prihlási každého z nich a požiada o /stations/.
-
-    Porovnává, že technik vidí len svoju stanicu a administrátor vidí obe.
-
-    Kontroluje aj <title> v HTML pre vaše dynamické názvy stránok.
-"""
-
-
+User = get_user_model()
 
 class StationPrefixHeaderTest(TestCase):
+    """
+    Testy zobrazovania prefixu stanice v hlavičke podľa prihláseného používateľa.
+    """
+
     def setUp(self):
-        # build minimal geography tree
+        """
+        Pripraví testovacie dáta: geografickú štruktúru, stanicu, technika a admina.
+        """
         self.country = Country.objects.create(name="C")
         self.region = Region.objects.create(name="R", country=self.country)
         self.district = District.objects.create(name="D", region=self.region)
         self.city = City.objects.create(name="City", district=self.district)
-        # create a station with explicit prefix
         self.station = Station.objects.create(name="One", city=self.city, prefix="XX")
-
-        # Technician user linked to station
         self.tech = User.objects.create_user("tech", password="pw")
         Profile.objects.create(
-            user=self.tech,
-            station=self.station,
-            role=Profile.ROLE_TECHNICIAN
+            user=self.tech, station=self.station, role=Profile.ROLE_TECHNICIAN
         )
-        # Admin user without station
         self.admin = User.objects.create_user("admin", password="pw", is_staff=True)
-        Profile.objects.create(
-            user=self.admin,
-            station=None,
-            role=Profile.ROLE_ADMIN
-        )
-
+        Profile.objects.create(user=self.admin, station=None, role=Profile.ROLE_ADMIN)
         self.client = Client()
 
     def test_technician_header_shows_their_prefix(self):
+        """
+        Ověří, že technik vidí svoj prefix stanice v hlavičke stránky.
+
+        Testuje, že po prihlásení technika je v HTML elemente <div class="station-code">
+        zobrazený prefix stanice, ku ktorej je technik priradený.
+        """
         self.client.login(username="tech", password="pw")
         resp = self.client.get(reverse("station_list"))
-        # Header .station-code should display station.prefix
         self.assertContains(resp, '<div class="station-code">XX</div>')
 
     def test_admin_header_shows_default_prefix(self):
+        """
+        Ověří, že admin bez stanice vidí defaultný prefix 'ZM'.
+
+        Testuje, že administrátorovi, ktorý nie je priradený ku žiadnej stanici,
+        sa zobrazuje predvolený prefix v hlavičke stránky.
+        """
         self.client.login(username="admin", password="pw")
         resp = self.client.get(reverse("station_list"))
-        # Admin with no station falls back to default 'ZM'
         self.assertContains(resp, '<div class="station-code">ZM</div>')
 
 
 class StationListViewPermissionsTest(TestCase):
+    """
+    Testy filtrácie zoznamu stanic podľa role používateľa.
+
+    Technik by mal vidieť iba svoju stanicu, admin vidí všetky stanice.
+    """
+
     def setUp(self):
-        # Geography
-        country  = Country.objects.create(name="C")
-        region   = Region.objects.create(name="R", country=country)
+        """
+        Pripraví testovacie dáta: dve stanice, technika a admina.
+        """
+        country = Country.objects.create(name="C")
+        region = Region.objects.create(name="R", country=country)
         district = District.objects.create(name="D", region=region)
-        city     = City.objects.create(name="City", district=district)
-        # Two stations
+        city = City.objects.create(name="City", district=district)
         self.s1 = Station.objects.create(name="One", city=city)
         self.s2 = Station.objects.create(name="Two", city=city)
-
-        # Technician user linked to s1
         self.tech = User.objects.create_user("tech2", password="pw2")
         Profile.objects.create(
-            user=self.tech,
-            station=self.s1,
-            role=Profile.ROLE_TECHNICIAN
+            user=self.tech, station=self.s1, role=Profile.ROLE_TECHNICIAN
         )
-
-        # Admin user
         self.admin = User.objects.create_user("admin2", password="pw2", is_staff=True)
-        Profile.objects.create(
-            user=self.admin,
-            station=None,
-            role=Profile.ROLE_ADMIN
-        )
-
+        Profile.objects.create(user=self.admin, station=None, role=Profile.ROLE_ADMIN)
         self.client = Client()
 
     def test_technician_sees_only_their_station(self):
+        """
+        Ověří, že technik vidí pouze svoju stanicu v zozname stanic.
+
+        Simuluje prihlásenie technika a požiadanie o stránku zoznamu stanic.
+        Overuje, že v kontexte view je len jeho stanica a že HTML obsahuje správny titulok.
+        """
         self.client.login(username="tech2", password="pw2")
         resp = self.client.get(reverse("station_list"))
         self.assertEqual(resp.status_code, 200)
-        # only s1 in context
         stations = list(resp.context["stations"])
         self.assertEqual(stations, [self.s1])
-        # dynamic title for technician
         self.assertContains(resp, "Vaša stanica")
 
     def test_admin_sees_all_stations(self):
+        """
+        Ověří, že admin vidí všetky stanice v zozname stanic.
+
+        Simuluje prihlásenie admina a kontroluje, že v kontexte view sú obe stanice.
+        Overuje tiež správny titulok stránky pre admina.
+        """
         self.client.login(username="admin2", password="pw2")
         resp = self.client.get(reverse("station_list"))
         self.assertEqual(resp.status_code, 200)
         stations = set(resp.context["stations"])
         self.assertEqual(stations, {self.s1, self.s2})
-        # default title for admin
         self.assertContains(resp, "Zoznam Staníc")
-
-

@@ -1,25 +1,24 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1>Tlačové formuláre</h1>
-<table border="1" cellpadding="5">
-    <thead>
-        <tr>
-            <th>Názov</th>
-            <th>Popis</th>
-            <th>Akcia</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for template in templates %}
-        <tr>
-            <td>{{ template.name }}</td>
-            <td>{{ template.description }}</td>
-            <td>
-                <a href="{% url 'equipment_select' template.id %}">Vybrať</a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+    <h1>Tlačové formuláre</h1>
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Názov</th>
+                <th>Popis</th>
+                <th>Akcia</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for template in templates %}
+                <tr>
+                    <td>{{ template.name }}</td>
+                    <td>{{ template.description }}</td>
+                    <td>
+                        <a href="{% url 'equipment_select' template.id %}">Vybrať</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

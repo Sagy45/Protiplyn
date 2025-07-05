@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="cs">
-<head>
-  <meta charset="UTF-8">
-  <title>{% if object %}Upravit{% else %}Přidat{% endif %} stanici</title>
-  <style>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            {% if object %}
+                Upravit
+            {% else %}
+                Přidat
+            {% endif %}
+        stanici</title>
+        <style>
     body {
       font-family: Arial, sans-serif;
       margin: 2em;
@@ -66,20 +72,25 @@
     a:hover {
       text-decoration: underline;
     }
-  </style>
-</head>
-<body>
-  <div class="form-container">
-    <h2>{% if object %}Upravit stanici{% else %}Přidat novou stanici{% endif %}</h2>
-
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <div class="form-actions">
-        <button type="submit">Uložit</button>
-        <a href="{% url 'station_list' %}">Zpět na seznam</a>
-      </div>
-    </form>
-  </div>
-</body>
+        </style>
+    </head>
+    <body>
+        <div class="form-container">
+            <h2>
+                {% if object %}
+                    Upravit stanici
+                {% else %}
+                    Přidat novou stanici
+                {% endif %}
+            </h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-actions">
+                    <button type="submit">Uložit</button>
+                    <a href="{% url 'station_list' %}">Zpět na seznam</a>
+                </div>
+            </form>
+        </div>
+    </body>
 </html>

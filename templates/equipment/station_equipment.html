@@ -1,142 +1,142 @@
 {% extends "base.html" %}
 {% load custom_filters %}
-
 {% block title %}Vybavenie stanice: {{ station.name }}{% endblock %}
-
 {% block content %}
-  <h2 style="text-align:center; margin-bottom:20px;">
-    Vybavenie stanice: {{ station.name }}
-  </h2>
-
-  <div class="tab-container">
-    <ul class="tab-list">
-      {% for section in equipment_sections %}
-        <li>
-          <a href="#"
-             class="{% if forloop.first %}active{% endif %}"
-             data-tab="tab-{{ forloop.counter }}">
-            {{ section.0 }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-
-    {% for section in equipment_sections %}
-      <div class="tab-content {% if forloop.first %}active{% endif %}"
-           id="tab-{{ forloop.counter }}">
-        <h3>{{ section.0 }}</h3>
-
-        {% if section.1 %}
-          <table class="equipment-table">
-            <thead>
-              <tr>
-                {% for raw, pretty in section.2 %}
-                  <th>{{ pretty }}</th>
-                {% endfor %}
-                <th>Umiestnenie</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for item in section.1 %}
-                <tr>
-                  {% for raw, pretty in section.2 %}
-                    {% if raw == "type" %}
-                      <td>
-                        <a href="{% url 'equipment_detail' section.3 item.pk %}">
-                          {{ item|attr:raw }}
-                        </a>
-                      </td>
-                    {% elif raw in "e_number,serial_number" %}
-                      <td>{{ item|attr:raw }}</td>
-                    {% else %}
-                      <td>
-                        {% with current=item|get_status:raw %}
-                          {% allowed_statuses current allowed_transitions as opts %}
-                          <form method="post"
-                                action="{% url 'update_status_form' %}"
-                                class="status-form">
-                            {% csrf_token %}
-                            <input type="hidden" name="model" value="{{ section.3 }}">
-                            <input type="hidden" name="id"    value="{{ item.pk }}">
-                            <input type="hidden" name="field" value="{{ raw }}">
-                            <select name="status"
-                                    data-original-value="{{ current }}"
-                                    class="status-dropdown {{ item|get_status_class:raw }}">
-                              {% for choice,label in opts %}
-                                <option value="{{ choice }}"
-                                        {% if choice == current %}selected{% endif %}>
-                                  {{ label }}
-                                </option>
-                              {% endfor %}
-                            </select>
-                          </form>
-                        {% endwith %}
-                      </td>
-                    {% endif %}
-                  {% endfor %}
-                  <td>
-                    {% if item.location %}
-                      {% if item.location.brand == "Sklad" %}🏢{% else %}🚒{% endif %}
-                      {{ item.location.brand }}
-                      {% if item.location.spz %}<br>({{ item.location.spz }}){% endif %}
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% else %}
-          <p>Žiadne položky.</p>
-        {% endif %}
-      </div>
-    {% endfor %}
-  </div>
-
-  <!-- MODÁLNÍ OKNO PRO VÝBĚR DATUMU REVIZE -->
-  <div id="dateModal"
-       style="display:none;
-              position:fixed; top:0; left:0; right:0; bottom:0;
-              background:rgba(0,0,0,0.6); z-index:9999;
-              justify-content:center; align-items:center;">
-    <div style="background:white;
-                padding:20px 30px;
-                border-radius:10px;
-                max-width:300px;
-                text-align:center;
-                box-shadow:0 0 10px rgba(0,0,0,0.2);">
-      <h3 style="color:#c62828; margin-bottom:15px;">
-        Zvolte datum poslední revize
-      </h3>
-      <input type="date" id="revisionDateInput"
-             style="padding:6px 10px;
-                    font-size:15px;
-                    border-radius:6px;
-                    border:1px solid #ccc;">
-      <div style="margin-top:20px;">
-        <button id="confirmDateBtn"
-                style="background:#c62828;
-                       color:white;
-                       border:none;
-                       padding:8px 14px;
-                       border-radius:6px;
-                       cursor:pointer;">
-          Potvrdit
-        </button>
-        <button id="cancelDateBtn"
-                style="margin-left:10px;
-                       padding:8px 14px;
-                       border-radius:6px;">
-          Zrušit
-        </button>
-      </div>
+    <h2 style="text-align:center; margin-bottom:20px;">Vybavenie stanice: {{ station.name }}</h2>
+    <div class="tab-container">
+        <ul class="tab-list">
+            {% for section in equipment_sections %}
+                <li>
+                    <a href="#"
+                       class="{% if forloop.first %}active{% endif %}"
+                       data-tab="tab-{{ forloop.counter }}">{{ section.0 }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        {% for section in equipment_sections %}
+            <div class="tab-content {% if forloop.first %}active{% endif %}"
+                 id="tab-{{ forloop.counter }}">
+                <h3>{{ section.0 }}</h3>
+                {% if section.1 %}
+                    <table class="equipment-table">
+                        <thead>
+                            <tr>
+                                {% for raw, pretty in section.2 %}<th>{{ pretty }}</th>{% endfor %}
+                                <th>Umiestnenie</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in section.1 %}
+                                <tr>
+                                    {% for raw, pretty in section.2 %}
+                                        {% if raw == "type" %}
+                                            <td>
+                                                <a href="{% url 'equipment_detail' section.3 item.pk %}">{{ item|attr:raw }}</a>
+                                            </td>
+                                        {% elif raw in "e_number,serial_number" %}
+                                            <td>{{ item|attr:raw }}</td>
+                                        {% else %}
+                                            <td>
+                                                {% with current=item|get_status:raw %}
+                                                    {% allowed_statuses current allowed_transitions as opts %}
+                                                    <form method="post"
+                                                          action="{% url 'update_status_form' %}"
+                                                          class="status-form">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="model" value="{{ section.3 }}">
+                                                        <input type="hidden" name="id"    value="{{ item.pk }}">
+                                                        <input type="hidden" name="field" value="{{ raw }}">
+                                                        <select name="status"
+                                                                data-original-value="{{ current }}"
+                                                                data-field="{{ raw }}"
+                                                                data-interval="{{ REVISION_INTERVALS|get_item:raw }}"
+                                                                class="status-dropdown {{ item|get_status_class:raw }}">
+                                                            {% for choice,label in opts %}
+                                                                <option value="{{ choice }}" {% if choice == current %}selected{% endif %}>{{ label }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </form>
+                                                {% endwith %}
+                                            </td>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <td>
+                                        {% if item.location %}
+                                            {% if item.location.brand == "Sklad" %}
+                                                🏢
+                                            {% else %}
+                                                🚒
+                                            {% endif %}
+                                            {{ item.location.brand }}
+                                            {% if item.location.spz %}
+                                                <br>
+                                                ({{ item.location.spz }})
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Žiadne položky.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
-  </div>
-
- <script>
+    <!-- MODÁLNÍ OKNO PRO VÝBĚR DATUMU REVIZE -->
+    <div id="dateModal"
+         style="display:none;
+                position:fixed;
+                top:0;
+                left:0;
+                right:0;
+                bottom:0;
+                background:rgba(0,0,0,0.6);
+                z-index:9999;
+                justify-content:center;
+                align-items:center">
+        <div style="background:white;
+                    padding:20px 30px;
+                    border-radius:10px;
+                    max-width:300px;
+                    text-align:center;
+                    box-shadow:0 0 10px rgba(0,0,0,0.2)">
+            <h3 style="color:#c62828; margin-bottom:15px;">Zvolte datum poslední revize</h3>
+            <input type="date"
+                   id="revisionDateInput"
+                   style="padding:6px 10px;
+                          font-size:15px;
+                          border-radius:6px;
+                          border:1px solid #ccc">
+            <div style="margin-top:20px;">
+                <button id="confirmDateBtn"
+                        style="background:#c62828;
+                               color:white;
+                               border:none;
+                               padding:8px 14px;
+                               border-radius:6px;
+                               cursor:pointer">Potvrdit</button>
+                <button id="cancelDateBtn"
+                        style="margin-left:10px;
+                               padding:8px 14px;
+                               border-radius:6px">Zrušit</button>
+            </div>
+        </div>
+    </div>
+    <script>
 document.addEventListener("DOMContentLoaded", function () {
   // --- Tabs switch ---
   const tabs     = document.querySelectorAll(".tab-list a"),
         contents = document.querySelectorAll(".tab-content");
+
+  // --- NOVÉ: Načtení indexu aktivního tabu z localStorage ---
+  let activeTabIndex = parseInt(localStorage.getItem("activeTabIndex") || "0", 10);
+  tabs.forEach((tab, i) => {
+    tab.classList.toggle("active", i === activeTabIndex);
+    contents[i].classList.toggle("active", i === activeTabIndex);
+  });
+
   tabs.forEach((tab, i) => {
     tab.addEventListener("click", e => {
       e.preventDefault();
@@ -144,6 +144,8 @@ document.addEventListener("DOMContentLoaded", function () {
       contents.forEach(c => c.classList.remove("active"));
       tab.classList.add("active");
       contents[i].classList.add("active");
+      // --- NOVÉ: Uložení indexu aktivního tabu do localStorage ---
+      localStorage.setItem("activeTabIndex", i);
     });
   });
 
@@ -194,7 +196,21 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("Prosím vyberte datum.");
       return;
     }
-    // capture before we clear pendingSelect
+    // --- NOVÁ VALIDACE ---
+    const intervalDays = parseInt(pendingSelect.getAttribute('data-interval') || "0", 10);
+    const dateStr = revInput.value;
+    const selectedDate = new Date(dateStr);
+    selectedDate.setDate(selectedDate.getDate() + intervalDays);
+
+    const today = new Date();
+    today.setHours(0,0,0,0); // jen datum bez času
+
+    if (selectedDate < today) {
+      alert("Výsledné revizní datum nesmí být v minulosti!");
+      return;
+    }
+    // --- KONEC VALIDACE ---
+
     const sel  = pendingSelect,
           form = pendingForm,
           fd   = new FormData(form);
@@ -258,6 +274,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       const sel = selectEl || form.querySelector("select.status-dropdown");
       if ((sel && sel.value === "under_revision") || (fd && fd.get("status") === "under_revision")) {
+        // --- Uloží aktuální záložku před reloadem ---
+        const activeIdx = [...tabs].findIndex(t => t.classList.contains("active"));
+        if (activeIdx !== -1) {
+          localStorage.setItem("activeTabIndex", activeIdx);
+        }
         window.location.reload();
         return;
       }
@@ -292,6 +313,5 @@ document.addEventListener("DOMContentLoaded", function () {
     sel.selectedIndex = 0; // Always show placeholder after change
   }
 });
-</script>
-
+    </script>
 {% endblock %}

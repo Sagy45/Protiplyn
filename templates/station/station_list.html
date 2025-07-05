@@ -1,115 +1,106 @@
 {% extends "base.html" %}
 {% load static %}
-
 {# Dynamický titul stránky podle role uživatele #}
 {% block title %}
-  {% if request.user.profile.role == 'technician' %}
-    Vaša stanica
-  {% else %}
-    Zoznam Staníc
-  {% endif %}
-{% endblock %}
-
-{% block content %}
-
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-      {% if request.user.profile.role == 'technician' %}
+    {% if request.user.profile.role == 'technician' %}
         Vaša stanica
-      {% else %}
+    {% else %}
         Zoznam Staníc
-      {% endif %}
-    </title>
-    <link rel="stylesheet" href="{% static 'css/stations-table.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  </head>
-
-  <div class="station-list-container">
-    {# Dynamický nadpis nad tabulkou #}
-    <h2 class="heading">
-      {% if request.user.profile.role == 'technician' %}
-        Vaša stanica
-      {% else %}
-        Zoznam staníc
-      {% endif %}
-    </h2>
-
-    {# Filtry – pouze pro admina #}
-    {% if request.user.profile.role == 'admin' %}
-      <form method="get" class="filter-form">
-        <div class="filter-row">
-          <select name="stat">
-            <option value="">-- Všetky štáty --</option>
-            {% for s in stat_options %}
-              <option value="{{ s }}" {% if request.GET.stat == s %}selected{% endif %}>{{ s }}</option>
-            {% endfor %}
-          </select>
-
-          <select name="kraj">
-            <option value="">-- Všetky kraje --</option>
-            {% for k in kraj_options %}
-              <option value="{{ k }}" {% if request.GET.kraj == k %}selected{% endif %}>{{ k }}</option>
-            {% endfor %}
-          </select>
-
-          <select name="okres">
-            <option value="">-- Všetky okresy --</option>
-            {% for o in okres_options %}
-              <option value="{{ o }}" {% if request.GET.okres == o %}selected{% endif %}>{{ o }}</option>
-            {% endfor %}
-          </select>
-
-          <select name="mesto">
-            <option value="">-- Všetky mestá --</option>
-            {% for m in mesto_options %}
-              <option value="{{ m }}" {% if request.GET.mesto == m %}selected{% endif %}>{{ m }}</option>
-            {% endfor %}
-          </select>
-
-          <a href="{% url 'station_list' %}" class="reset-link">Zrušiť filter</a>
-        </div>
-      </form>
     {% endif %}
-
-    <table class="station-table">
-      <thead>
-        <tr>
-          <th>Stanica</th>
-          <th>Mesto</th>
-          <th>Okres</th>
-          <th>Kraj</th>
-          <th>Štát</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for station in stations %}
-          <tr>
-            <td><a href="{% url 'station_equipment' station.pk %}">{{ station.name }}</a></td>
-            <td>{{ station.city.name }}</td>
-            <td>{{ station.city.district.name }}</td>
-            <td>{{ station.city.district.region.name }}</td>
-            <td>{{ station.city.district.region.country.name }}</td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="5" class="empty-row">Žiadne stanice neboli nájdené.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  {# Skript pro automatické odeslání filtru pouze pro admina #}
-  {% if request.user.profile.role == 'admin' %}
-    <script>
+{% endblock %}
+{% block content %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% if request.user.profile.role == 'technician' %}
+                Vaša stanica
+            {% else %}
+                Zoznam Staníc
+            {% endif %}
+        </title>
+        <link rel="stylesheet" href="{% static 'css/stations-table.css' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+              rel="stylesheet">
+    </head>
+    <div class="station-list-container">
+        {# Dynamický nadpis nad tabulkou #}
+        <h2 class="heading">
+            {% if request.user.profile.role == 'technician' %}
+                Vaša stanica
+            {% else %}
+                Zoznam staníc
+            {% endif %}
+        </h2>
+        {# Filtry – pouze pro admina #}
+        {% if request.user.profile.role == 'admin' %}
+            <form method="get" class="filter-form">
+                <div class="filter-row">
+                    <select name="stat">
+                        <option value="">-- Všetky štáty --</option>
+                        {% for s in stat_options %}
+                            <option value="{{ s }}" {% if request.GET.stat == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="kraj">
+                        <option value="">-- Všetky kraje --</option>
+                        {% for k in kraj_options %}
+                            <option value="{{ k }}" {% if request.GET.kraj == k %}selected{% endif %}>{{ k }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="okres">
+                        <option value="">-- Všetky okresy --</option>
+                        {% for o in okres_options %}
+                            <option value="{{ o }}" {% if request.GET.okres == o %}selected{% endif %}>{{ o }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="mesto">
+                        <option value="">-- Všetky mestá --</option>
+                        {% for m in mesto_options %}
+                            <option value="{{ m }}" {% if request.GET.mesto == m %}selected{% endif %}>{{ m }}</option>
+                        {% endfor %}
+                    </select>
+                    <a href="{% url 'station_list' %}" class="reset-link">Zrušiť filter</a>
+                </div>
+            </form>
+        {% endif %}
+        <table class="station-table">
+            <thead>
+                <tr>
+                    <th>Stanica</th>
+                    <th>Mesto</th>
+                    <th>Okres</th>
+                    <th>Kraj</th>
+                    <th>Štát</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for station in stations %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'station_equipment' station.pk %}">{{ station.name }}</a>
+                        </td>
+                        <td>{{ station.city.name }}</td>
+                        <td>{{ station.city.district.name }}</td>
+                        <td>{{ station.city.district.region.name }}</td>
+                        <td>{{ station.city.district.region.country.name }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-row">Žiadne stanice neboli nájdené.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {# Skript pro automatické odeslání filtru pouze pro admina #}
+    {% if request.user.profile.role == 'admin' %}
+        <script>
       document.querySelectorAll('.filter-form select').forEach(function(select) {
         select.addEventListener('change', function () {
           this.form.submit();
         });
       });
-    </script>
-  {% endif %}
-
+        </script>
+    {% endif %}
 {% endblock %}

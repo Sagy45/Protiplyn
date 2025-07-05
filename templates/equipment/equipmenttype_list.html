@@ -1,37 +1,31 @@
 {% extends "base.html" %}
-
 {% block content %}
-  <h1>Typy vybavení</h1>
-  <a href="{% url 'equipmenttype_add' %}">➕ Přidat nový typ</a>
-
-  {% if equipment_types %}
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Název</th>
-          <th>Akce</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for etype in equipment_types %}
-          <tr>
-            <td>{{ etype.id }}</td>
-            <td>{{ etype.name }}</td>
-            <td>
-              <a href="{% url 'equipmenttype_edit' etype.id %}">✏️ Upravit</a>
-              |
-              <a href="{% url 'equipmenttype_delete' etype.id %}">🗑️ Smazat</a>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>Žádné typy vybavení nejsou k dispozici.</p>
-  {% endif %}
+    <h1>Typy vybavení</h1>
+    <a href="{% url 'equipmenttype_add' %}">➕ Přidat nový typ</a>
+    {% if equipment_types %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Název</th>
+                    <th>Akce</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for etype in equipment_types %}
+                    <tr>
+                        <td>{{ etype.id }}</td>
+                        <td>{{ etype.name }}</td>
+                        <td>
+                            <a href="{% url 'equipmenttype_edit' etype.id %}">✏️ Upravit</a>
+                            |
+                            <a href="{% url 'equipmenttype_delete' etype.id %}">🗑️ Smazat</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Žádné typy vybavení nejsou k dispozici.</p>
+    {% endif %}
 {% endblock %}
-
-
-
-

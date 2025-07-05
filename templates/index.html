@@ -1,32 +1,29 @@
 {% extends "base.html" %}
-
 {% block title %}Hlavná Stránka{% endblock %}
-
 {% block content %}
-  <h1>Prehľad revízií</h1>
-
-  <table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Názov Položky</th>
-        <th>Dátum Revízie</th>
-        <th>Stanica</th>
-        <th>Stav</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in items %}
-        <tr>
-          <td>{{ item.name }}</td>
-          <td>{{ item.revision_date }}</td>
-          <td>{{ item.station }}</td>
-          <td>{{ item.status }}</td>
-        </tr>
-      {% empty %}
-        <tr>
-          <td colspan="4">Žiadne položky na revíziu.</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <h1>Prehľad revízií</h1>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Názov Položky</th>
+                <th>Dátum Revízie</th>
+                <th>Stanica</th>
+                <th>Stav</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.revision_date }}</td>
+                    <td>{{ item.station }}</td>
+                    <td>{{ item.status }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">Žiadne položky na revíziu.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-
 {% block content %}
-  <h1>Potvrdit smazání</h1>
-  <p>Opravdu chceš smazat typ vybavení <strong>{{ object.name }}</strong>?</p>
-
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit">🗑️ Smazat</button>
-    <a href="{% url 'equipmenttype_list' %}">↩️ Zpět</a>
-  </form>
+    <h1>Potvrdit smazání</h1>
+    <p>
+        Opravdu chceš smazat typ vybavení <strong>{{ object.name }}</strong>?
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">🗑️ Smazat</button>
+        <a href="{% url 'equipmenttype_list' %}">↩️ Zpět</a>
+    </form>
 {% endblock %}

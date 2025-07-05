@@ -1,37 +1,16 @@
+"""Modely pre aplikáciu equipment."""
+
 from django.conf import settings
-from django.db.models import Model, CharField, ForeignKey, SET_NULL, DateField, IntegerField
 from django.db import models
 from django.core.exceptions import ValidationError
-
-class EquipmentType(Model):
-    name = CharField(max_length=100, null=False, blank=False)
-
-    class Meta:
-        ordering = ["name"]
-        verbose_name_plural = "Druh"
-
-    def __str__(self):
-        return self.name
-
-
-class VehicleStorage(Model):
-    brand = CharField(max_length=100, null=False, blank=False)
-    spz = CharField(max_length=7, null=True, blank=True)
-    station = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True, related_name="viewer")
-
-    class Meta:
-        ordering = ["brand"]
-        verbose_name_plural = "Auto/Sklad"
-
-    def __str__(self):
-        return f" {self.brand} {self.spz}"
+from django.utils import timezone
 
 STATUS_CHOICES = [
-    ('ok', 'OK'),
-    ('bsr', 'BSR'),
-    ('under_revision', 'V rieseni'),
-    ('critical', 'Kriticky'),
-    ('vyradit', 'Vyradiť'),
+    ("ok", "OK"),
+    ("bsr", "BSR"),
+    ("under_revision", "V riešení"),
+    ("critical", "Kriticky"),
+    ("vyradit", "Vyradiť"),
 ]
 
 REVISION_LABELS = {
@@ -46,208 +25,519 @@ REVISION_LABELS = {
     "extra_1": "Extra 1",
     "extra_2": "Extra 2",
 }
-
 REVISION_FIELDS = list(REVISION_LABELS.keys())
 
 
+class EquipmentType(models.Model):
+    """
+    Model reprezentujúci typ vybavenia.
+
+    Atribúty:
+        name (str): Názov typu vybavenia.
+    """
+
+    name = models.CharField(max_length=100, null=False, blank=False)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name_plural = "Druh"
+
+    def __str__(self):
+        return self.name
+
+
+class VehicleStorage(models.Model):
+    """
+    Model pre evidenciu vozidiel a skladov.
+
+    Atribúty:
+        brand (str): Značka vozidla/skladu.
+        spz (str): ŠPZ (voliteľné).
+        station (Station): Príslušná stanica.
+    """
+
+    brand = models.CharField(max_length=100, null=False, blank=False)
+    spz = models.CharField(max_length=7, null=True, blank=True)
+    station = models.ForeignKey(
+        "viewer.Station", on_delete=models.SET_NULL, null=True, related_name="viewer"
+    )
+
+    class Meta:
+        ordering = ["brand"]
+        verbose_name_plural = "Auto/Sklad"
+
+    def __str__(self):
+        return f"{self.brand} {self.spz or ''}"
+
+
 class ArchiveFields(models.Model):
+    """
+    Abstraktný model na podporu archivácie záznamov.
+
+    Atribúty:
+        is_archived (bool): Či je záznam archivovaný.
+        archived_at (datetime): Dátum a čas archivácie.
+        archived_by (User): Používateľ, ktorý archivoval.
+    """
+
     is_archived = models.BooleanField(default=False)
     archived_at = models.DateTimeField(null=True, blank=True)
     archived_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        null=True, blank=True,
+        null=True,
+        blank=True,
         on_delete=models.SET_NULL,
-        related_name="archived_%(class)s"   # This is key! It auto-uses the child class name.
+        related_name="archived_%(class)s",
     )
 
     class Meta:
         abstract = True
 
 
-class Mask(ArchiveFields, Model):
-    equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="masks_over")
-    type = CharField(max_length=50,null=False,blank=False)
-    e_number = CharField(max_length=10,null=False,blank=False)
-    serial_number = CharField(max_length=50,null=False,blank=False)
-    rev_2years = DateField(null=False,blank=False)
-    rev_4years = DateField(null=False,blank=False)
-    rev_6years = DateField(null=False,blank=False)
-    extra_1 = DateField(null=True,blank=True)
-    extra_2 = DateField(null=True,blank=True)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
-    located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="MO_located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="MO_locations")
+class Mask(ArchiveFields, models.Model):
+    """
+    Model pre celoobličejové masky.
 
+    Atribúty:
+        equipment_type (EquipmentType): Typ vybavenia.
+        type (str): Typ masky.
+        e_number (str): Evidenčné číslo.
+        serial_number (str): Sériové číslo.
+        rev_2years, rev_4years, rev_6years, extra_1, extra_2 (date): Termíny revízií.
+        status (str): Stav.
+        located (Station): Stanica.
+        location (VehicleStorage): Vozidlo/sklad.
+        status_field (str): Aktuálne riešená revízia.
+    """
+
+    equipment_type = models.ForeignKey(
+        "EquipmentType", on_delete=models.SET_NULL, null=True, related_name="masks_over"
+    )
+    type = models.CharField(max_length=50, null=False, blank=False)
+    e_number = models.CharField(max_length=10, null=False, blank=False)
+    serial_number = models.CharField(max_length=50, null=False, blank=False)
+    rev_2years = models.DateField(null=False, blank=False)
+    rev_4years = models.DateField(null=False, blank=False)
+    rev_6years = models.DateField(null=False, blank=False)
+    extra_1 = models.DateField(null=True, blank=True)
+    extra_2 = models.DateField(null=True, blank=True)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="ok",
+        verbose_name="Súčasný stav",
+    )
+    located = models.ForeignKey(
+        "viewer.Station",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="MO_located_stations",
+    )
+    location = models.ForeignKey(
+        "VehicleStorage", on_delete=models.SET_NULL, null=True, related_name="MO_locations"
+    )
     status_field = models.CharField(
-        max_length=30,
-        blank=True, null=True,
-        help_text="Která revize je právě v řešení"
+        max_length=30, blank=True, null=True, help_text="Ktorá revízia je práve v riešení"
     )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
         verbose_name_plural = "Masky"
 
+    def clean(self):
+        """
+        Overuje, že žiadne revízne dátumy nie sú v minulosti.
+        """
+        today = timezone.now().date()
+        revision_fields = [
+            ("rev_2years", self.rev_2years),
+            ("rev_4years", self.rev_4years),
+            ("rev_6years", self.rev_6years),
+            ("extra_1", self.extra_1),
+            ("extra_2", self.extra_2),
+        ]
+        for name, value in revision_fields:
+            if value and value < today:
+                raise ValidationError({name: f"{name} nemôže byť v minulosti."})
+
     def __str__(self):
-        return f" {self.equipment_type} {self.type} {self.e_number}"
+        return f"{self.equipment_type} {self.type} {self.e_number}"
 
 
-class ADPMulti(ArchiveFields, Model):
-    equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="adp_m")
-    type = CharField(max_length=50,null=False,blank=False)
-    e_number = CharField(max_length=10,null=False,blank=False)
-    serial_number = CharField(max_length=50,null=False,blank=False)
-    rev_1years = DateField(null=False,blank=False)
-    rev_6years = DateField(null=False,blank=False)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
-    located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="ADPm_located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="ADMm_locations")
+class ADPMulti(ArchiveFields, models.Model):
+    """
+    Model pre ADP dvojhadicové.
 
+    Atribúty:
+        equipment_type (EquipmentType): Typ vybavenia.
+        type (str): Typ ADP.
+        e_number (str): Evidenčné číslo.
+        serial_number (str): Sériové číslo.
+        rev_1years, rev_6years (date): Termíny revízií.
+        status (str): Stav.
+        located (Station): Stanica.
+        location (VehicleStorage): Vozidlo/sklad.
+        status_field (str): Aktuálne riešená revízia.
+    """
+
+    equipment_type = models.ForeignKey(
+        "EquipmentType", on_delete=models.SET_NULL, null=True, related_name="adp_m"
+    )
+    type = models.CharField(max_length=50, null=False, blank=False)
+    e_number = models.CharField(max_length=10, null=False, blank=False)
+    serial_number = models.CharField(max_length=50, null=False, blank=False)
+    rev_1years = models.DateField(null=False, blank=False)
+    rev_6years = models.DateField(null=False, blank=False)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="ok",
+        verbose_name="Súčasný stav",
+    )
+    located = models.ForeignKey(
+        "viewer.Station",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="ADPm_located_stations",
+    )
+    location = models.ForeignKey(
+        "VehicleStorage", on_delete=models.SET_NULL, null=True, related_name="ADMm_locations"
+    )
     status_field = models.CharField(
-        max_length=30,
-        blank=True, null=True,
-        help_text="Která revize je právě v řešení"
+        max_length=30, blank=True, null=True, help_text="Ktorá revízia je práve v riešení"
     )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
         verbose_name_plural = "ADP-Dvojhadicovy"
 
+    def clean(self):
+        """
+        Overuje, že revízne dátumy nie sú v minulosti.
+        """
+        today = timezone.now().date()
+        revision_fields = [
+            ("rev_1years", self.rev_1years),
+            ("rev_6years", self.rev_6years),
+        ]
+        for name, value in revision_fields:
+            if value and value < today:
+                raise ValidationError({name: f"{name} nemôže byť v minulosti."})
+
     def __str__(self):
-        return f" {self.equipment_type} {self.type} {self.e_number}"
+        return f"{self.equipment_type} {self.type} {self.e_number}"
 
 
-class ADPSingle(ArchiveFields, Model):
-    equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="adp_s")
-    type = CharField(max_length=50,null=False,blank=False)
-    e_number = CharField(max_length=10,null=False,blank=False)
-    serial_number = CharField(max_length=50,null=False,blank=False)
-    rev_1years = DateField(null=False,blank=False)
-    rev_9years = DateField(null=False,blank=False)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
-    located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="ADPs_located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="ADPs_locations")
+class ADPSingle(ArchiveFields, models.Model):
+    """
+    Model pre ADP jednohadicové.
 
+    Atribúty:
+        equipment_type (EquipmentType): Typ vybavenia.
+        type (str): Typ ADP.
+        e_number (str): Evidenčné číslo.
+        serial_number (str): Sériové číslo.
+        rev_1years, rev_9years (date): Termíny revízií.
+        status (str): Stav.
+        located (Station): Stanica.
+        location (VehicleStorage): Vozidlo/sklad.
+        status_field (str): Aktuálne riešená revízia.
+    """
+
+    equipment_type = models.ForeignKey(
+        "EquipmentType", on_delete=models.SET_NULL, null=True, related_name="adp_s"
+    )
+    type = models.CharField(max_length=50, null=False, blank=False)
+    e_number = models.CharField(max_length=10, null=False, blank=False)
+    serial_number = models.CharField(max_length=50, null=False, blank=False)
+    rev_1years = models.DateField(null=False, blank=False)
+    rev_9years = models.DateField(null=False, blank=False)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="ok",
+        verbose_name="Súčasný stav",
+    )
+    located = models.ForeignKey(
+        "viewer.Station",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="ADPs_located_stations",
+    )
+    location = models.ForeignKey(
+        "VehicleStorage", on_delete=models.SET_NULL, null=True, related_name="ADPs_locations"
+    )
     status_field = models.CharField(
-        max_length=30,
-        blank=True, null=True,
-        help_text="Která revize je právě v řešení"
+        max_length=30, blank=True, null=True, help_text="Ktorá revízia je práve v riešení"
     )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
         verbose_name_plural = "ADP-Jednohadicovy"
 
+    def clean(self):
+        """
+        Overuje, že revízne dátumy nie sú v minulosti.
+        """
+        today = timezone.now().date()
+        revision_fields = [
+            ("rev_1years", self.rev_1years),
+            ("rev_9years", self.rev_9years),
+        ]
+        for name, value in revision_fields:
+            if value and value < today:
+                raise ValidationError({name: f"{name} nemôže byť v minulosti."})
+
     def __str__(self):
-        return f" {self.equipment_type} {self.type} {self.e_number}"
+        return f"{self.equipment_type} {self.type} {self.e_number}"
 
 
-class AirTank(ArchiveFields, Model):
-    equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="airtank")
-    type = CharField(max_length=50,null=False,blank=False)
-    e_number = CharField(max_length=10,null=False,blank=False)
-    serial_number = CharField(max_length=50,null=False,blank=False)
-    volume = CharField(max_length=50,null=False,blank=False)
-    pressure = CharField(max_length=50,null=False,blank=False)
-    material_type = CharField(max_length=50,null=False,blank=False)
-    rev_5years = DateField(null=False,blank=False)
-    made = IntegerField(null=False,blank=False)
-    service_life = IntegerField(null=False,blank=False) #v rokoch
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
-    located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="AirTank_located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="AirTank_locations")
+class AirTank(ArchiveFields, models.Model):
+    """
+    Model pre tlakové nádoby (fľaše).
 
+    Atribúty:
+        equipment_type (EquipmentType): Typ vybavenia.
+        type (str): Typ nádoby.
+        e_number (str): Evidenčné číslo.
+        serial_number (str): Sériové číslo.
+        volume (str): Objem.
+        pressure (str): Tlak.
+        material_type (str): Materiál.
+        rev_5years (date): Termín revízie.
+        made (int): Rok výroby.
+        service_life (int): Životnosť v rokoch.
+        status (str): Stav.
+        located (Station): Stanica.
+        location (VehicleStorage): Vozidlo/sklad.
+        status_field (str): Aktuálne riešená revízia.
+    """
+
+    equipment_type = models.ForeignKey(
+        "EquipmentType", on_delete=models.SET_NULL, null=True, related_name="airtank"
+    )
+    type = models.CharField(max_length=50, null=False, blank=False)
+    e_number = models.CharField(max_length=10, null=False, blank=False)
+    serial_number = models.CharField(max_length=50, null=False, blank=False)
+    volume = models.CharField(max_length=50, null=False, blank=False)
+    pressure = models.CharField(max_length=50, null=False, blank=False)
+    material_type = models.CharField(max_length=50, null=False, blank=False)
+    rev_5years = models.DateField(null=False, blank=False)
+    made = models.IntegerField(null=False, blank=False)
+    service_life = models.IntegerField(null=False, blank=False)  # v rokoch
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="ok",
+        verbose_name="Súčasný stav",
+    )
+    located = models.ForeignKey(
+        "viewer.Station",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="AirTank_located_stations",
+    )
+    location = models.ForeignKey(
+        "VehicleStorage",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="AirTank_locations",
+    )
     status_field = models.CharField(
-        max_length=30,
-        blank=True, null=True,
-        help_text="Která revize je právě v řešení"
+        max_length=30, blank=True, null=True, help_text="Ktorá revízia je práve v riešení"
     )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
         verbose_name_plural = "Tlakové nádoby"
 
+    def clean(self):
+        """
+        Overuje, že revízny dátum nie je v minulosti.
+        """
+        today = timezone.now().date()
+        revision_fields = [
+            ("rev_5years", self.rev_5years),
+        ]
+        for name, value in revision_fields:
+            if value and value < today:
+                raise ValidationError({name: f"{name} nemôže byť v minulosti."})
+
     def __str__(self):
-        return f" {self.equipment_type} {self.type} {self.e_number}"
+        return f"{self.equipment_type} {self.type} {self.e_number}"
 
 
-class PCHO(ArchiveFields, Model):
-    equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="pcho")
-    type = CharField(max_length=50,null=False,blank=False)
-    e_number = CharField(max_length=10,null=False,blank=False)
-    serial_number = CharField(max_length=50,null=False,blank=False)
-    rev_half_year = DateField(null=False,blank=False)
-    rev_2years = DateField(null=False,blank=False)
-    made = IntegerField(null=False,blank=False)
-    service_life = IntegerField(null=False,blank=False) #v rokoch
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
-    located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="PCHO_located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="PCHO_locations")
+class PCHO(ArchiveFields, models.Model):
+    """
+    Model pre proti-chemické obleky (PCHO).
 
+    Atribúty:
+        equipment_type (EquipmentType): Typ vybavenia.
+        type (str): Typ PCHO.
+        e_number (str): Evidenčné číslo.
+        serial_number (str): Sériové číslo.
+        rev_half_year, rev_2years (date): Termíny revízií.
+        made (int): Rok výroby.
+        service_life (int): Životnosť v rokoch.
+        status (str): Stav.
+        located (Station): Stanica.
+        location (VehicleStorage): Vozidlo/sklad.
+        status_field (str): Aktuálne riešená revízia.
+    """
+
+    equipment_type = models.ForeignKey(
+        "EquipmentType", on_delete=models.SET_NULL, null=True, related_name="pcho"
+    )
+    type = models.CharField(max_length=50, null=False, blank=False)
+    e_number = models.CharField(max_length=10, null=False, blank=False)
+    serial_number = models.CharField(max_length=50, null=False, blank=False)
+    rev_half_year = models.DateField(null=False, blank=False)
+    rev_2years = models.DateField(null=False, blank=False)
+    made = models.IntegerField(null=False, blank=False)
+    service_life = models.IntegerField(null=False, blank=False)  # v rokoch
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="ok",
+        verbose_name="Súčasný stav",
+    )
+    located = models.ForeignKey(
+        "viewer.Station",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="PCHO_located_stations",
+    )
+    location = models.ForeignKey(
+        "VehicleStorage", on_delete=models.SET_NULL, null=True, related_name="PCHO_locations"
+    )
     status_field = models.CharField(
-        max_length=30,
-        blank=True, null=True,
-        help_text="Která revize je právě v řešení"
+        max_length=30, blank=True, null=True, help_text="Ktorá revízia je práve v riešení"
     )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
         verbose_name_plural = "Proti chemicke obleky"
 
+    def clean(self):
+        """
+        Overuje, že revízne dátumy nie sú v minulosti.
+        """
+        today = timezone.now().date()
+        revision_fields = [
+            ("rev_2years", self.rev_2years),
+            ("rev_half_year", self.rev_half_year),
+        ]
+        for name, value in revision_fields:
+            if value and value < today:
+                raise ValidationError({name: f"{name} nemôže byť v minulosti."})
+
     def __str__(self):
-        return f" {self.equipment_type} {self.type} {self.e_number}"
+        return f"{self.equipment_type} {self.type} {self.e_number}"
 
 
+class PA(ArchiveFields, models.Model):
+    """
+    Model pre pľúcnu automatiku.
 
+    Atribúty:
+        equipment_type (EquipmentType): Typ vybavenia.
+        type (str): Typ PA.
+        e_number (str): Evidenčné číslo.
+        serial_number (str): Sériové číslo.
+        rev_3year, rev_6years, rev_9years (date): Termíny revízií.
+        made (int): Rok výroby.
+        status (str): Stav.
+        located (Station): Stanica.
+        location (VehicleStorage): Vozidlo/sklad.
+        status_field (str): Aktuálne riešená revízia.
+    """
 
-class PA(ArchiveFields, Model):
-    equipment_type = ForeignKey("EquipmentType",on_delete=SET_NULL, null=True,related_name="pa")
-    type = CharField(max_length=50,null=False,blank=False)
-    e_number = CharField(max_length=10,null=False,blank=False)
-    serial_number = CharField(max_length=50,null=False,blank=False)
-    rev_3year = DateField(null=False,blank=False)
-    rev_6years = DateField(null=False,blank=False)
-    rev_9years = DateField(null=False,blank=False)
-    made = IntegerField(null=False,blank=False)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='ok', verbose_name="Současný stav")
-    located = ForeignKey("viewer.Station", on_delete=SET_NULL, null=True,related_name="PA_located_stations")
-    location = ForeignKey("VehicleStorage", on_delete=SET_NULL, null=True,related_name="PA_locations")
-
+    equipment_type = models.ForeignKey(
+        "EquipmentType", on_delete=models.SET_NULL, null=True, related_name="pa"
+    )
+    type = models.CharField(max_length=50, null=False, blank=False)
+    e_number = models.CharField(max_length=10, null=False, blank=False)
+    serial_number = models.CharField(max_length=50, null=False, blank=False)
+    rev_3year = models.DateField(null=False, blank=False)
+    rev_6years = models.DateField(null=False, blank=False)
+    rev_9years = models.DateField(null=False, blank=False)
+    made = models.IntegerField(null=False, blank=False)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="ok",
+        verbose_name="Súčasný stav",
+    )
+    located = models.ForeignKey(
+        "viewer.Station",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="PA_located_stations",
+    )
+    location = models.ForeignKey(
+        "VehicleStorage", on_delete=models.SET_NULL, null=True, related_name="PA_locations"
+    )
     status_field = models.CharField(
-        max_length=30,
-        blank=True, null=True,
-        help_text="Která revize je právě v řešení"
+        max_length=30, blank=True, null=True, help_text="Ktorá revízia je práve v riešení"
     )
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
         verbose_name_plural = "Plucna automatika"
 
+    def clean(self):
+        """
+        Overuje, že revízne dátumy nie sú v minulosti.
+        """
+        today = timezone.now().date()
+        revision_fields = [
+            ("rev_3years", self.rev_3year),
+            ("rev_6years", self.rev_6years),
+            ("rev_9years", self.rev_9years),
+        ]
+        for name, value in revision_fields:
+            if value and value < today:
+                raise ValidationError({name: f"{name} nemôže byť v minulosti."})
+
     def __str__(self):
-        return f" {self.equipment_type} {self.type} {self.e_number}"
+        return f"{self.equipment_type} {self.type} {self.e_number}"
 
 
-class Complete(Model):
-    e_number = CharField(max_length=10,null=False,blank=False)
+class Complete(models.Model):
+    """
+    Model reprezentujúci komplet vybavenia s evidenčným číslom.
+
+    Atribúty:
+        e_number (str): Evidenčné číslo (spoločné pre komplet).
+    """
+
+    e_number = models.CharField(max_length=10, null=False, blank=False)
 
     class Meta:
         verbose_name_plural = "Komplety"
 
     def __str__(self):
+        """
+        Reprezentácia kompletu - vypíše masku, pa a adp.
+        """
         p = self.parts
         return f"{self.e_number}: {p['mask']}; {p['pa']}; {p['adp']}"
 
-
     @property
     def mask(self):
+        """Vráti príslušnú masku pre daný komplet."""
         return Mask.objects.get(e_number=self.e_number)
 
     @property
     def pa(self):
+        """Vráti príslušnú PA pre daný komplet."""
         return PA.objects.get(e_number=self.e_number)
 
     @property
     def adp(self):
+        """
+        Vráti príslušné ADP (najprv hľadá dvojhadicové, potom jednohadicové).
+        """
         choice = ADPMulti.objects.filter(e_number=self.e_number).first()
         if choice:
             return choice
@@ -255,41 +545,72 @@ class Complete(Model):
 
     @property
     def parts(self):
+        """
+        Vráti slovník so stručnými popismi všetkých častí kompletu.
+        """
         return {
-            "mask": f"{self.mask.equipment_type}, seriove cislo: {self.mask.serial_number}",
-            "pa": f"{self.pa.equipment_type},seriove cislo: {self.pa.serial_number}",
-            "adp": f"{self.adp.equipment_type}, seriove cislo: {self.adp.serial_number}",
+            "mask": f"{self.mask.equipment_type}, seriové číslo: {self.mask.serial_number}",
+            "pa": f"{self.pa.equipment_type}, seriové číslo: {self.pa.serial_number}",
+            "adp": f"{self.adp.equipment_type}, seriové číslo: {self.adp.serial_number}",
         }
 
     def clean(self):
+        """
+        Overuje, že existujú všetky potrebné časti kompletu.
+        """
         error = {}
         if not Mask.objects.filter(e_number=self.e_number).exists():
-            error["e_number"] = f"Maska neexistuje"
+            error["e_number"] = "Maska neexistuje"
         if not PA.objects.filter(e_number=self.e_number).exists():
-            error.setdefault("e_number", f"PA neexistuje")
-        if not (ADPMulti.objects.filter(e_number=self.e_number).exists()
-            or ADPSingle.objects.filter(e_number=self.e_number).exists()):
-            error.setdefault("e_number", f"Ziadne ADP neexistuje")
+            error.setdefault("e_number", "PA neexistuje")
+        if not (
+            ADPMulti.objects.filter(e_number=self.e_number).exists()
+            or ADPSingle.objects.filter(e_number=self.e_number).exists()
+        ):
+            error.setdefault("e_number", "Žiadne ADP neexistuje")
         if error:
             raise ValidationError(error)
 
     def save(self, *args, **kwargs):
+        """
+        Uloží model po overení (validácii) všetkých častí kompletu.
+        """
         self.full_clean()
         super().save(*args, **kwargs)
 
+
 class ActiveManager(models.Manager):
+    """
+    Custom manager pre záznamy, ktoré nie sú archivované.
+    """
     def get_queryset(self):
         return super().get_queryset().filter(is_archived=False)
 
+    def __str__(self):
+        return "Active"
+
+
 class ArchivedManager(models.Manager):
+    """
+    Custom manager pre archivované záznamy.
+    """
     def get_queryset(self):
         return super().get_queryset().filter(is_archived=True)
 
+    def __str__(self):
+        return "Archived"
+
 
 class Equipment(ArchiveFields, models.Model):
+    """
+    Abstraktný model pre všetky typy vybavenia s podporou archivácie.
+
+    Používajte ako rodičovskú triedu pre konkrétne typy vybavenia.
+    """
+
     class Meta:
         abstract = True
 
-    objects = models.Manager()      # standardní manager
-    active = ActiveManager()        # manager pro aktivní záznamy
-    archived = ArchivedManager()    # manager pro archivované
+    objects = models.Manager()  # základný manager
+    active = ActiveManager()    # iba aktívne záznamy
+    archived = ArchivedManager()  # iba archivované záznamy

@@ -1,13 +1,10 @@
 {% extends "base.html" %}
-
 {% block content %}
-  <h1>{{ view.object.pk|yesno:"Upravit typ vybavení,Přidat nový typ vybavení" }}</h1>
-
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button type="submit">💾 Uložit</button>
-    <a href="{% url 'equipmenttype_list' %}">↩️ Zpět na seznam</a>
-  </form>
+    <h1>{{ view.object.pk|yesno:"Upravit typ vybavení,Přidat nový typ vybavení" }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">💾 Uložit</button>
+        <a href="{% url 'equipmenttype_list' %}">↩️ Zpět na seznam</a>
+    </form>
 {% endblock %}

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="cs">
-<head>
-  <meta charset="UTF-8">
-  <title>Potvrzení smazání</title>
-  <style>
+    <head>
+        <meta charset="UTF-8">
+        <title>Potvrzení smazání</title>
+        <style>
     body {
       font-family: Arial, sans-serif;
       margin: 2em;
@@ -61,18 +61,19 @@
     a:hover {
       background-color: #e6f0ff;
     }
-  </style>
-</head>
-<body>
-  <div class="form-container">
-    <h2>Smazat stanici</h2>
-    <p>Opravdu chcete smazat stanici <strong>{{ object.name }}</strong>?</p>
-
-    <form method="post">
-      {% csrf_token %}
-      <button type="submit">Ano, smazat</button>
-      <a href="{% url 'station_list' %}">Zpět</a>
-    </form>
-  </div>
-</body>
+        </style>
+    </head>
+    <body>
+        <div class="form-container">
+            <h2>Smazat stanici</h2>
+            <p>
+                Opravdu chcete smazat stanici <strong>{{ object.name }}</strong>?
+            </p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit">Ano, smazat</button>
+                <a href="{% url 'station_list' %}">Zpět</a>
+            </form>
+        </div>
+    </body>
 </html>

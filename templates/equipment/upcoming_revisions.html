@@ -1,36 +1,37 @@
 {% extends "base.html" %}
 {% load custom_filters %}
-
 {% block content %}
-  <h2>Upcoming Revisions in Your Scope</h2>
-
-  {% for name, items in groups %}
-    <h3>{{ name }}</h3>
-    <table border="1" style="width: 100%; border-collapse: collapse;">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>E Number</th>
-          <th>Station</th>
-          <th>Upcoming Revisions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in items %}
-          <tr {% if item.is_red %} style="background: red;" {% endif %}>
-            <td>{{ item.type }}</td>
-            <td>{{ item.e_number }}</td>
-            <td>{{ item.located.name }}</td>
-            <td>
-              {% for f, date in item.relevant_dates %}
-                {{ f }}: {{ date|date:"d.m.Y" }}<br>
-              {% endfor %}
-            </td>
-          </tr>
-        {% empty %}
-          <tr><td colspan="4">No items</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% endfor %}
+    <h2>Upcoming Revisions in Your Scope</h2>
+    {% for name, items in groups %}
+        <h3>{{ name }}</h3>
+        <table border="1" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>E Number</th>
+                    <th>Station</th>
+                    <th>Upcoming Revisions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr {% if item.is_red %}style="background: red;"{% endif %}>
+                        <td>{{ item.type }}</td>
+                        <td>{{ item.e_number }}</td>
+                        <td>{{ item.located.name }}</td>
+                        <td>
+                            {% for f, date in item.relevant_dates %}
+                                {{ f }}: {{ date|date:"d.m.Y" }}
+                                <br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">No items</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
 {% endblock %}

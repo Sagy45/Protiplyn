@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="cs">
-<head>
-  <meta charset="UTF-8">
-  <title>Pridať nové mesto</title>
-  <style>
+    <head>
+        <meta charset="UTF-8">
+        <title>Pridať nové mesto</title>
+        <style>
     body {
       font-family: Arial, sans-serif;
       margin: 2em;
@@ -66,20 +66,19 @@
     a:hover {
       text-decoration: underline;
     }
-  </style>
-</head>
-<body>
-  <div class="form-container">
-    <h2>Pridať nové mesto</h2>
-
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <div class="form-actions">
-        <button type="submit">Uložiť</button>
-        <a href="{% url 'station_add' %}">Späť na stanice</a>
-      </div>
-    </form>
-  </div>
-</body>
+        </style>
+    </head>
+    <body>
+        <div class="form-container">
+            <h2>Pridať nové mesto</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-actions">
+                    <button type="submit">Uložiť</button>
+                    <a href="{% url 'station_add' %}">Späť na stanice</a>
+                </div>
+            </form>
+        </div>
+    </body>
 </html>

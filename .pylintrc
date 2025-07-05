@@ -1,0 +1,13 @@
+[MASTER]
+load-plugins=pylint_django
+django-settings-module=protiplyn.settings
+
+[MESSAGES CONTROL]
+disable=
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    no-member
+
+[FORMAT]
+max-line-length=100

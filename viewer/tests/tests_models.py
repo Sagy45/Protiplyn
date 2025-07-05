@@ -1,6 +1,7 @@
 from django.test import TestCase
 from viewer.models import Country, Region, District
 
+
 class LocationModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):

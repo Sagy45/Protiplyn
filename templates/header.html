@@ -1,56 +1,61 @@
 {% load static %}
 <header>
-  <div class="header-left">
-    <img src="{% static 'images/logo_head.png' %}" alt="Logo" class="header-logo">
-
-    <div class="station-info-box">
-      <div class="station-code">{{ request.user.profile.station.prefix|default:"ZM"|default_if_none:"" }}</div>
-      <div class="datetime" id="datetime"></div>
-    </div>
-  </div>
-
-  <div class="header-center">
-    <nav class="nav-buttons">
-      <a href="{% url 'station_list' %}" class="nav-btn">Filtrovať Stanice</a>
-      <a href="{% url 'upcoming_revisions' %}" class="nav-btn">Nadchádzajúca revízia</a>
-      <a href="{% url 'templates_list' %}" class="nav-btn">Tlačové Formuláre</a>
-      {% if station %}
-        <a href="{% url 'station_equipment_archive' station.pk %}" class="nav-btn">Archív</a>
-      {% else %}
-        <a href="#" class="nav-btn disabled" title="Vyberte staniciu pre zobrazenie archívu">Archív</a>
-      {% endif %}
-
-      <!-- Vyhledávací formulář stylovaný jako nav-btn -->
-      <form action="{% url 'equipment_search' %}" method="get" class="nav-search-form">
-        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <label>
-              <input type="text" name="serial_number" placeholder="Hľadať Sériové číslo" required>
-          </label>
-          <button type="submit">🔍</button>
-      </form>
-    </nav>
-  </div>
-
-  <div class="header-right user-panel">
-    {% if user.is_authenticated %}
-      <div class="user-info">
-        {% if user.profile.profile_image %}
-          <img src="{{ user.profile.profile_image.url }}" alt="{{ user.username }}" class="profile-avatar">
-        {% else %}
-          <div class="profile-avatar-placeholder">
-            {{ user.username|first|upper }}
-          </div>
-        {% endif %}
-        <div class="user-details">
-          <span class="user-label">Užívateľ:</span>
-          <span class="username">{{ user.username }}</span>
+    <div class="header-left">
+        <img src="{% static 'images/logo_head.png' %}"
+             alt="Logo"
+             class="header-logo">
+        <div class="station-info-box">
+            <div class="station-code">{{ request.user.profile.station.prefix|default:"ZM"|default_if_none:"" }}</div>
+            <div class="datetime" id="datetime"></div>
         </div>
-      </div>
-
-      <form method="post" action="{% url 'logout' %}" class="logout-form">
-        {% csrf_token %}
-        <button type="submit" class="logout-btn">Odhlásiť sa</button>
-      </form>
-    {% endif %}
-  </div>
+    </div>
+    <div class="header-center">
+        <nav class="nav-buttons">
+            <a href="{% url 'station_list' %}" class="nav-btn">Filtrovať Stanice</a>
+            <a href="{% url 'upcoming_revisions' %}" class="nav-btn">Nadchádzajúca revízia</a>
+            <a href="{% url 'templates_list' %}" class="nav-btn">Tlačové Formuláre</a>
+            {% if station %}
+                <a href="{% url 'station_equipment_archive' station.pk %}"
+                   class="nav-btn">Archív</a>
+            {% else %}
+                <a href="#"
+                   class="nav-btn disabled"
+                   title="Vyberte staniciu pre zobrazenie archívu">Archív</a>
+            {% endif %}
+            <!-- Vyhledávací formulář stylovaný jako nav-btn -->
+            <form action="{% url 'equipment_search' %}"
+                  method="get"
+                  class="nav-search-form">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <label>
+                    <input type="text"
+                           name="serial_number"
+                           placeholder="Hľadať Sériové číslo"
+                           required>
+                </label>
+                <button type="submit">🔍</button>
+            </form>
+        </nav>
+    </div>
+    <div class="header-right user-panel">
+        {% if user.is_authenticated %}
+            <div class="user-info">
+                {% if user.profile.profile_image %}
+                    <img src="{{ user.profile.profile_image.url }}"
+                         alt="{{ user.username }}"
+                         class="profile-avatar">
+                {% else %}
+                    <div class="profile-avatar-placeholder">{{ user.username|first|upper }}</div>
+                {% endif %}
+                <div class="user-details">
+                    <span class="user-label">Užívateľ:</span>
+                    <span class="username">{{ user.username }}</span>
+                </div>
+            </div>
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Odhlásiť sa</button>
+            </form>
+        {% endif %}
+    </div>
 </header>

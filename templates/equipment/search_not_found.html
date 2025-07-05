@@ -1,12 +1,10 @@
 {% extends "base.html" %}
-
 {% block title %}Vybavenie nenájdené{% endblock %}
-
 {% block content %}
-  <h2 style="text-align:center; margin: 40px 0;">
-    Výbava so sériovým číslom <strong>{{ query }}</strong> nebola nájdená.
-  </h2>
-  <div style="text-align:center;">
-    <a href="{{ next_url }}" class="button">Späť</a>
-  </div>
+    <h2 style="text-align:center; margin: 40px 0;">
+        Výbava so sériovým číslom <strong>{{ query }}</strong> nebola nájdená.
+    </h2>
+    <div style="text-align:center;">
+        <a href="{{ next_url }}" class="button">Späť</a>
+    </div>
 {% endblock %}
