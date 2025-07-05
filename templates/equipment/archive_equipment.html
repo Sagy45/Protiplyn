@@ -9,12 +9,10 @@
       text-align: center;
       white-space: nowrap;
     }
-    /* Wrap long serials if needed */
     .equipment-table td {
       max-width: 110px;
       overflow-x: auto;
     }
-    /* Highlight archive info */
     .archive-meta {
       font-size: 12px;
       color: #666;
@@ -25,22 +23,18 @@
 {% block content %}
     <h2 style="text-align:center; margin-bottom:20px;">Archiv vybavení: {{ station.name }}</h2>
     <p style="text-align:right; margin-bottom:10px;">
-        <a href="{% url 'station_equipment' station.pk %}"
-           class="btn btn-secondary">← Zpět na aktivní</a>
+        <a href="{% url 'station_equipment' station.pk %}" class="btn btn-secondary">← Zpět na aktivní</a>
     </p>
     <div class="tab-container">
         <ul class="tab-list">
             {% for section in equipment_sections %}
                 <li>
-                    <a href="#"
-                       class="{% if forloop.first %}active{% endif %}"
-                       data-tab="tab-{{ forloop.counter }}">{{ section.0 }}</a>
+                    <a href="#" class="{% if forloop.first %}active{% endif %}" data-tab="tab-{{ forloop.counter }}">{{ section.0 }}</a>
                 </li>
             {% endfor %}
         </ul>
         {% for section in equipment_sections %}
-            <div class="tab-content {% if forloop.first %}active{% endif %}"
-                 id="tab-{{ forloop.counter }}">
+            <div class="tab-content {% if forloop.first %}active{% endif %}" id="tab-{{ forloop.counter }}">
                 <h3>{{ section.0 }}</h3>
                 {% if section.1 %}
                     <table class="equipment-table">
@@ -87,9 +81,12 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <form method="post" action="{% url 'equipment_restore' item.pk %}">
+                                        <form method="post" class="restore-form" action="{% url 'equipment_restore' item.pk %}">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-sm btn-success">Obnoviť</button>
+                                            <input type="hidden" name="revise_from_date" value="">
+                                            <input type="hidden" name="model" value="{{ section.3 }}">
+                                            <input type="hidden" name="id" value="{{ item.pk }}">
+                                            <button type="button" class="btn btn-sm btn-success restore-btn">Obnoviť</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -104,19 +101,90 @@
             </div>
         {% endfor %}
     </div>
+    <!-- MODÁLNÍ OKNO PRO VÝBĚR DATUMU REVIZE -->
+    <div id="restoreDateModal"
+         style="display:none;
+                position:fixed;
+                top:0; left:0; right:0; bottom:0;
+                background:rgba(0,0,0,0.6); z-index:9999;
+                justify-content:center; align-items:center">
+        <div style="background:white; padding:20px 30px; border-radius:10px; max-width:300px; text-align:center; box-shadow:0 0 10px rgba(0,0,0,0.2)">
+            <h3 style="color:#c62828; margin-bottom:15px;">Zvolte datum poslední revize</h3>
+            <input type="date" id="restoreRevisionDateInput" style="padding:6px 10px; font-size:15px; border-radius:6px; border:1px solid #ccc">
+            <div style="margin-top:20px;">
+                <button id="restoreConfirmBtn" style="background:#c62828;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer">Potvrdit</button>
+                <button id="restoreCancelBtn" style="margin-left:10px;padding:8px 14px;border-radius:6px">Zrušit</button>
+            </div>
+        </div>
+    </div>
     <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const tabs     = document.querySelectorAll(".tab-list a");
-    const contents = document.querySelectorAll(".tab-content");
-    tabs.forEach((tab, i) => {
-      tab.addEventListener("click", function (e) {
-        e.preventDefault();
-        tabs.forEach(t => t.classList.remove("active"));
-        contents.forEach(c => c.classList.remove("active"));
-        this.classList.add("active");
-        contents[i].classList.add("active");
+      document.addEventListener("DOMContentLoaded", function () {
+        // Tabs
+        const tabs = document.querySelectorAll(".tab-list a"),
+              contents = document.querySelectorAll(".tab-content");
+        tabs.forEach((tab, i) => {
+          tab.addEventListener("click", function (e) {
+            e.preventDefault();
+            tabs.forEach(t => t.classList.remove("active"));
+            contents.forEach(c => c.classList.remove("active"));
+            this.classList.add("active");
+            contents[i].classList.add("active");
+          });
+        });
+
+        // --- MODAL pro obnovu ---
+        const modal = document.getElementById("restoreDateModal"),
+              revInput = document.getElementById("restoreRevisionDateInput"),
+              confirmBtn = document.getElementById("restoreConfirmBtn"),
+              cancelBtn = document.getElementById("restoreCancelBtn");
+        let pendingForm = null;
+
+        document.querySelectorAll(".restore-btn").forEach(btn => {
+          btn.addEventListener("click", function (e) {
+            pendingForm = this.closest("form");
+            revInput.value = "";
+            modal.style.display = "flex";
+          });
+        });
+
+        confirmBtn.addEventListener("click", function () {
+          if (!revInput.value) {
+            alert("Prosím vyberte datum.");
+            return;
+          }
+          if (!pendingForm) return;
+          pendingForm.querySelector('input[name="revise_from_date"]').value = revInput.value;
+
+          // --- AJAX odeslání ---
+          const fd = new FormData(pendingForm);
+          fetch(pendingForm.action, {
+            method: "POST",
+            body: fd,
+            headers: { "X-CSRFToken": fd.get("csrfmiddlewaretoken") }
+          })
+          .then(r => {
+            if (!r.ok) throw new Error("Chyba při obnově");
+            return r.json();
+          })
+          .then(data => {
+            if (data.success) {
+              pendingForm.closest("tr").remove();
+              modal.style.display = "none";
+            } else if (data.error) {
+              alert(data.error);
+            }
+          })
+          .catch(err => { alert(err.message); })
+          .finally(() => {
+            pendingForm = null;
+            modal.style.display = "none";
+          });
+        });
+
+        cancelBtn.addEventListener("click", function () {
+          modal.style.display = "none";
+          pendingForm = null;
+        });
       });
-    });
-  });
     </script>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.management import call_command
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
@@ -974,13 +975,45 @@ class RetireEquipment(View):
 
 
 class RestoreEquipment(View):
+    """
+    View pro obnovu vybavení z archivu.
+    Po zadání datumu dopočte VŠECHNA revizní pole dle jejich intervalu.
+    """
+
     def post(self, request, pk):
+        revise_from_date = request.POST.get("revise_from_date")
+        model_name = request.POST.get("model")
+        if not revise_from_date:
+            return JsonResponse({"error": "Chybí datum poslední revize."}, status=400)
+        if not model_name:
+            return JsonResponse({"error": "Chybí model."}, status=400)
+
+        # Hledáme správný model
         for model in MODEL_MAP.values():
+            if model.__name__ != model_name:
+                continue
             try:
                 eq = model.objects.get(pk=pk)
             except model.DoesNotExist:
                 continue
+
+            # Dopočítej VŠECHNA revizní pole
+            base_date = datetime.strptime(revise_from_date, "%Y-%m-%d").date()
+            update_fields = ["is_archived", "status"]
+            for field, interval in REVISION_INTERVALS.items():
+                # Každé pole které existuje na modelu
+                if hasattr(eq, field):
+                    new_value = base_date + interval
+                    setattr(eq, field, new_value)
+                    update_fields.append(field)
+
             eq.is_archived = False
-            eq.save(update_fields=["is_archived"])
-            return redirect("station_equipment_archive", pk=eq.located.pk)
-        raise Http404("Equipment not found")
+            eq.status = "ok"
+            eq.save(update_fields=update_fields)
+
+            # Zavolej aktualizaci statusů
+            call_command("update_equipment_statuses")
+
+            return JsonResponse({"success": True})
+
+        return JsonResponse({"error": "Equipment not found"}, status=404)

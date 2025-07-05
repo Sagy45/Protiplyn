@@ -29,7 +29,7 @@
             {% endfor %}
             <tr>
                 <th>Stav</th>
-                <td>{{ object.status }}</td>
+                <td>{{ object.get_status_display }}</td>
             </tr>
             {% if object.located %}
                 <tr>
