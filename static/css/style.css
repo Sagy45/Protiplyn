@@ -213,7 +213,7 @@ td button {
 }
 
 .equipment-table tr.danger {
-  background: #b71c1c; /* red for Kriticky */
+  background: #9e1f1f; /* red for Kriticky */
   color: white;
 }
 

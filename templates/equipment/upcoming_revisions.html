@@ -7,22 +7,21 @@
         <table border="1" style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr>
-                    <th>Type</th>
-                    <th>E Number</th>
-                    <th>Station</th>
-                    <th>Upcoming Revisions</th>
+                    <th>Typ</th>
+                    <th>Evidenčné číslo</th>
+                    <th>Stanica</th>
+                    <th>Nadchádzajúce revízie</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in items %}
-                    <tr {% if item.is_red %}style="background: red;"{% endif %}>
+                    <tr {% if item.is_red %}style="background: lightcoral;"{% endif %}>
                         <td>{{ item.type }}</td>
                         <td>{{ item.e_number }}</td>
                         <td>{{ item.located.name }}</td>
                         <td>
                             {% for f, date in item.relevant_dates %}
-                                {{ f }}: {{ date|date:"d.m.Y" }}
-                                <br>
+                                {{ REVISION_LABELS|get_item:f }}: {{ date|date:"d.m.Y" }}<br>
                             {% endfor %}
                         </td>
                     </tr>

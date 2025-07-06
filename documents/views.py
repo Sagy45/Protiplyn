@@ -76,7 +76,7 @@ def generate_equipment_pdf(template, equipment, user):
         c.drawString(40, y, str(eq.equipment_type))
         c.drawString(140, y, str(eq.e_number))
         c.drawString(220, y, str(eq.serial_number))
-        c.drawString(340, y, str(eq.located))
+        c.drawString(340, y, str(eq.located.name))
         y -= 16
 
     # Podpisová časť

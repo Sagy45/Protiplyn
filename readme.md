@@ -1,58 +1,107 @@
-# Projekt ----->PROTIPLYN<-----
+# Protiplyn – evidencia a správa zásob pre protiplynovú službu
+Tento projekt slúži na **evidenciu a správu vybavenia pre protiplynovú službu** – hlavne dýchacie prístroje, chemické obleky, kyslíkové bomby a ďalšie záchranárske prostriedky.
+Umožňuje sledovanie revízií, skladovanie, pohyb vybavenia medzi stanicami a vozidlami, archiváciu, aj automatizované notifikácie ohľadom revízií.
+---
+## Požiadavky
+- **Python 3.10+** (ideálne 3.11)
+- **Django 4.2+**
+- Odporúčame použiť **virtuálne prostredie (venv)**
+- Základné znalosti práce s Gitom, PyCharmom, a shellom
+---
+## Inštalácia a spustenie
+1. **Naklonujte si projekt z Gitu:**
+    ```sh
+    git clone <adresa_repozitara>
+    cd Protiplyn
+    ```
+2. **Vytvorte a aktivujte virtuálne prostredie:**
+    ```sh
+    python -m venv .venv
+    # Windows:
+    .venv\Scripts\activate
+    # Linux/Mac:
+    source .venv/bin/activate
+    ```
+3. **Nainštalujte závislosti:**
+    ```sh
+    pip install -r requirements.txt
+    ```
+4. **Vykonajte migrácie databázy:**
+    ```sh
+    python manage.py migrate
+    ```
+5. **Vytvorte superužívateľa (pre správu):**
+    ```sh
+    python manage.py createsuperuser
+    ```
+6. **Spustite vývojový server:**
+    ```sh
+    python manage.py runserver
+    ```
+    Aplikácia beží na [http://localhost:8000](http://localhost:8000)
+---
+## Popis projektu a funkcionality
+- **Prehľad a evidencia všetkých typov vybavenia** (masky, ADP, tlakové nádoby, chemické obleky, atď.)
+- **Automatické sledovanie revíznych termínov** – systém upozorňuje na blížiace sa alebo premeškané revízie
+- **Možnosť archivácie vyradených alebo expirovaných kusov**
+- **Správa umiestnenia** – rozdelenie na kraje, okresy, stanice, sklady, vozidlá
+- **Filtrácia, vyhľadávanie a triedenie záznamov**
+- **Detailné zobrazenie a úprava jednotlivých položiek**
+- **Tlačové zostavy a export údajov** (napr. do PDF)
+- **Jednoduchý prístup pre protiplynového technika – prehľad podľa stanice**
+- **Možnosť zadávať a spravovať užívateľov (autentizácia, prístupové práva)**
+- **Automatizované upozornenia emailom**
+---
+## Prehľad hlavných modelov a evidovaných zariadení
+- **Maska** (celoobličejová maska)
+- **ADP Multi / Single**
+- **Tlaková nádoba**
+- **Protichemický oblek**
+- **PA** (ďalšie typy vybavenia)
+- **VehicleStorage** (vozidlo alebo sklad)
+- **EquipmentType** (typ vybavenia)
+- **Station** (stanica, objekt v systéme)
+- **Revizné polia** – každé zariadenie má vlastné revízne termíny a statusy
+---
+## Užívateľské role a práva
+- **Admin** – plný prístup (vytváranie, úpravy, archivácia, správa užívateľov)
+- **Technik** – správa vybavenia na pridelených staniciach, možnosť zápisu revízií a práce s evidenciou
 
-## Python / Django
-
-### Instalacia
-```bash
-pip install django
-```
-```bash
-pip install python_dotenv
-```
-```bash
-pip freeze requirement.txt
-```
-### Vytvorenie projektu
-```bash
-django-admin startproject protiplyn .
-```
-## Sprava hesiel
-### 
-Vytvorim subor .env v root, zo `settings.py` zoberem `SECRET_KEY` a ulozim 
-ho do .env suboru (vo formate bez medzier a uvodzoviek). 
-
-Do suboru `settings.py`:
-```python
-from dotenv import load_dotenv
-import os
-SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-)si+fpno3#)=7__vx-4%ni^&n1wvaz9bju1e+s8*i!e9qt!@f)')
-```
-### Vytvorenie APP
-```bash
-python manage.py startapp viewer
-```
-V subore `settings.py` pridam do `INSTALLED_APPS` - line 43 `'viewer',`
-
-### upload na Git
-
-
-## Popis projektu
-Aplikacia na pridavanie a sledovanie prostriedkov protiplynovej sluzby (#PPLS) a kontrolu
-doby revizie produktov s funkciou automatickeho upozornenia na koniec doby platnosti.
-
-## Funkcionalita
-
-- [ ] 1 Filtrovanie jednotlivych stanic (podla okresu, kraju)
-- [ ] 2 Zobrazenie inventara na roznych urovnach (Stat, kraj, okres, stanica)
-  - [ ] 2.1 Filtrovanie podla zadanych kriterii (datumu revizie, podla produktu etc.)
-- [ ] 3 Pridavanie a mazanie a uprava produktov
-  - [ ] 3.1 Pridavanie
-  - [ ] 3.2 Mazanie
-  - [ ] 3.3 Uprava
-- [ ] 4 Automaticka kontrola revizie produktov
-  - [ ] 4.1 Odosielanie notifikacie uzivatelovi s opravnenim
-    - [ ] 4.1.1 Zmena statusu (OK -> Bliziaca sa revizia (3M do konca: mail 1x) -> Kriticky (1M do konca: mail 2x/T) -> V rieseni (NONE) -> OK: (return: DateTime + "dlzka revizie" + "ktora rev. urobena")
-- [ ] 5 Tlacenie prednastravenych dokumentov ?
+---
+## Práca s kódom a vývoj
+- Kód je rozdelený podľa Django štandardov do apps (`equipment`, `viewer` atď.)
+- **Modely** sú v `equipment/models.py`
+- **Views** sú v `equipment/views.py` a `viewer/views.py`
+- **Šablóny** sú v priečinku `templates/`
+- **Vlastné filtry** sú v `equipment/templatetags/custom_filters.py`
+- **Management commandy** (napr. automatická kontrola revízií) v `equipment/management/commands/`
+- V prípade úprav modelov nezabudnite na:
+    ```sh
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
+---
+## Užitočné príkazy pre vývoj
+- **Spustenie servera:**
+    `python manage.py runserver`
+- **Vytvorenie superužívateľa:**
+    `python manage.py createsuperuser`
+- **Aktualizácia migrácií:**
+    `python manage.py makemigrations && python manage.py migrate`
+- **Spustenie testov (ak budú pridané):**
+    `python manage.py test`
+- **Vyčistenie cache:**
+    (v PowerShell)
+    `Get-ChildItem -Recurse -Directory -Filter __pycache__ | Remove-Item -Recurse -Force`
+---
+## TODO / ďalší rozvoj
+- Rozšírenie exportov a tlačových zostáv
+- Vylepšená správa užívateľských práv
+- Pridať pokročilé vyhľadávanie a štatistiky
+---
+## Kontakt a autori
+Projekt vytvára tým TMA sro. v rámci praxe.
+---
 
 ## Databaza
 

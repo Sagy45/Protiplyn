@@ -31,6 +31,30 @@
                 <th>Stav</th>
                 <td>{{ object.get_status_display }}</td>
             </tr>
+            {% if object.volume != None %}
+                <tr>
+                    <th>Objem (L)</th>
+                    <td>{{ object.volume }}</td>
+                </tr>
+            {% endif %}
+            {% if object.pressure != None %}
+                <tr>
+                    <th>Tlak (pa)</th>
+                    <td>{{ object.pressure }}</td>
+                </tr>
+            {% endif %}
+            {% if object.made != None %}
+                <tr>
+                    <th>Dátum výroby</th>
+                    <td>{{ object.made }}</td>
+                </tr>
+            {% endif %}
+            {% if object.service_life != None %}
+                <tr>
+                    <th>Životnosť (roky)</th>
+                    <td>{{ object.service_life }}</td>
+                </tr>
+            {% endif %}
             {% if object.located %}
                 <tr>
                     <th>Stanica</th>

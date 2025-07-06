@@ -65,20 +65,16 @@ def get_allowed_transitions(current_status):
 def equipment_search(request):
     """
     Vyhľadáva vybavenie podľa sériového čísla a presmeruje na detail.
-
-    Args:
-        request (HttpRequest): HTTP požiadavka s GET parametrom 'serial_number'.
-
-    Returns:
-        HttpResponse: Presmerovanie na detail nájdeného vybavenia,
-        alebo stránka s hláškou ak nič nebolo nájdené.
+    Ak existuje viac výsledkov, ponúkne výber.
     """
     serial_number = request.GET.get("serial_number", "").strip()
     next_url = (
-        request.GET.get("next")
-        or request.META.get("HTTP_REFERER")
-        or reverse("station_list")
+            request.GET.get("next")
+            or request.META.get("HTTP_REFERER")
+            or reverse("station_list")
     )
+
+    results = []
 
     if serial_number:
         model_map = {
@@ -90,11 +86,26 @@ def equipment_search(request):
             "PA": PA,
         }
         for model_name, model_class in model_map.items():
-            try:
-                obj = model_class.objects.get(serial_number__iexact=serial_number)
-                return redirect(reverse("equipment_detail", args=[model_name, obj.pk]))
-            except model_class.DoesNotExist:
-                continue
+            found = model_class.objects.filter(serial_number__iexact=serial_number)
+            for obj in found:
+                results.append((model_name, obj))
+
+        if len(results) == 1:
+            model_name, obj = results[0]
+            return redirect(reverse("equipment_detail", args=[model_name, obj.pk]))
+        elif len(results) > 1:
+            # VÍCE VÝSLEDKŮ: zobraz seznam pro výběr
+            return render(
+                request,
+                "equipment/search_multiple_found.html",
+                {
+                    "query": serial_number,
+                    "results": results,
+                    "next_url": next_url,
+                },
+            )
+
+    # Pokud nenajde nic, zobrazí stránku "nenalezeno"
     return render(
         request,
         "equipment/search_not_found.html",
@@ -103,6 +114,7 @@ def equipment_search(request):
             "next_url": next_url,
         },
     )
+
 
 
 class HomeView(ListView):
@@ -779,6 +791,7 @@ class UpcomingRevisionListView(TemplateView):
             ("PCHO", filter_items(PCHO, ["rev_half_year", "rev_2years"])),
             ("PA", filter_items(PA, ["rev_3year", "rev_6years", "rev_9years"])),
         ]
+        context["REVISION_LABELS"] = REVISION_LABELS
 
         return context
 

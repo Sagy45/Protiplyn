@@ -1,0 +1,36 @@
+.equipment-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 30px auto;
+    font-size: 1rem;
+    background: #fff;
+}
+
+.equipment-table th, .equipment-table td {
+    border: 1px solid #d1d1d1;
+    padding: 8px 16px;
+    text-align: left;
+    white-space: normal;        /* důležité: zalamuje dlouhé texty */
+    word-break: break-word;     /* důležité: zalamuje i dlouhá slova */
+    max-width: 230px;           /* můžeš upravit dle potřeby */
+}
+
+.equipment-table th {
+    background: #f6f6f6;
+    font-weight: bold;
+}
+
+.button {
+    display: inline-block;
+    background: #c62828;
+    color: #fff !important;
+    padding: 7px 17px;
+    border-radius: 7px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.15s;
+    border: none;
+}
+.button:hover {
+    background: #8e1a1a;
+}

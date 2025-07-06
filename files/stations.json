@@ -1,0 +1,108 @@
+[
+{
+  "model": "viewer.country",
+  "pk": 1,
+  "fields": {
+    "name": "Slovenská republika"
+  }
+},
+{
+  "model": "viewer.region",
+  "pk": 1,
+  "fields": {
+    "name": "Bratislavský",
+    "country": 1
+  }
+},
+{
+  "model": "viewer.region",
+  "pk": 2,
+  "fields": {
+    "name": "Nitriansky",
+    "country": 1
+  }
+},
+{
+  "model": "viewer.region",
+  "pk": 3,
+  "fields": {
+    "name": "Banskobystrický",
+    "country": 1
+  }
+},
+{
+  "model": "viewer.district",
+  "pk": 1,
+  "fields": {
+    "name": "Banská Bystrica",
+    "region": 3
+  }
+},
+{
+  "model": "viewer.district",
+  "pk": 2,
+  "fields": {
+    "name": "Bratislava",
+    "region": 1
+  }
+},
+{
+  "model": "viewer.district",
+  "pk": 3,
+  "fields": {
+    "name": "Nitra",
+    "region": 2
+  }
+},
+{
+  "model": "viewer.city",
+  "pk": 1,
+  "fields": {
+    "name": "Banská Bystrica",
+    "district": 1
+  }
+},
+{
+  "model": "viewer.city",
+  "pk": 2,
+  "fields": {
+    "name": "Bratislava",
+    "district": 2
+  }
+},
+{
+  "model": "viewer.city",
+  "pk": 3,
+  "fields": {
+    "name": "Zlaté Moravce",
+    "district": 3
+  }
+},
+{
+  "model": "viewer.station",
+  "pk": 1,
+  "fields": {
+    "name": "HAZZ-BB",
+    "city": 1,
+    "prefix": "BB"
+  }
+},
+{
+  "model": "viewer.station",
+  "pk": 2,
+  "fields": {
+    "name": "HAZZ-BA",
+    "city": 2,
+    "prefix": "BA"
+  }
+},
+{
+  "model": "viewer.station",
+  "pk": 3,
+  "fields": {
+    "name": "HAZZ-ZM",
+    "city": 3,
+    "prefix": "ZM"
+  }
+}
+]
