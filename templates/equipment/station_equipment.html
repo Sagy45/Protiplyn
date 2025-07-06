@@ -21,7 +21,17 @@
                     <table class="equipment-table">
                         <thead>
                             <tr>
-                                {% for raw, pretty in section.2 %}<th>{{ pretty }}</th>{% endfor %}
+                                {% for raw, pretty in section.2 %}
+                                    <th>
+                                        {% if section.3 == "Mask" and raw == "extra_1" %}
+                                            Dátum následujúcej výmeny disku nádychového ventilu
+                                        {% elif section.3 == "Mask" and raw == "extra_2" %}
+                                            Dátum následujúcej výmeny disku nádychového ventilu
+                                        {% else %}
+                                            {{ pretty }}
+                                        {% endif %}
+                                    </th>
+                                {% endfor %}
                                 <th>Umiestnenie</th>
                             </tr>
                         </thead>
@@ -29,7 +39,55 @@
                             {% for item in section.1 %}
                                 <tr>
                                     {% for raw, pretty in section.2 %}
-                                        {% if raw == "type" %}
+                                        {# Speciální pole pro Mask extra_1 #}
+                                        {% if section.3 == "Mask" and raw == "extra_1" %}
+                                            <td>
+                                                <form method="post"
+                                                      action="{% url 'update_status' %}"
+                                                      class="extra-date-form"
+                                                      style="display:flex; flex-direction:column; align-items:center;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="model" value="{{ section.3 }}">
+                                                    <input type="hidden" name="id" value="{{ item.pk }}">
+                                                    <input type="hidden" name="field" value="{{ raw }}">
+                                                    <input type="date"
+                                                           name="extra_date"
+                                                           value="{{ item|attr:raw|date:'Y-m-d' }}"
+                                                           style="min-width:130px;"
+                                                           min="{{ today|date:'Y-m-d' }}"
+                                                           onchange="submitExtraDate(this)">
+                                                    {% if not item|attr:raw %}
+                                                        <div style="color:#bbb;font-size:12px;">
+                                                            Zadejte datum příští výměny
+                                                        </div>
+                                                    {% endif %}
+                                                </form>
+                                            </td>
+                                        {# Speciální pole pro Mask extra_2 #}
+                                        {% elif section.3 == "Mask" and raw == "extra_2" %}
+                                            <td>
+                                                <form method="post"
+                                                      action="{% url 'update_status' %}"
+                                                      class="extra-date-form"
+                                                      style="display:flex; flex-direction:column; align-items:center;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="model" value="{{ section.3 }}">
+                                                    <input type="hidden" name="id" value="{{ item.pk }}">
+                                                    <input type="hidden" name="field" value="{{ raw }}">
+                                                    <input type="date"
+                                                           name="extra_date"
+                                                           value="{{ item|attr:raw|date:'Y-m-d' }}"
+                                                           style="min-width:130px;"
+                                                           min="{{ today|date:'Y-m-d' }}"
+                                                           onchange="submitExtraDate(this)">
+                                                    {% if not item|attr:raw %}
+                                                        <div style="color:#bbb;font-size:12px;">
+                                                            Zadejte datum příští výměny
+                                                        </div>
+                                                    {% endif %}
+                                                </form>
+                                            </td>
+                                        {% elif raw == "type" %}
                                             <td>
                                                 <a href="{% url 'equipment_detail' section.3 item.pk %}">{{ item|attr:raw }}</a>
                                             </td>
@@ -40,7 +98,7 @@
                                                 {% with current=item|get_status:raw %}
                                                     {% allowed_statuses current allowed_transitions as opts %}
                                                     <form method="post"
-                                                          action="{% url 'update_status_form' %}"
+                                                          action="{% url 'update_status' %}"
                                                           class="status-form">
                                                         {% csrf_token %}
                                                         <input type="hidden" name="model" value="{{ section.3 }}">
@@ -125,12 +183,35 @@
         </div>
     </div>
     <script>
+function submitExtraDate(input) {
+    const form = input.form;
+    const fd = new FormData(form);
+    input.disabled = true;
+    fetch(form.action, {
+        method: "POST",
+        body: fd,
+        headers: {"X-CSRFToken": fd.get("csrfmiddlewaretoken")}
+    })
+    .then(r => {
+        if (!r.ok) throw new Error("Chyba při ukládání datumu");
+        return r.json();
+    })
+    .then(data => {
+        input.style.background = "#c8e6c9";
+        setTimeout(() => {input.style.background = "";}, 600);
+    })
+    .catch(err => {
+        alert(err.message);
+    })
+    .finally(() => {
+        input.disabled = false;
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-  // --- Tabs switch ---
   const tabs     = document.querySelectorAll(".tab-list a"),
         contents = document.querySelectorAll(".tab-content");
 
-  // --- NOVÉ: Načtení indexu aktivního tabu z localStorage ---
   let activeTabIndex = parseInt(localStorage.getItem("activeTabIndex") || "0", 10);
   tabs.forEach((tab, i) => {
     tab.classList.toggle("active", i === activeTabIndex);
@@ -144,12 +225,10 @@ document.addEventListener("DOMContentLoaded", function () {
       contents.forEach(c => c.classList.remove("active"));
       tab.classList.add("active");
       contents[i].classList.add("active");
-      // --- NOVÉ: Uložení indexu aktivního tabu do localStorage ---
       localStorage.setItem("activeTabIndex", i);
     });
   });
 
-  // --- Variables for modal workflow ---
   const selects    = document.querySelectorAll(".status-dropdown"),
         modal      = document.getElementById("dateModal"),
         revInput   = document.getElementById("revisionDateInput"),
@@ -159,7 +238,6 @@ document.addEventListener("DOMContentLoaded", function () {
       pendingForm   = null,
       originalValue = null;
 
-  // --- Handle select changes ---
   selects.forEach(select => {
     select.setAttribute("data-original-value", select.dataset.originalValue);
     select.addEventListener("change", function () {
@@ -167,7 +245,6 @@ document.addEventListener("DOMContentLoaded", function () {
             oldStatus = this.getAttribute("data-original-value"),
             form      = this.closest("form");
 
-      // Confirm retire action
       if (newStatus === "vyradit") {
         if (!confirm("Opravdu chcete tuto položku vyradit?")) {
           this.value = oldStatus;
@@ -175,7 +252,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
 
-      // If switching to OK → show date picker
       if (newStatus === "ok") {
         pendingSelect  = this;
         pendingForm    = form;
@@ -183,33 +259,29 @@ document.addEventListener("DOMContentLoaded", function () {
         revInput.value = "";
         modal.style.display = "flex";
       } else {
-        // Immediate save for other statuses
         submitForm(form, this);
         this.setAttribute("data-original-value", newStatus);
       }
     });
   });
 
-  // --- Confirm revision date ---
   confirmBtn.addEventListener("click", function () {
     if (!revInput.value) {
       alert("Prosím vyberte datum.");
       return;
     }
-    // --- NOVÁ VALIDACE ---
     const intervalDays = parseInt(pendingSelect.getAttribute('data-interval') || "0", 10);
     const dateStr = revInput.value;
     const selectedDate = new Date(dateStr);
     selectedDate.setDate(selectedDate.getDate() + intervalDays);
 
     const today = new Date();
-    today.setHours(0,0,0,0); // jen datum bez času
+    today.setHours(0,0,0,0);
 
     if (selectedDate < today) {
       alert("Výsledné revizní datum nesmí být v minulosti!");
       return;
     }
-    // --- KONEC VALIDACE ---
 
     const sel  = pendingSelect,
           form = pendingForm,
@@ -230,7 +302,6 @@ document.addEventListener("DOMContentLoaded", function () {
         form.closest("tr").remove();
         return;
       }
-      // Update dropdown with new options
       if (data.new_options && sel) {
         updateDropdownOptions(sel, data.new_options);
       }
@@ -246,7 +317,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // --- Cancel revision date ---
   cancelBtn.addEventListener("click", function () {
     modal.style.display = "none";
     if (pendingSelect) {
@@ -255,7 +325,6 @@ document.addEventListener("DOMContentLoaded", function () {
     pendingSelect = pendingForm = null;
   });
 
-  // --- Common AJAX save & recolor ---
   function submitForm(form, selectEl) {
     const fd = new FormData(form);
     fetch(form.action, {
@@ -274,7 +343,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       const sel = selectEl || form.querySelector("select.status-dropdown");
       if ((sel && sel.value === "under_revision") || (fd && fd.get("status") === "under_revision")) {
-        // --- Uloží aktuální záložku před reloadem ---
         const activeIdx = [...tabs].findIndex(t => t.classList.contains("active"));
         if (activeIdx !== -1) {
           localStorage.setItem("activeTabIndex", activeIdx);
@@ -292,25 +360,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // --- Helper to update dropdown options after change ---
   function updateDropdownOptions(sel, options) {
-    // Remove all old options
     sel.innerHTML = "";
-    // Add placeholder
     const placeholder = document.createElement("option");
     placeholder.value = "";
     placeholder.textContent = "Vyberte stav...";
     placeholder.disabled = true;
     placeholder.selected = true;
     sel.appendChild(placeholder);
-    // Add each new option
     options.forEach(([value, label]) => {
       const opt = document.createElement("option");
       opt.value = value;
       opt.textContent = label;
       sel.appendChild(opt);
     });
-    sel.selectedIndex = 0; // Always show placeholder after change
+    sel.selectedIndex = 0;
   }
 });
     </script>

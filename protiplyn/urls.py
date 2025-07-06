@@ -177,7 +177,7 @@ urlpatterns = [
     # Accounts
     path("accounts/", include("accounts.urls")),
     path("", HomeView.as_view(), name="home"),
-    path("update-status-form/", UpdateStatusView.as_view(), name="update_status_form"),
+    path("update-status/", UpdateStatusView.as_view(), name="update_status"),
     path(
         "equipment/<str:model>/<int:pk>/",
         EquipmentDetailView.as_view(),

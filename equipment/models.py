@@ -24,6 +24,11 @@ REVISION_LABELS = {
     "rev_half_year": "Polročná",
     "extra_1": "Extra 1",
     "extra_2": "Extra 2",
+    "serial_number": 'Sériové číslo',
+    "e_number": "Evidenčné číslo",
+    "status": "Stav",
+    "type": "Typ"
+
 }
 REVISION_FIELDS = list(REVISION_LABELS.keys())
 
@@ -142,6 +147,7 @@ class Mask(ArchiveFields, models.Model):
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
+        verbose_name = "Maska"
         verbose_name_plural = "Masky"
 
     def clean(self):
@@ -209,7 +215,9 @@ class ADPMulti(ArchiveFields, models.Model):
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
+        verbose_name = "ADP-Dvojhadicová"
         verbose_name_plural = "ADP-Dvojhadicovy"
+
 
     def clean(self):
         """
@@ -273,6 +281,7 @@ class ADPSingle(ArchiveFields, models.Model):
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
+        verbose_name = "ADP-Jednohadicová"
         verbose_name_plural = "ADP-Jednohadicovy"
 
     def clean(self):
@@ -349,6 +358,7 @@ class AirTank(ArchiveFields, models.Model):
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
+        verbose_name = "Tlaková nádoba"
         verbose_name_plural = "Tlakové nádoby"
 
     def clean(self):
@@ -416,7 +426,8 @@ class PCHO(ArchiveFields, models.Model):
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
-        verbose_name_plural = "Proti chemicke obleky"
+        verbose_name = "Protichemický oblek"
+        verbose_name_plural = "Protichemické obleky"
 
     def clean(self):
         """
@@ -483,7 +494,8 @@ class PA(ArchiveFields, models.Model):
 
     class Meta:
         ordering = ["equipment_type", "type", "e_number"]
-        verbose_name_plural = "Plucna automatika"
+        verbose_name = "Pľúcna automatika"
+        verbose_name_plural = "Pľúcne automatiky"
 
     def clean(self):
         """
@@ -514,6 +526,7 @@ class Complete(models.Model):
     e_number = models.CharField(max_length=10, null=False, blank=False)
 
     class Meta:
+        verbose_name = "Komplet"
         verbose_name_plural = "Komplety"
 
     def __str__(self):

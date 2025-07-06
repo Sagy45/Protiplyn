@@ -1,37 +1,34 @@
+from datetime import date, datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from django.core.management import call_command
-from django.http import Http404, JsonResponse
-from django.shortcuts import get_object_or_404, render, redirect
-from django.utils import timezone
-from datetime import timedelta, date, datetime
 from django.db.models import Q
-from django.views.decorators.csrf import csrf_protect
-
-from viewer.models import Station
-from django.views.generic import (
-    ListView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-    TemplateView,
-    DetailView,
-)
-from django.urls import reverse_lazy, reverse
-from .models import EquipmentType
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.views import View
+from django.views.decorators.csrf import csrf_protect
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
+from viewer.models import Station
+from .models import EquipmentType
 from .models import (
-    Mask,
-    VehicleStorage,
     ADPMulti,
     ADPSingle,
     AirTank,
-    PCHO,
-    PA,
     Complete,
-    REVISION_FIELDS,
+    Mask,
+    PA,
+    PCHO,
     REVISION_LABELS,
     STATUS_CHOICES,
-    Equipment,
+    VehicleStorage,
 )
 
 ALLOWED = {
@@ -42,7 +39,7 @@ ALLOWED = {
 }
 
 
-def get_allowed_trransitions(current_status):
+def get_allowed_transitions(current_status):
     """
     Vráti zoznam možných prechodov stavu pre daný status.
 
@@ -514,31 +511,6 @@ MODEL_MAP = {
     "PA": PA,
 }
 
-REVISION_FIELDS = [
-    "rev_half_year",
-    "rev_1years",
-    "rev_2years",
-    "rev_3year",
-    "rev_4years",
-    "rev_5years",
-    "rev_6years",
-    "rev_9years",
-    "extra_1",
-    "extra_2",
-]
-
-REVISION_LABELS = {
-    "rev_half_year": "Polročná",
-    "rev_1years": "1 ročná",
-    "rev_2years": "2 ročná",
-    "rev_3year": "3 ročná",
-    "rev_4years": "4 ročná",
-    "rev_5years": "5 ročná",
-    "rev_6years": "6 ročná",
-    "rev_9years": "9 ročná",
-    "extra_1": "Extra 1",
-    "extra_2": "Extra 2",
-}
 
 REVISION_INTERVALS = {
     "rev_half_year": timedelta(days=182),
@@ -556,16 +528,37 @@ class UpdateStatusView(View):
     def post(self, request, *args, **kwargs):
         model_name = request.POST.get("model")
         obj_id = request.POST.get("id")
-        field = request.POST.get("field")  # např. "rev_6years"
+        field = request.POST.get("field")  # např. "rev_6years", "extra_1", ...
         new_status = request.POST.get(
             "status"
         )  # ok | bsr | critical | under_revision | vyradit
+        extra_date = request.POST.get("extra_date")
 
         # načteme správný model podle názvu
         from django.apps import apps
 
         Model = apps.get_model("equipment", model_name)
         eq = get_object_or_404(Model, pk=obj_id)
+
+        # 0) SPECIÁLNÍ LOGIKA pro extra_1 / extra_2
+        if model_name == "Mask" and field in ("extra_1", "extra_2"):
+            if extra_date:
+                try:
+                    parsed_date = datetime.strptime(extra_date, "%Y-%m-%d").date()
+                except Exception:
+                    return JsonResponse({"error": "Chybný formát data"}, status=400)
+                if parsed_date < timezone.now().date():
+                    return JsonResponse(
+                        {"error": "Nelze zadat datum v minulosti!"}, status=400
+                    )
+                setattr(eq, field, parsed_date)
+            else:
+                setattr(eq, field, None)
+            # Volitelné: pokud status není nastaven, nastav na ok
+            if not eq.status:
+                eq.status = "ok"
+            eq.save(update_fields=[field, "status"])
+            return JsonResponse({"result": "ok"})
 
         # 1) ARCHIVACE (Vyradit)
         if new_status == "vyradit":
@@ -605,7 +598,6 @@ class UpdateStatusView(View):
             base_date_str = request.POST.get("revise_from_date")
             if base_date_str:
                 base = datetime.strptime(base_date_str, "%Y-%m-%d").date()
-                # >>> KONTROLA ZDE <<<
                 if base < date.today():
                     return JsonResponse({"error": "Past date not allowed"}, status=400)
             else:
@@ -837,7 +829,7 @@ def update_status_form(request):
 
         obj.save()
 
-        new_options = get_allowed_trransitions(new_status)
+        new_options = get_allowed_transitions(new_status)
 
         return JsonResponse({"success": True, "new_options": new_options})
     else:

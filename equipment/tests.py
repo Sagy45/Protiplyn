@@ -100,7 +100,7 @@ class UpdateStatusFormTest(TestCase):
         """
         Overí, že nie je možné nastaviť revíziu na dátum v minulosti.
         """
-        url = reverse("update_status_form")
+        url = reverse("update_status")
         yesterday = timezone.now().date() - timedelta(days=1)
         data = {
             "model": "Mask",
@@ -117,7 +117,7 @@ class UpdateStatusFormTest(TestCase):
         """
         Overí, že je možné nastaviť revíziu na dnešný alebo budúci dátum.
         """
-        url = reverse("update_status_form")
+        url = reverse("update_status")
         today = timezone.now().date()
         data_today = {
             "model": "Mask",

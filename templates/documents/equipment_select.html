@@ -29,7 +29,7 @@
                             <td>{{ eq.e_number }}</td>
                             <td>{{ eq.serial_number }}</td>
                             <td>{{ eq.located }}</td>
-                            <td>{{ eq.status }}</td>
+                            <td>{{ eq.get_status_display}}</td>
                             <td>{{ eq.model_verbose }}</td>
                         </tr>
                     {% endfor %}
