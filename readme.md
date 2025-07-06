@@ -200,3 +200,5 @@ doby revizie produktov s funkciou automatickeho upozornenia na koniec doby platn
 python manage.py email_upcoming_revisions
 `
 mal by sa ukazat email pre kazdu stanicu 
+
+test
